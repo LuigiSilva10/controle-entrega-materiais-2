@@ -1,0 +1,2785 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCM Intelligence — Manutenção Industrial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN SYSTEM  — PCM INTELLIGENCE v3
+   Aesthetic: Refined Enterprise · Calm Authority · Breathable
+   Inspired by: Linear, Notion, Vercel Dashboard, GitHub Analytics
+═══════════════════════════════════════════════════════════ */
+:root {
+  /* Surface */
+  --bg:          #F7F8FA;
+  --surface:     #FFFFFF;
+  --surface-2:   #F2F3F6;
+  --surface-3:   #ECEDF1;
+
+  /* Borders */
+  --border:      #E4E6ED;
+  --border-2:    #D0D3DD;
+  --border-focus:#3B7DE8;
+
+  /* Brand — Slate Blue (calm, trustworthy, not aggressive) */
+  --brand:       #2563EB;
+  --brand-dark:  #1D4ED8;
+  --brand-light: #EFF6FF;
+  --brand-mid:   #93C5FD;
+
+  /* Semantic */
+  --ok:          #059669;
+  --ok-bg:       #ECFDF5;
+  --ok-border:   #6EE7B7;
+  --warn:        #D97706;
+  --warn-bg:     #FFFBEB;
+  --warn-border: #FCD34D;
+  --crit:        #DC2626;
+  --crit-bg:     #FEF2F2;
+  --crit-border: #FCA5A5;
+  --info:        #0284C7;
+  --info-bg:     #F0F9FF;
+  --info-border: #7DD3FC;
+
+  /* Text */
+  --t1: #111827;
+  --t2: #374151;
+  --t3: #6B7280;
+  --t4: #9CA3AF;
+  --t-inv: #FFFFFF;
+
+  /* Fonts */
+  --sans: 'Figtree', -apple-system, system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+
+  /* Geometry */
+  --r1: 4px;
+  --r2: 8px;
+  --r3: 12px;
+  --r4: 16px;
+  --r5: 20px;
+
+  /* Shadows — very subtle */
+  --s1: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --s2: 0 4px 12px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05);
+  --s3: 0 8px 28px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.06);
+  --s4: 0 20px 48px rgba(0,0,0,.14), 0 4px 10px rgba(0,0,0,.07);
+
+  /* Layout */
+  --hh: 54px;  /* header height */
+  --nh: 44px;  /* nav height */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--t1);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ══════════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--t4); }
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+#hdr {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--hh);
+  background: var(--t1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 300;
+}
+
+.hdr-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hdr-logo {
+  width: 32px; height: 32px;
+  background: var(--brand);
+  border-radius: var(--r2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 11px;
+  color: white;
+  letter-spacing: -0.03em;
+  flex-shrink: 0;
+}
+
+.hdr-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: white;
+  letter-spacing: -0.02em;
+}
+
+.hdr-sep {
+  width: 1px; height: 20px;
+  background: rgba(255,255,255,0.12);
+  margin: 0 4px;
+}
+
+.hdr-module {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  font-weight: 400;
+}
+
+.hdr-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hdr-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.8);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.hdr-pill:hover {
+  background: rgba(255,255,255,0.14);
+  color: white;
+}
+
+.hdr-pill i { font-size: 13px; }
+
+.hdr-pill.danger {
+  background: rgba(220,38,38,0.2);
+  border-color: rgba(220,38,38,0.4);
+  color: #FCA5A5;
+}
+
+.hdr-pill.danger:hover {
+  background: rgba(220,38,38,0.3);
+  color: #FEE2E2;
+}
+
+.dot-live {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #34D399;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(52,211,153,.25);
+  animation: livePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  0%,100% { box-shadow: 0 0 0 2px rgba(52,211,153,.25); }
+  50%      { box-shadow: 0 0 0 5px rgba(52,211,153,.08); }
+}
+
+/* ══════════════════════════════════════════
+   NAV BAR
+══════════════════════════════════════════ */
+#nav {
+  position: fixed;
+  top: var(--hh);
+  left: 0; right: 0;
+  height: var(--nh);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: stretch;
+  padding: 0 16px;
+  z-index: 299;
+  overflow-x: auto;
+  scrollbar-width: none;
+  box-shadow: var(--s1);
+}
+
+#nav::-webkit-scrollbar { display: none; }
+
+.nav-group {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+}
+
+.nav-group + .nav-group {
+  border-left: 1px solid var(--border);
+  margin-left: 8px;
+  padding-left: 8px;
+}
+
+.nav-group-right {
+  margin-left: auto;
+  border-left: 1px solid var(--border);
+  padding-left: 8px;
+}
+
+.nb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 13px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t3);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s;
+  outline: none;
+  position: relative;
+}
+
+.nb i { font-size: 14px; transition: color 0.15s; }
+
+.nb:hover { color: var(--t1); }
+.nb:hover i { color: var(--brand); }
+
+.nb.active {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+  font-weight: 600;
+}
+
+.nb.active i { color: var(--brand); }
+
+.nb:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+  border-radius: var(--r1);
+}
+
+.nb-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 99px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--mono);
+  line-height: 1;
+}
+
+.nb-badge.crit { background: var(--crit-bg); color: var(--crit); border: 1px solid var(--crit-border); }
+.nb-badge.warn { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn-border); }
+
+/* ══════════════════════════════════════════
+   MAIN CANVAS
+══════════════════════════════════════════ */
+#main {
+  margin-top: calc(var(--hh) + var(--nh));
+  padding: 24px 24px 48px;
+  min-height: calc(100vh - var(--hh) - var(--nh));
+}
+
+.sec { display: none; animation: secIn 0.25s ease; }
+.sec.active { display: block; }
+
+@keyframes secIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════════════════════════════════════════
+   PAGE TITLE
+══════════════════════════════════════════ */
+.pg-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pg-title {
+  font-size: 21px;
+  font-weight: 800;
+  color: var(--t1);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.pg-sub {
+  font-size: 13px;
+  color: var(--t3);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+.pg-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════
+   CARD
+══════════════════════════════════════════ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r3);
+  box-shadow: var(--s1);
+  overflow: hidden;
+}
+
+.card-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.01em;
+}
+
+.card-icon {
+  width: 28px; height: 28px;
+  border-radius: var(--r2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.ci-blue   { background: var(--brand-light); color: var(--brand); }
+.ci-green  { background: var(--ok-bg);       color: var(--ok); }
+.ci-red    { background: var(--crit-bg);     color: var(--crit); }
+.ci-amber  { background: var(--warn-bg);     color: var(--warn); }
+.ci-slate  { background: var(--surface-2);   color: var(--t3); }
+
+.card-bd { padding: 18px; }
+.card-ft { padding: 10px 18px; background: var(--surface-2); border-top: 1px solid var(--border); font-size: 12px; color: var(--t4); }
+
+/* ══════════════════════════════════════════
+   KPI CARDS — Refined with scale bars
+══════════════════════════════════════════ */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width:1400px) { .kpi-row { grid-template-columns: repeat(3,1fr); } }
+@media (max-width:800px)  { .kpi-row { grid-template-columns: repeat(2,1fr); } }
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r3);
+  padding: 16px 18px 14px;
+  box-shadow: var(--s1);
+  position: relative;
+  transition: box-shadow 0.2s, transform 0.2s;
+  cursor: default;
+  overflow: hidden;
+}
+
+.kpi:hover {
+  box-shadow: var(--s2);
+  transform: translateY(-2px);
+}
+
+.kpi-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: var(--r3) var(--r3) 0 0;
+}
+
+.kpi-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--t3);
+}
+
+.kpi-ico {
+  width: 32px; height: 32px;
+  border-radius: var(--r2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.kpi-val {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: var(--t1);
+  transition: color 0.3s;
+}
+
+.kpi-bar-wrap {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.kpi-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  width: 0%;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+.kpi-foot {
+  font-size: 11px;
+  color: var(--t4);
+}
+
+/* ══════════════════════════════════════════
+   DASHBOARD GAUGE CARDS (scale bars)
+══════════════════════════════════════════ */
+.gauge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width:1100px) { .gauge-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width:700px)  { .gauge-grid { grid-template-columns: 1fr; } }
+
+.gauge-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r3);
+  padding: 18px 20px;
+  box-shadow: var(--s1);
+}
+
+.gauge-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.gauge-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--t2);
+  letter-spacing: -0.01em;
+}
+
+.gauge-val {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t3);
+}
+
+/* Horizontal stacked bar gauge */
+.hbar-wrap {
+  display: flex;
+  height: 32px;
+  border-radius: var(--r2);
+  overflow: hidden;
+  gap: 2px;
+}
+
+.hbar-seg {
+  height: 100%;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-radius: var(--r1);
+}
+
+.hbar-ok   { background: var(--ok); }
+.hbar-warn { background: var(--warn); }
+.hbar-crit { background: var(--crit); }
+
+.hbar-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.hbar-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--t3);
+}
+
+.hbar-swatch {
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.hbar-count {
+  font-family: var(--mono);
+  font-weight: 600;
+  color: var(--t2);
+}
+
+/* ══════════════════════════════════════════
+   RANKING BARS (replaces pie charts)
+══════════════════════════════════════════ */
+.rank-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.rank-item {
+  display: grid;
+  grid-template-columns: 120px 1fr 48px;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width:600px) {
+  .rank-item { grid-template-columns: 90px 1fr 40px; }
+}
+
+.rank-label {
+  font-size: 12px;
+  color: var(--t2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.rank-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.rank-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--brand);
+  width: 0;
+  transition: width 0.9s cubic-bezier(0.4,0,0.2,1);
+}
+
+.rank-val {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--t3);
+  text-align: right;
+}
+
+/* ══════════════════════════════════════════
+   CHART AREA
+══════════════════════════════════════════ */
+.chart-wrap {
+  position: relative;
+}
+
+.chart-2col {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+@media (max-width:1100px) { .chart-2col { grid-template-columns: 1fr; } }
+
+/* ══════════════════════════════════════════
+   CRITICAL RIBBON (top of dashboard)
+══════════════════════════════════════════ */
+.crit-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--crit-bg);
+  border: 1px solid var(--crit-border);
+  border-radius: var(--r3);
+  margin-bottom: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.crit-ribbon::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--crit);
+  border-radius: var(--r3) 0 0 var(--r3);
+}
+
+.crit-ribbon-icon {
+  width: 36px; height: 36px;
+  background: var(--crit);
+  border-radius: var(--r2);
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.crit-ribbon-body { flex: 1; }
+.crit-ribbon-title { font-size: 13px; font-weight: 700; color: var(--crit); }
+.crit-ribbon-text  { font-size: 12px; color: var(--t3); margin-top: 1px; }
+
+/* ══════════════════════════════════════════
+   INFO BANNER (no data)
+══════════════════════════════════════════ */
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--info-bg);
+  border: 1px solid var(--info-border);
+  border-radius: var(--r3);
+  margin-bottom: 18px;
+  font-size: 13px;
+  color: var(--info);
+}
+
+.info-banner i { font-size: 16px; flex-shrink: 0; }
+.info-banner strong { font-weight: 600; }
+.info-banner .ib-close { margin-left: auto; background:none; border:none; cursor:pointer; color:var(--info); font-size:14px; opacity:.6; }
+.info-banner .ib-close:hover { opacity:1; }
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 32px;
+  border-radius: var(--r2);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  outline: none;
+  text-decoration: none;
+}
+
+.btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.btn i { font-size: 13px; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+.btn-primary {
+  background: var(--brand);
+  color: white;
+  border-color: var(--brand);
+}
+.btn-primary:hover { background: var(--brand-dark); border-color: var(--brand-dark); box-shadow: 0 2px 8px rgba(37,99,235,.3); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--t2);
+  border-color: var(--border-2);
+}
+.btn-ghost:hover { background: var(--surface-2); border-color: var(--border-2); color: var(--t1); }
+
+.btn-danger {
+  background: var(--crit);
+  color: white;
+  border-color: var(--crit);
+}
+.btn-danger:hover { background: #B91C1C; box-shadow: 0 2px 8px rgba(220,38,38,.3); }
+
+.btn-success {
+  background: var(--ok);
+  color: white;
+  border-color: var(--ok);
+}
+.btn-success:hover { background: #047857; box-shadow: 0 2px 8px rgba(5,150,105,.3); }
+
+.btn-sm { height: 27px; padding: 0 10px; font-size: 12px; }
+.btn-lg { height: 38px; padding: 0 20px; font-size: 14px; font-weight: 600; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ══════════════════════════════════════════
+   TOOLBAR
+══════════════════════════════════════════ */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.toolbar-l { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; }
+.toolbar-r { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* Search */
+.srch {
+  position: relative;
+  min-width: 240px;
+  max-width: 340px;
+}
+
+.srch i.si {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--t4);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.srch input {
+  width: 100%;
+  height: 32px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 0 32px 0 32px;
+  font-size: 13px;
+  font-family: var(--sans);
+  color: var(--t1);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.srch input:focus {
+  background: var(--surface);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.srch input::placeholder { color: var(--t4); }
+
+.srch-clear {
+  position: absolute;
+  right: 8px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer; color: var(--t4);
+  font-size: 12px; display: none;
+  padding: 2px; border-radius: 2px;
+}
+.srch-clear:hover { color: var(--t1); }
+
+/* Select */
+.flt-sel {
+  height: 32px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 0 28px 0 10px;
+  font-size: 12px;
+  font-family: var(--sans);
+  color: var(--t2);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  min-width: 130px;
+  max-width: 190px;
+  transition: border-color 0.15s;
+}
+
+.flt-sel:focus { border-color: var(--brand); background-color: var(--surface); outline: none; }
+.flt-sel.active { border-color: var(--brand); background-color: var(--brand-light); color: var(--brand); font-weight: 600; }
+
+.rec-count {
+  font-size: 12px;
+  color: var(--t4);
+  white-space: nowrap;
+  font-family: var(--mono);
+}
+
+/* ══════════════════════════════════════════
+   FILTER PANEL
+══════════════════════════════════════════ */
+.flt-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r3);
+  box-shadow: var(--s2);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  display: none;
+  animation: secIn 0.2s ease;
+}
+
+.flt-panel.open { display: block; }
+
+.flt-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.flt-panel-ft {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Active filter pills */
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 10px;
+  background: var(--brand-light);
+  border: 1px solid var(--brand-mid);
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--brand);
+}
+
+.filter-pill button {
+  background: none; border: none;
+  cursor: pointer; color: var(--brand);
+  font-size: 12px; padding: 0; margin-left: 2px;
+  opacity: 0.6; line-height: 1;
+}
+
+.filter-pill button:hover { opacity: 1; }
+
+/* ══════════════════════════════════════════
+   TABLE
+══════════════════════════════════════════ */
+.tbl-wrap { overflow-x: auto; }
+
+table.dt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.dt thead th {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-2);
+  padding: 9px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--t4);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s, background 0.12s;
+}
+
+.dt thead th i { margin-left: 3px; font-size: 9px; opacity: 0.5; }
+.dt thead th:hover { color: var(--t2); background: var(--surface-3); }
+.dt thead th:hover i { opacity: 1; }
+.dt thead th.s-asc, .dt thead th.s-desc { color: var(--brand); background: var(--brand-light); }
+.dt thead th.s-asc i, .dt thead th.s-desc i { opacity: 1; color: var(--brand); }
+
+.dt tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.dt tbody tr:last-child { border-bottom: none; }
+.dt tbody tr:hover { background: #F8FAFF; }
+.dt tbody tr.r-crit { background: #FEF9F9; }
+.dt tbody tr.r-crit:hover { background: var(--crit-bg); }
+.dt tbody tr.r-warn { background: #FEFDF5; }
+.dt tbody tr.r-warn:hover { background: var(--warn-bg); }
+
+.dt td {
+  padding: 10px 14px;
+  color: var(--t2);
+  vertical-align: middle;
+}
+
+.dt td.mono { font-family: var(--mono); font-size: 12px; }
+.dt td.tr { text-align: right; }
+.dt td.tc { text-align: center; }
+
+.dt td strong { color: var(--t1); font-weight: 600; }
+
+.row-act {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.ia {
+  width: 27px; height: 27px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--r1);
+  background: var(--surface);
+  color: var(--t4);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.ia:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+
+/* ══════════════════════════════════════════
+   BADGES
+══════════════════════════════════════════ */
+.bdg {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--r1);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  letter-spacing: 0.02em;
+}
+
+.bdg i { font-size: 10px; }
+.bdg-ok   { background:var(--ok-bg);   color:var(--ok);   border-color:var(--ok-border); }
+.bdg-warn { background:var(--warn-bg); color:var(--warn); border-color:var(--warn-border); }
+.bdg-crit { background:var(--crit-bg); color:var(--crit); border-color:var(--crit-border); }
+.bdg-info { background:var(--info-bg); color:var(--info); border-color:var(--info-border); }
+.bdg-neu  { background:var(--surface-2); color:var(--t3); border-color:var(--border); }
+
+/* ══════════════════════════════════════════
+   PAGINATION
+══════════════════════════════════════════ */
+.pag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pag-info { font-size: 12px; color: var(--t4); font-family: var(--mono); }
+
+.pag-ctrl { display: flex; align-items: center; gap: 3px; }
+
+.pg {
+  min-width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r1);
+  background: var(--surface);
+  font-size: 12px;
+  font-family: var(--mono);
+  color: var(--t3);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.pg:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
+.pg.on  { background: var(--brand); color: white; border-color: var(--brand); font-weight: 600; }
+.pg:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.pag-sz {
+  height: 28px;
+  font-size: 11px;
+  font-family: var(--mono);
+  border: 1px solid var(--border);
+  border-radius: var(--r1);
+  padding: 0 20px 0 8px;
+  background: var(--surface);
+  color: var(--t3);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%239CA3AF' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+}
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+.mo-wrap {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.mo-wrap.open { opacity: 1; pointer-events: all; }
+
+.mo {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r4);
+  box-shadow: var(--s4);
+  width: 100%;
+  max-width: 520px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-16px) scale(0.97);
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+.mo-wrap.open .mo { transform: translateY(0) scale(1); }
+.mo.lg { max-width: 800px; }
+.mo.xl { max-width: 1040px; }
+
+.mo-hd {
+  padding: 18px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.mo-title { font-size: 15px; font-weight: 700; color: var(--t1); letter-spacing: -0.02em; }
+.mo-sub   { font-size: 12px; color: var(--t3); margin-top: 2px; }
+
+.mo-x {
+  background: none; border: none;
+  cursor: pointer; color: var(--t4);
+  font-size: 18px; padding: 2px;
+  border-radius: var(--r1); line-height: 1;
+  transition: all 0.12s; flex-shrink: 0;
+}
+
+.mo-x:hover { color: var(--t1); background: var(--surface-2); }
+
+.mo-bd { padding: 20px; overflow-y: auto; flex: 1; }
+
+.mo-ft {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  background: var(--surface-2);
+  border-radius: 0 0 var(--r4) var(--r4);
+}
+
+/* ══════════════════════════════════════════
+   DRAWER
+══════════════════════════════════════════ */
+.drw-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.drw-bg.open { opacity: 1; pointer-events: all; }
+
+.drw {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 440px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: var(--s4);
+  z-index: 401;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+.drw-bg.open .drw { transform: translateX(0); }
+
+.drw-hd {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  background: var(--surface-2);
+}
+
+.drw-title { font-size: 15px; font-weight: 700; color: var(--t1); }
+.drw-sub   { font-size: 11px; color: var(--t4); margin-top: 2px; font-family: var(--mono); }
+.drw-x     { background:none; border:none; cursor:pointer; font-size:18px; color:var(--t4); line-height:1; padding:2px; border-radius:var(--r1); transition:all .12s; }
+.drw-x:hover { color:var(--t1); background:var(--border); }
+
+.drw-bd    { padding: 20px; overflow-y: auto; flex: 1; }
+
+.drow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.drow:last-child { border-bottom: none; }
+.drow-lbl { font-size: 12px; color: var(--t3); font-weight: 500; flex-shrink: 0; min-width: 130px; }
+.drow-val { font-size: 13px; color: var(--t1); font-weight: 500; text-align: right; }
+.drow-val.mono { font-family: var(--mono); font-size: 12px; }
+
+.dg-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--t4);
+  padding: 14px 0 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+/* Progress */
+.prog { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 99px; transition: width 0.7s ease; }
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+#toasts {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  pointer-events: none;
+  max-width: 340px;
+}
+
+.toast {
+  pointer-events: all;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--t1);
+  border-radius: var(--r3);
+  box-shadow: var(--s4);
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  animation: toastIn 0.25s ease;
+  cursor: pointer;
+  min-width: 260px;
+}
+
+@keyframes toastIn {
+  from { opacity:0; transform: translateX(20px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+
+.t-ok   { background: #064E3B; }
+.t-info { background: #1E3A8A; }
+.t-warn { background: #78350F; }
+.t-err  { background: #7F1D1D; }
+
+.toast-ico { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.t-ok   .toast-ico { color: #6EE7B7; }
+.t-info .toast-ico { color: #93C5FD; }
+.t-warn .toast-ico { color: #FCD34D; }
+.t-err  .toast-ico { color: #FCA5A5; }
+
+.toast-bd { flex: 1; }
+.toast-title { font-weight: 600; color: white; font-size: 13px; margin-bottom: 1px; }
+.toast-msg   { font-size: 12px; opacity: 0.7; line-height: 1.4; }
+
+/* ══════════════════════════════════════════
+   LOADING
+══════════════════════════════════════════ */
+#ldr {
+  position: fixed; inset: 0;
+  background: rgba(247,248,250,0.9);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ldr-ring {
+  width: 40px; height: 40px;
+  border: 3px solid var(--border-2);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ldr-txt { font-size: 13px; color: var(--t3); font-weight: 500; }
+
+/* ══════════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════════ */
+.empty {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.empty i { font-size: 40px; color: var(--t4); opacity: 0.5; display: block; margin-bottom: 14px; }
+.empty h3 { font-size: 15px; font-weight: 700; color: var(--t2); margin-bottom: 6px; }
+.empty p  { font-size: 13px; color: var(--t4); max-width: 300px; margin: 0 auto 18px; }
+
+/* ══════════════════════════════════════════
+   FORMS
+══════════════════════════════════════════ */
+.fg { margin-bottom: 16px; }
+.fl { display: block; font-size: 12px; font-weight: 600; color: var(--t2); margin-bottom: 5px; }
+.fc {
+  width: 100%; height: 34px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r2);
+  padding: 0 10px;
+  font-size: 13px; font-family: var(--sans);
+  color: var(--t1); outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.fc:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+
+.fs {
+  width: 100%; height: 34px;
+  padding: 0 28px 0 10px;
+  font-size: 13px; font-family: var(--sans);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r2);
+  background: var(--surface);
+  color: var(--t1); outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239CA3AF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color 0.15s;
+}
+
+.fs:focus { border-color: var(--brand); outline: none; }
+.fh { font-size: 11px; color: var(--t4); margin-top: 4px; }
+
+/* ══════════════════════════════════════════
+   IMPORT ZONE
+══════════════════════════════════════════ */
+.imp-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+@media (max-width:900px) { .imp-grid { grid-template-columns: 1fr; } }
+
+.imp-card {
+  background: var(--surface);
+  border: 2px dashed var(--border-2);
+  border-radius: var(--r4);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.imp-card:hover:not(.disabled) {
+  border-color: var(--brand);
+  background: var(--brand-light);
+}
+
+.imp-card.loaded {
+  border-style: solid;
+  border-color: var(--ok);
+  background: var(--ok-bg);
+  cursor: default;
+}
+
+.imp-card.disabled { cursor: not-allowed; opacity: 0.55; }
+.imp-card.drag-ov  { border-color: var(--brand); background: var(--brand-light); transform: scale(1.02); }
+
+.imp-ico { font-size: 38px; margin-bottom: 12px; display: block; }
+.imp-ttl { font-size: 14px; font-weight: 700; margin-bottom: 4px; color: var(--t1); }
+.imp-sub { font-size: 12px; color: var(--t3); line-height: 1.5; }
+
+/* ══════════════════════════════════════════
+   SETTINGS ROWS
+══════════════════════════════════════════ */
+.cfg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+.cfg-row:last-child { border-bottom: none; }
+.cfg-lbl  { font-size: 13px; font-weight: 600; color: var(--t1); margin-bottom: 2px; }
+.cfg-hint { font-size: 12px; color: var(--t3); }
+
+/* ══════════════════════════════════════════
+   MATRIX KPI MINI
+══════════════════════════════════════════ */
+.mat-kpis {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.mat-kpi {
+  text-align: center;
+  min-width: 72px;
+}
+
+.mat-kpi-val {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.mat-kpi-lbl {
+  font-size: 11px;
+  color: var(--t4);
+}
+
+/* ══════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════ */
+.g2  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.mb14 { margin-bottom: 14px; }
+.mb20 { margin-bottom: 20px; }
+.mb4  { margin-bottom: 4px; }
+.sep  { height: 1px; background: var(--border); margin: 16px 0; }
+.tc   { text-align: center; }
+.tr   { text-align: right; }
+.mono { font-family: var(--mono); }
+.t3   { color: var(--t3); }
+.t4   { color: var(--t4); }
+.fw6  { font-weight: 600; }
+.fw7  { font-weight: 700; }
+.fs11 { font-size: 11px; }
+.fs12 { font-size: 12px; }
+.fs13 { font-size: 13px; }
+.w100 { width: 100%; }
+
+@media (max-width:768px) { .g2,.g3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ══ LOADING ══ -->
+<div id="ldr" style="display:none">
+  <div class="ldr-ring"></div>
+  <div class="ldr-txt" id="ldrTxt">Processando dados...</div>
+</div>
+
+<!-- ══ TOASTS ══ -->
+<div id="toasts"></div>
+
+<!-- ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ -->
+<header id="hdr">
+  <div class="hdr-brand">
+    <div class="hdr-logo">PCM</div>
+    <span class="hdr-name">PCM Intelligence</span>
+    <div class="hdr-sep"></div>
+    <span class="hdr-module" id="hdrMod">Dashboard</span>
+  </div>
+  <div class="hdr-right">
+    <span class="hdr-pill" id="hdrStatus" style="cursor:default">
+      <span class="dot-live" style="background:#6B7280;box-shadow:none;animation:none"></span>
+      <span id="hdrStatusTxt">Sem dados</span>
+    </span>
+    <button class="hdr-pill" id="btnHdrImport"><i class="bi bi-cloud-upload"></i> Importar</button>
+    <button class="hdr-pill" id="btnHdrExport"><i class="bi bi-download"></i> Exportar</button>
+    <button class="hdr-pill danger" id="btnHdrCrit" style="display:none">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span id="hdrCritNum">0</span> críticos
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ -->
+<nav id="nav" role="navigation">
+  <div class="nav-group">
+    <button class="nb active" data-t="s-dash"><i class="bi bi-speedometer2"></i> Dashboard</button>
+    <button class="nb" data-t="s-mat"><i class="bi bi-table"></i> Materiais</button>
+    <button class="nb" data-t="s-crit"><i class="bi bi-exclamation-triangle"></i> Críticos
+      <span class="nb-badge crit" id="navBadge" style="display:none">0</span>
+    </button>
+  </div>
+  <div class="nav-group">
+    <button class="nb" data-t="s-area"><i class="bi bi-building"></i> Por Área</button>
+    <button class="nb" data-t="s-setor"><i class="bi bi-diagram-3"></i> Por Setor</button>
+    <button class="nb" data-t="s-matriz"><i class="bi bi-grid-3x3"></i> Matriz Máq.×Mat.</button>
+  </div>
+  <div class="nav-group">
+    <button class="nb" data-t="s-rel"><i class="bi bi-file-earmark-spreadsheet"></i> Relatórios</button>
+  </div>
+  <div class="nav-group nav-group-right">
+    <button class="nb" data-t="s-imp"><i class="bi bi-cloud-upload"></i> Importar</button>
+    <button class="nb" data-t="s-cfg"><i class="bi bi-sliders"></i> Config.</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+   MAIN
+══════════════════════════════════════ -->
+<main id="main">
+
+<!-- ════════ SECTION: DASHBOARD ════════ -->
+<section id="s-dash" class="sec active">
+
+  <div class="info-banner" id="noBanner">
+    <i class="bi bi-info-circle-fill"></i>
+    <span>Nenhuma planilha carregada. Acesse <strong>Importar</strong> para iniciar.</span>
+    <button class="ib-close" onclick="this.closest('.info-banner').style.display='none'">✕</button>
+  </div>
+
+  <div id="dashMain" style="display:none">
+
+    <!-- Ribbon críticos -->
+    <div class="crit-ribbon" id="critRibbon" style="display:none">
+      <div class="crit-ribbon-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+      <div class="crit-ribbon-body">
+        <div class="crit-ribbon-title" id="critRibbonTitle">Materiais Críticos</div>
+        <div class="crit-ribbon-text"  id="critRibbonText">—</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="navTo('s-crit')">Ver Críticos</button>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="kpi-row" id="kpiRow">
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--brand)"></div>
+        <div class="kpi-header">
+          <div class="kpi-label">Total Registros</div>
+          <div class="kpi-ico ci-blue"><i class="bi bi-database"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-total">—</div>
+        <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-total" style="background:var(--brand)"></div></div>
+        <div class="kpi-foot">Linhas processadas</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:#0891B2"></div>
+        <div class="kpi-header">
+          <div class="kpi-label">Mat. Únicos</div>
+          <div class="kpi-ico" style="background:#ECFEFF;color:#0891B2"><i class="bi bi-box-seam"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-mat">—</div>
+        <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-mat" style="background:#0891B2"></div></div>
+        <div class="kpi-foot">Códigos distintos</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--ok)"></div>
+        <div class="kpi-header">
+          <div class="kpi-label">Disponíveis</div>
+          <div class="kpi-ico ci-green"><i class="bi bi-check-circle"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-disp">—</div>
+        <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-disp" style="background:var(--ok)"></div></div>
+        <div class="kpi-foot">Qtd. &gt; limiar</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--warn)"></div>
+        <div class="kpi-header">
+          <div class="kpi-label">Em Atenção</div>
+          <div class="kpi-ico ci-amber"><i class="bi bi-exclamation-circle"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-atenc">—</div>
+        <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-atenc" style="background:var(--warn)"></div></div>
+        <div class="kpi-foot">Abaixo do ideal</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:var(--crit)"></div>
+        <div class="kpi-header">
+          <div class="kpi-label">Críticos</div>
+          <div class="kpi-ico ci-red"><i class="bi bi-x-circle"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-crit">—</div>
+        <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-crit" style="background:var(--crit)"></div></div>
+        <div class="kpi-foot">Risco iminente</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-accent" style="background:#7C3AED"></div>
+        <div class="kpi-header">
+          <div class="kpi-label">Máq. Críticas</div>
+          <div class="kpi-ico" style="background:#EDE9FE;color:#7C3AED"><i class="bi bi-gear"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-maq">—</div>
+        <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-maq" style="background:#7C3AED"></div></div>
+        <div class="kpi-foot">Equipamentos afetados</div>
+      </div>
+    </div>
+
+    <!-- Gauge row -->
+    <div class="gauge-grid mb20">
+      <!-- Stacked bar: status distribution -->
+      <div class="gauge-card" style="grid-column: span 2">
+        <div class="gauge-head">
+          <div class="gauge-label"><i class="bi bi-bar-chart-steps" style="color:var(--brand);margin-right:6px"></i>Distribuição de Status</div>
+          <div class="gauge-val" id="gTotalLabel">0 itens</div>
+        </div>
+        <div class="hbar-wrap">
+          <div class="hbar-seg hbar-ok"   id="hbOk"   style="width:0%"></div>
+          <div class="hbar-seg hbar-warn" id="hbWarn" style="width:0%"></div>
+          <div class="hbar-seg hbar-crit" id="hbCrit" style="width:0%"></div>
+        </div>
+        <div class="hbar-legend">
+          <div class="hbar-legend-item">
+            <div class="hbar-swatch" style="background:var(--ok)"></div>
+            Disponível <span class="hbar-count" id="hbOkN">0</span>
+          </div>
+          <div class="hbar-legend-item">
+            <div class="hbar-swatch" style="background:var(--warn)"></div>
+            Atenção <span class="hbar-count" id="hbWarnN">0</span>
+          </div>
+          <div class="hbar-legend-item">
+            <div class="hbar-swatch" style="background:var(--crit)"></div>
+            Crítico <span class="hbar-count" id="hbCritN">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top areas mini ranking -->
+      <div class="gauge-card">
+        <div class="gauge-head">
+          <div class="gauge-label"><i class="bi bi-building" style="color:var(--brand);margin-right:6px"></i>Top Áreas</div>
+          <div class="gauge-val">por volume</div>
+        </div>
+        <div class="rank-list" id="rankAreas"></div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-2col mb14">
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-title">
+            <div class="card-icon ci-blue"><i class="bi bi-bar-chart-line"></i></div>
+            Volume por Área
+          </div>
+          <span class="fs11 t4 mono">TOP 15</span>
+        </div>
+        <div class="card-bd" style="padding:14px 16px">
+          <div style="position:relative;height:220px"><canvas id="cArea"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-title">
+            <div class="card-icon ci-slate"><i class="bi bi-diagram-3"></i></div>
+            Top Setores
+          </div>
+        </div>
+        <div class="card-bd" style="padding:14px 16px">
+          <div class="rank-list" id="rankSetores" style="max-height:220px;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /dashMain -->
+</section>
+
+<!-- ════════ SECTION: MATERIAIS ════════ -->
+<section id="s-mat" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Tabela de Materiais</div>
+      <div class="pg-sub">Todos os registros com filtros avançados e exportação</div>
+    </div>
+    <div class="pg-actions">
+      <button class="btn btn-ghost btn-sm" id="btnAdvFlt"><i class="bi bi-funnel"></i> Filtros</button>
+      <button class="btn btn-ghost btn-sm" id="btnExpGeral"><i class="bi bi-download"></i> Exportar</button>
+    </div>
+  </div>
+
+  <div class="flt-panel" id="advPanel">
+    <div class="fs12 fw6" style="color:var(--t2);margin-bottom:14px;display:flex;align-items:center;gap:8px">
+      <i class="bi bi-funnel-fill" style="color:var(--brand)"></i> Filtros Avançados
+    </div>
+    <div class="flt-panel-grid">
+      <div class="fg" style="margin:0"><label class="fl">Área</label>
+        <select class="fs" id="fa-area"><option value="">Todas</option></select></div>
+      <div class="fg" style="margin:0"><label class="fl">Setor</label>
+        <select class="fs" id="fa-setor"><option value="">Todos</option></select></div>
+      <div class="fg" style="margin:0"><label class="fl">Status</label>
+        <select class="fs" id="fa-status">
+          <option value="">Todos</option>
+          <option value="disponivel">Disponível</option>
+          <option value="atencao">Em Atenção</option>
+          <option value="critico">Crítico</option>
+        </select></div>
+      <div class="fg" style="margin:0"><label class="fl">Qtd. mín.</label>
+        <input type="number" class="fc" id="fa-qmin" placeholder="0" min="0"></div>
+      <div class="fg" style="margin:0"><label class="fl">Qtd. máx.</label>
+        <input type="number" class="fc" id="fa-qmax" placeholder="sem limite" min="0"></div>
+      <div class="fg" style="margin:0"><label class="fl">Classe</label>
+        <select class="fs" id="fa-classe"><option value="">Todas</option></select></div>
+    </div>
+    <div class="flt-panel-ft">
+      <button class="btn btn-ghost btn-sm" id="btnFltClear"><i class="bi bi-x"></i> Limpar</button>
+      <button class="btn btn-primary btn-sm" id="btnFltApply"><i class="bi bi-check2"></i> Aplicar Filtros</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="toolbar-l">
+        <div class="srch">
+          <i class="bi bi-search si"></i>
+          <input type="text" id="searchMat" placeholder="Buscar código, descrição, área, local...">
+          <button class="srch-clear" id="scMat"><i class="bi bi-x"></i></button>
+        </div>
+        <select class="flt-sel" id="qfArea"><option value="">Área: Todas</option></select>
+        <select class="flt-sel" id="qfStatus">
+          <option value="">Status: Todos</option>
+          <option value="disponivel">✓ Disponível</option>
+          <option value="atencao">⚠ Atenção</option>
+          <option value="critico">✕ Crítico</option>
+        </select>
+      </div>
+      <div class="toolbar-r">
+        <span class="rec-count"><span id="cntMat">0</span> registros</span>
+      </div>
+    </div>
+    <div class="pill-row" id="pillRow" style="display:none"></div>
+    <div class="tbl-wrap">
+      <table class="dt" id="tblMat">
+        <thead><tr>
+          <th data-s="area">Área <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="setor">Setor <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="local">Local de Instalação <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="codigo">Código <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="descricao">Descrição <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="unid" class="tc">Unid.</th>
+          <th data-s="qtd" class="tr">Qtd. <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="status">Status <i class="bi bi-arrow-down-up"></i></th>
+          <th style="width:40px"></th>
+        </tr></thead>
+        <tbody id="tbMat">
+          <tr><td colspan="9"><div class="empty"><i class="bi bi-inbox"></i><h3>Sem dados</h3><p>Importe uma planilha para visualizar os registros.</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pag" id="pagMat">
+      <div class="pag-info" id="pagInfo">—</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="fs12 t4">Por página:</span>
+        <select class="pag-sz" id="ppSel"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option></select>
+        <div class="pag-ctrl" id="pagCtrl"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION: CRÍTICOS ════════ -->
+<section id="s-crit" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title" style="color:var(--crit)"><i class="bi bi-exclamation-triangle-fill" style="font-size:18px;margin-right:6px"></i>Materiais Críticos</div>
+      <div class="pg-sub">Itens abaixo do estoque mínimo — risco de parada de manutenção</div>
+    </div>
+    <div class="pg-actions">
+      <button class="btn btn-danger btn-sm" id="btnExpCrit"><i class="bi bi-download"></i> Exportar Críticos</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title"><div class="card-icon ci-red"><i class="bi bi-exclamation-octagon"></i></div>Lista de Criticidade</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="srch" style="min-width:180px">
+          <i class="bi bi-search si"></i>
+          <input type="text" id="searchCrit" placeholder="Buscar críticos...">
+        </div>
+        <select class="flt-sel" id="qfCritArea"><option value="">Área: Todas</option></select>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="dt">
+        <thead><tr>
+          <th>Área</th><th>Setor</th><th>Local de Instalação</th>
+          <th>Código</th><th>Descrição</th>
+          <th class="tc">Qtd.</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody id="tbCrit"></tbody>
+      </table>
+    </div>
+    <div class="card-ft" id="critFt">—</div>
+  </div>
+</section>
+
+<!-- ════════ SECTION: POR ÁREA ════════ -->
+<section id="s-area" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Análise por Área</div>
+      <div class="pg-sub">Clique em uma barra para ver o detalhe daquela área</div>
+    </div>
+    <div class="pg-actions">
+      <select class="flt-sel" id="areaMetric">
+        <option value="total">Total de registros</option>
+        <option value="critico">Apenas Críticos</option>
+        <option value="disponivel">Apenas Disponíveis</option>
+      </select>
+    </div>
+  </div>
+  <div class="card mb14">
+    <div class="card-bd" style="padding:16px">
+      <div style="position:relative;height:400px"><canvas id="cAreaFull"></canvas></div>
+    </div>
+  </div>
+  <div class="card" id="areaDetail" style="display:none">
+    <div class="card-hd">
+      <div class="card-title"><div class="card-icon ci-blue"><i class="bi bi-table"></i></div>Detalhe: <span id="areaDetailName">—</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('areaDetail').style.display='none'">Fechar</button>
+    </div>
+    <div class="tbl-wrap">
+      <table class="dt">
+        <thead><tr><th>Setor</th><th>Local</th><th>Código</th><th>Descrição</th><th class="tr">Qtd</th><th>Status</th></tr></thead>
+        <tbody id="tbAreaDetail"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION: POR SETOR ════════ -->
+<section id="s-setor" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Análise por Setor</div>
+      <div class="pg-sub">Distribuição operacional por setor de manutenção</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-bd" style="padding:16px">
+      <div style="position:relative;height:420px"><canvas id="cSetorFull"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION: MATRIZ ════════ -->
+<section id="s-matriz" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Matriz Máquina × Material</div>
+      <div class="pg-sub">Selecione um equipamento para ver todos os materiais e status</div>
+    </div>
+  </div>
+  <div class="card mb14">
+    <div class="card-bd" style="padding:16px 18px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:640px">
+        <div class="fg" style="margin:0">
+          <label class="fl">Local de Instalação / Máquina</label>
+          <select class="fs" id="selMaq"><option value="">Selecione um equipamento...</option></select>
+        </div>
+        <div class="fg" style="margin:0">
+          <label class="fl">Filtrar por status</label>
+          <select class="fs" id="matFltSt">
+            <option value="">Todos</option>
+            <option value="critico">Crítico</option>
+            <option value="atencao">Atenção</option>
+            <option value="disponivel">Disponível</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="matrizRes" style="display:none">
+    <div class="card mb14" style="background:var(--surface-2)">
+      <div class="card-bd" style="padding:14px 18px">
+        <div class="mat-kpis" id="matKpis"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title"><div class="card-icon ci-slate"><i class="bi bi-gear-wide-connected"></i></div><span id="matTitle">—</span></div>
+        <button class="btn btn-ghost btn-sm" id="btnExpMatriz"><i class="bi bi-download"></i> Exportar</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="dt">
+          <thead><tr><th>Código</th><th>Descrição</th><th class="tc">Unid.</th><th class="tr">Qtd.</th><th>Status</th><th></th></tr></thead>
+          <tbody id="tbMatriz"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION: RELATÓRIOS ════════ -->
+<section id="s-rel" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Relatórios e Exportação</div>
+      <div class="pg-sub">Gere arquivos Excel com os dados processados e filtrados</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title"><div class="card-icon ci-green"><i class="bi bi-file-earmark-excel"></i></div>Base Completa</div></div>
+      <div class="card-bd">
+        <p class="fs13 t3 mb14">Exporta todos os registros com status calculado, incluindo área, setor, local, código, descrição e quantidade.</p>
+        <div class="fg">
+          <label class="fl">Filtrar por status (opcional)</label>
+          <select class="fs" id="relFltSt"><option value="">Todos</option><option value="disponivel">Disponível</option><option value="atencao">Em Atenção</option><option value="critico">Crítico</option></select>
+        </div>
+        <button class="btn btn-success btn-full" id="btnExpFull" disabled><i class="bi bi-download"></i> Baixar Excel</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title"><div class="card-icon ci-red"><i class="bi bi-exclamation-triangle"></i></div>Relatório Críticos</div></div>
+      <div class="card-bd">
+        <p class="fs13 t3 mb14">Exporta apenas os materiais críticos para requisições de compra e prevenção de paradas.</p>
+        <div class="fg">
+          <label class="fl">Agrupamento</label>
+          <select class="fs" id="relGrp"><option value="none">Sem agrupamento</option><option value="area">Por Área</option><option value="setor">Por Setor</option></select>
+        </div>
+        <button class="btn btn-danger btn-full" id="btnExpCritRel" disabled><i class="bi bi-download"></i> Baixar Críticos</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION: IMPORTAR ════════ -->
+<section id="s-imp" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Importar Dados</div>
+      <div class="pg-sub">Carregue planilhas Excel para alimentar o sistema de análise</div>
+    </div>
+  </div>
+
+  <div class="imp-grid mb20">
+    <div class="imp-card" id="dropZone">
+      <div id="dropPr">
+        <span class="imp-ico bi bi-file-earmark-excel" style="color:#217346"></span>
+        <div class="imp-ttl">Base Trab</div>
+        <div class="imp-sub">Arraste o arquivo .xlsx aqui<br>ou clique para selecionar</div>
+        <div style="margin-top:12px"><span class="bdg bdg-info">Aba: Base Trab</span></div>
+      </div>
+      <div id="dropHUD" style="display:none">
+        <span class="imp-ico bi bi-check-circle-fill" style="color:var(--ok)"></span>
+        <div class="imp-ttl" style="color:var(--ok)">Carregado com sucesso</div>
+        <div class="imp-sub" id="dropFN" style="word-break:break-all;margin:6px 0 14px"></div>
+        <button class="btn btn-danger btn-sm" id="btnClear"><i class="bi bi-trash"></i> Remover</button>
+      </div>
+      <input type="file" id="fileIn" accept=".xlsx,.xls" style="display:none">
+    </div>
+    <div class="imp-card disabled">
+      <span class="imp-ico bi bi-person-rolodex" style="color:var(--brand)"></span>
+      <div class="imp-ttl">Planilha SAP</div>
+      <div class="imp-sub">Materiais solicitados/comprados no SAP</div>
+      <div style="margin-top:12px"><span class="bdg bdg-neu">Em breve</span></div>
+    </div>
+    <div class="imp-card disabled">
+      <span class="imp-ico bi bi-boxes" style="color:var(--ok)"></span>
+      <div class="imp-ttl">Almoxarifado</div>
+      <div class="imp-sub">Estoque físico disponível em estoque</div>
+      <div style="margin-top:12px"><span class="bdg bdg-neu">Em breve</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-title"><div class="card-icon ci-blue"><i class="bi bi-info-circle"></i></div>Como o sistema funciona</div></div>
+    <div class="card-bd">
+      <div class="g3 mb14">
+        <div style="padding:14px;background:var(--surface-2);border-radius:var(--r3);border-left:3px solid var(--brand)">
+          <div class="fs11 fw6 mono" style="color:var(--brand);letter-spacing:.08em;margin-bottom:8px">01 · BASE DE MANUTENÇÃO</div>
+          <div class="fs13 t3">Equipamentos, materiais necessários, área, setor, local de instalação (coluna F) e quantidades.</div>
+        </div>
+        <div style="padding:14px;background:var(--surface-2);border-radius:var(--r3);border-left:3px solid #0284C7">
+          <div class="fs11 fw6 mono" style="color:#0284C7;letter-spacing:.08em;margin-bottom:8px">02 · PLANILHA SAP</div>
+          <div class="fs13 t3">Materiais já solicitados ou comprados para atender as manutenções planejadas.</div>
+        </div>
+        <div style="padding:14px;background:var(--surface-2);border-radius:var(--r3);border-left:3px solid var(--ok)">
+          <div class="fs11 fw6 mono" style="color:var(--ok);letter-spacing:.08em;margin-bottom:8px">03 · ALMOXARIFADO</div>
+          <div class="fs13 t3">Materiais fisicamente disponíveis em estoque para uso imediato.</div>
+        </div>
+      </div>
+      <div style="padding:14px;background:var(--warn-bg);border:1px solid var(--warn-border);border-radius:var(--r3)">
+        <div class="fs12 fw6" style="color:var(--warn);margin-bottom:8px">Critérios de Classificação (configuráveis em Config.)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <span class="bdg bdg-ok"><i class="bi bi-check-circle-fill"></i> Disponível — Qtd. acima do limiar de atenção</span>
+          <span class="bdg bdg-warn"><i class="bi bi-exclamation-circle-fill"></i> Atenção — Entre os limiares</span>
+          <span class="bdg bdg-crit"><i class="bi bi-x-circle-fill"></i> Crítico — Abaixo do limiar crítico</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION: CONFIG ════════ -->
+<section id="s-cfg" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Configurações</div>
+      <div class="pg-sub">Ajuste os parâmetros de classificação e preferências do sistema</div>
+    </div>
+  </div>
+  <div class="card" style="max-width:540px">
+    <div class="card-hd"><div class="card-title"><div class="card-icon ci-slate"><i class="bi bi-sliders"></i></div>Parâmetros de Classificação</div></div>
+    <div class="cfg-row">
+      <div><div class="cfg-lbl">Limiar Crítico (qtd. &lt; X)</div><div class="cfg-hint">Abaixo deste valor o material é Crítico</div></div>
+      <input type="number" class="fc" id="cfgCrit" value="5" min="1" style="width:80px;text-align:center">
+    </div>
+    <div class="cfg-row">
+      <div><div class="cfg-lbl">Limiar Atenção (qtd. &lt; X)</div><div class="cfg-hint">Abaixo deste valor o material é Atenção</div></div>
+      <input type="number" class="fc" id="cfgAtenc" value="10" min="1" style="width:80px;text-align:center">
+    </div>
+    <div class="cfg-row">
+      <div><div class="cfg-lbl">Itens por página (tabela)</div><div class="cfg-hint">Quantidade de registros por página</div></div>
+      <select class="flt-sel" id="cfgPP" style="min-width:80px"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option></select>
+    </div>
+    <div style="padding:14px 20px;display:flex;justify-content:flex-end;gap:8px">
+      <button class="btn btn-ghost btn-sm" onclick="resetCfg()">Restaurar padrão</button>
+      <button class="btn btn-primary btn-sm" onclick="saveCfg()"><i class="bi bi-check2"></i> Salvar e Reaplicar</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════════════════════════════════
+   DRAWER — Detail
+══════════════════════════════════════ -->
+<div class="drw-bg" id="drwBg">
+  <div class="drw">
+    <div class="drw-hd">
+      <div>
+        <div class="drw-title" id="drwTitle">Detalhe do Material</div>
+        <div class="drw-sub" id="drwSub">—</div>
+      </div>
+      <button class="drw-x" onclick="closeDrw()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="drw-bd" id="drwBd"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+   MODAL — Export
+══════════════════════════════════════ -->
+<div class="mo-wrap" id="moExport">
+  <div class="mo">
+    <div class="mo-hd">
+      <div><div class="mo-title">Exportar Dados</div><div class="mo-sub">Selecione o conjunto de dados e nome do arquivo</div></div>
+      <button class="mo-x" onclick="closeMo('moExport')"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="mo-bd">
+      <div class="fg">
+        <label class="fl">Dados a exportar</label>
+        <select class="fs" id="expType">
+          <option value="all">Todos os registros</option>
+          <option value="filtered">Registros filtrados (visíveis)</option>
+          <option value="criticos">Apenas Críticos</option>
+          <option value="atencao">Apenas Em Atenção</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="fl">Nome do arquivo</label>
+        <input type="text" class="fc" id="expName" value="PCM_Relatorio">
+        <div class="fh">A data será adicionada automaticamente</div>
+      </div>
+    </div>
+    <div class="mo-ft">
+      <button class="btn btn-ghost" onclick="closeMo('moExport')">Cancelar</button>
+      <button class="btn btn-success" onclick="doExport()"><i class="bi bi-download"></i> Exportar Excel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+   JAVASCRIPT — Full Logic
+════════════════════════════════════════════════ -->
+<script>
+/* ─── IndexedDB ─────────────────────────────── */
+const DB={name:'PCM_v3',store:'d',ver:1,
+  async op(){return new Promise((r,j)=>{const q=indexedDB.open(this.name,this.ver);q.onerror=()=>j(q.error);q.onsuccess=()=>r(q.result);q.onupgradeneeded=e=>{if(!e.target.result.objectStoreNames.contains(this.store))e.target.result.createObjectStore(this.store)};})},
+  async set(k,v){const db=await this.op();return new Promise((r,j)=>{const t=db.transaction(this.store,'readwrite');t.objectStore(this.store).put(v,k).onsuccess=()=>r();t.onerror=()=>j()})},
+  async get(k){const db=await this.op();return new Promise((r,j)=>{const q=db.transaction(this.store,'readonly').objectStore(this.store).get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>j()})},
+  async clear(){const db=await this.op();return new Promise((r,j)=>{const q=db.transaction(this.store,'readwrite').objectStore(this.store).clear();q.onsuccess=()=>r();q.onerror=()=>j()})}
+};
+
+/* ─── Config ─────────────────────────────── */
+let CFG={crit:5,atenc:10,pp:50};
+function loadCFG(){const s=localStorage.getItem('pcm3_cfg');if(s)try{CFG={...CFG,...JSON.parse(s)}}catch(e){}; document.getElementById('cfgCrit').value=CFG.crit;document.getElementById('cfgAtenc').value=CFG.atenc;document.getElementById('cfgPP').value=CFG.pp;S.pp=CFG.pp}
+function saveCfg(){CFG.crit=parseInt(document.getElementById('cfgCrit').value)||5;CFG.atenc=parseInt(document.getElementById('cfgAtenc').value)||10;CFG.pp=parseInt(document.getElementById('cfgPP').value)||50;S.pp=CFG.pp;localStorage.setItem('pcm3_cfg',JSON.stringify(CFG));if(S.raw.length)processData(S.raw);toast('Configurações salvas e aplicadas','ok')}
+function resetCfg(){CFG={crit:5,atenc:10,pp:50};document.getElementById('cfgCrit').value=5;document.getElementById('cfgAtenc').value=10;document.getElementById('cfgPP').value=50;S.pp=50;toast('Configurações restauradas','info')}
+
+/* ─── State ─────────────────────────────── */
+const S={raw:[],data:[],flt:[],pg:1,pp:50,sortC:null,sortD:'asc',charts:{},AF:{},q:''};
+
+/* ─── Nav ─────────────────────────────── */
+const NAV_LABELS={
+  's-dash':'Dashboard','s-mat':'Materiais','s-crit':'Críticos',
+  's-area':'Por Área','s-setor':'Por Setor','s-matriz':'Matriz',
+  's-rel':'Relatórios','s-imp':'Importar','s-cfg':'Configurações'
+};
+
+function navTo(t){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const sec=document.getElementById(t);if(sec)sec.classList.add('active');
+  const btn=document.querySelector(`.nb[data-t="${t}"]`);if(btn)btn.classList.add('active');
+  document.getElementById('hdrMod').textContent=NAV_LABELS[t]||t;
+}
+
+document.querySelectorAll('.nb[data-t]').forEach(b=>b.addEventListener('click',()=>navTo(b.dataset.t)));
+
+// Keyboard arrow nav
+const allNBs=()=>[...document.querySelectorAll('.nb[data-t]')];
+document.getElementById('nav').addEventListener('keydown',e=>{
+  const bs=allNBs(),i=bs.indexOf(document.activeElement);if(i<0)return;
+  if(e.key==='ArrowRight'){e.preventDefault();const n=bs[(i+1)%bs.length];n.focus();n.click()}
+  else if(e.key==='ArrowLeft'){e.preventDefault();const n=bs[(i-1+bs.length)%bs.length];n.focus();n.click()}
+  else if(e.key==='Home'){e.preventDefault();bs[0].focus();bs[0].click()}
+  else if(e.key==='End'){e.preventDefault();bs[bs.length-1].focus();bs[bs.length-1].click()}
+});
+
+// Header buttons
+document.getElementById('btnHdrImport').addEventListener('click',()=>navTo('s-imp'));
+document.getElementById('btnHdrExport').addEventListener('click',()=>openMo('moExport'));
+document.getElementById('btnHdrCrit').addEventListener('click',()=>navTo('s-crit'));
+document.getElementById('btnAdvFlt').addEventListener('click',()=>document.getElementById('advPanel').classList.toggle('open'));
+document.getElementById('btnExpGeral').addEventListener('click',()=>openMo('moExport'));
+
+/* ─── Toast ─────────────────────────────── */
+const TI={ok:'check-circle-fill',info:'info-circle-fill',warn:'exclamation-triangle-fill',err:'x-circle-fill'};
+const TT={ok:'Sucesso',info:'Informação',warn:'Atenção',err:'Erro'};
+function toast(msg,type='info',ms=4500){
+  const c=document.getElementById('toasts'),el=document.createElement('div');
+  el.className=`toast t-${type}`;
+  el.innerHTML=`<i class="bi bi-${TI[type]} toast-ico"></i><div class="toast-bd"><div class="toast-title">${TT[type]}</div><div class="toast-msg">${msg}</div></div>`;
+  el.onclick=()=>el.remove();c.appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .3s';el.style.opacity='0';setTimeout(()=>el.remove(),350)},ms);
+}
+
+/* ─── Loading ─────────────────────────────── */
+const setLdr=(v,t='Processando...')=>{document.getElementById('ldr').style.display=v?'flex':'none';document.getElementById('ldrTxt').textContent=t};
+
+/* ─── Modal ─────────────────────────────── */
+function openMo(id){document.getElementById(id).classList.add('open')}
+function closeMo(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.mo-wrap').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mo-wrap.open').forEach(o=>o.classList.remove('open'));closeDrw()}});
+
+/* ─── Drawer ─────────────────────────────── */
+function openDrw(item){
+  document.getElementById('drwTitle').textContent=item.codigo||'Material';
+  document.getElementById('drwSub').textContent=item.descricao||'';
+  const pct=Math.min((item.qtd/Math.max(CFG.atenc*2,20))*100,100);
+  const barClr=item.status.lvl==='critico'?'var(--crit)':item.status.lvl==='atencao'?'var(--warn)':'var(--ok)';
+  const bdg=`<span class="bdg ${item.status.lvl==='critico'?'bdg-crit':item.status.lvl==='atencao'?'bdg-warn':'bdg-ok'}"><i class="bi bi-${item.status.ico}"></i> ${item.status.txt}</span>`;
+  document.getElementById('drwBd').innerHTML=`
+    <div class="dg-title" style="padding-top:0;margin-bottom:0">Identificação</div>
+    <div class="drow"><span class="drow-lbl">Código</span><span class="drow-val mono">${item.codigo||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Descrição</span><span class="drow-val">${item.descricao||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Classe</span><span class="drow-val">${item.classe||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Unidade</span><span class="drow-val mono">${item.unid||'—'}</span></div>
+    <div class="dg-title">Localização</div>
+    <div class="drow"><span class="drow-lbl">Área</span><span class="drow-val">${item.area||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Setor</span><span class="drow-val">${item.setor||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Local de Instalação</span><span class="drow-val">${item.local||'—'}</span></div>
+    <div class="dg-title">Estoque</div>
+    <div class="drow"><span class="drow-lbl">Quantidade Atual</span><span class="drow-val mono" style="font-size:20px;font-weight:600">${item.qtd}</span></div>
+    <div class="drow"><span class="drow-lbl">Status</span><span class="drow-val">${bdg}</span></div>
+    <div class="drow"><span class="drow-lbl">Limiar Crítico</span><span class="drow-val mono">&lt; ${CFG.crit}</span></div>
+    <div class="drow"><span class="drow-lbl">Limiar Atenção</span><span class="drow-val mono">&lt; ${CFG.atenc}</span></div>
+    <div style="margin-top:14px">
+      <div class="fs12 t4 mb4">Nível de estoque</div>
+      <div class="prog"><div class="prog-fill" id="drwProg" style="width:0%;background:${barClr}"></div></div>
+      <div class="fs11 t4" style="margin-top:4px">${item.qtd} unidades</div>
+    </div>
+  `;
+  document.getElementById('drwBg').classList.add('open');
+  requestAnimationFrame(()=>{ setTimeout(()=>{ const el=document.getElementById('drwProg');if(el)el.style.width=pct+'%';},100); });
+}
+
+function closeDrw(){document.getElementById('drwBg').classList.remove('open')}
+document.getElementById('drwBg').addEventListener('click',e=>{if(e.target===document.getElementById('drwBg'))closeDrw()});
+
+/* ─── File Upload ─────────────────────────────── */
+const dz=document.getElementById('dropZone'),fi=document.getElementById('fileIn');
+dz.addEventListener('click',()=>fi.click());
+fi.addEventListener('change',e=>e.target.files[0]&&processFile(e.target.files[0]));
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-ov')});
+['dragleave','dragend'].forEach(ev=>dz.addEventListener(ev,()=>dz.classList.remove('drag-ov')));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-ov');if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0])});
+document.getElementById('btnClear').addEventListener('click',e=>{e.stopPropagation();if(!confirm('Remover planilha e limpar todos os dados?'))return;DB.clear();localStorage.removeItem('pcm3_file');location.reload()});
+
+function showLoaded(name){
+  document.getElementById('dropPr').style.display='none';
+  document.getElementById('dropHUD').style.display='block';
+  document.getElementById('dropFN').textContent=name;
+  dz.classList.add('loaded');
+  document.getElementById('btnExpFull').disabled=false;
+  document.getElementById('btnExpCritRel').disabled=false;
+  document.getElementById('btnExpCrit').disabled=false;
+  // Update header status
+  const st=document.getElementById('hdrStatus');
+  st.querySelector('span.dot-live').style.background='#34D399';
+  st.querySelector('span.dot-live').style.animation='livePulse 2.5s ease-in-out infinite';
+  st.querySelector('span.dot-live').style.boxShadow='0 0 0 2px rgba(52,211,153,.25)';
+}
+
+function processFile(file){
+  setLdr(true,'Lendo arquivo...');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      setLdr(true,'Analisando estrutura...');
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      let sn=wb.SheetNames.find(n=>n.trim().toLowerCase()==='base trab');
+      if(!sn){sn=wb.SheetNames[0];toast(`Aba "Base Trab" não localizada. Usando: ${sn}`,'warn')}
+      const ws=wb.Sheets[sn];
+      const raw=XLSX.utils.sheet_to_json(ws,{header:1});
+      let hRow=0;
+      for(let i=0;i<Math.min(raw.length,20);i++){
+        const str=(raw[i]||[]).map(c=>String(c).toLowerCase()).join(' ');
+        if(str.includes('código')||str.includes('codigo')||str.includes('quantidade')){hRow=i;break}
+      }
+      const json=XLSX.utils.sheet_to_json(ws,{range:hRow,defval:''});
+      setLdr(true,'Processando registros...');
+      S.raw=json;
+      processData(json);
+      localStorage.setItem('pcm3_file',file.name);
+      showLoaded(file.name);
+      toast(`<strong>${file.name}</strong> — ${S.data.length.toLocaleString('pt-BR')} registros processados`,'ok');
+      navTo('s-dash');
+    }catch(err){
+      console.error(err);
+      toast(err.message||'Erro ao processar planilha','err',8000);
+    }finally{setLdr(false)}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ─── Data Processing ─────────────────────────────── */
+function gV(row,keys){for(const k in row){const ck=k.toLowerCase().trim();if(keys.some(n=>ck.includes(n)))return row[k]}return''}
+function cl(v){if(v==null)return'';const s=String(v).trim();return['undefined','null','-'].includes(s.toLowerCase())?'':s}
+
+function calcSt(qtd){
+  if(qtd>CFG.atenc)return{txt:'Disponível',lvl:'disponivel',bdg:'bdg-ok',  ico:'check-circle-fill'};
+  if(qtd>=CFG.crit) return{txt:'Em Atenção', lvl:'atencao',  bdg:'bdg-warn',ico:'exclamation-circle-fill'};
+  return              {txt:'Crítico',     lvl:'critico',  bdg:'bdg-crit',ico:'x-circle-fill'};
+}
+
+function processData(json){
+  S.data=[];
+  json.forEach((row,ri)=>{
+    // ── Captura os valores pela posição das colunas (header 0-indexed)
+    // Usamos mapeamento por nome E por posição como fallback
+    const keys=Object.keys(row);
+    
+    const area     =cl(gV(row,['área','area']));
+    const setor    =cl(gV(row,['setor']));
+    
+    // Local de instalação — coluna F (índice 5 no header original, mapeado como 6ª coluna)
+    // Tentamos nome primeiro, depois posição
+    let local=cl(gV(row,['descrição do local de instalação','descricao do local de instalacao','local de instalação','local instalacao','local de instalation','functional location','localização funcional','local funcional','local']));
+    if(!local && keys.length>=6) local=cl(row[keys[5]]); // fallback coluna F (índice 5)
+    
+    const codigo   =cl(gV(row,['código material','codigo material','cód. material','cod. material','código','material','cod material']));
+    const descricao=cl(gV(row,['descrição sistema','descricao sistema','descrição do material','descricao do material','texto breve','descrição','descricao']));
+    const unid     =cl(gV(row,['unid','unidade','un.','un']));
+    const qtdRaw   =gV(row,['quantidade','qtd','montante','qty','amount']);
+    const classe   =cl(gV(row,['classe']));
+    
+    if(!codigo&&!descricao)return;
+    if(!area||/^(total|geral|subtotal)/i.test(area.trim()))return;
+    
+    let qtd=parseFloat(String(qtdRaw).replace(',','.'));
+    if(isNaN(qtd))qtd=0;
+    
+    S.data.push({area,setor,local,codigo,descricao,unid,qtd,classe,status:calcSt(qtd)});
+  });
+  S.flt=[...S.data];
+  S.AF={};
+  DB.set('dados',S.data).catch(()=>{});
+  updateAll();
+}
+
+/* ─── Update All ─────────────────────────────── */
+function updateAll(){
+  const has=S.data.length>0;
+  document.getElementById('noBanner').style.display=has?'none':'flex';
+  document.getElementById('dashMain').style.display=has?'block':'none';
+  if(has){
+    document.getElementById('hdrStatusTxt').textContent=`${S.data.length.toLocaleString('pt-BR')} registros`;
+    updateKPIs();
+    buildGauges();
+    buildRankings();
+    buildCharts();
+    fillFilOpts();
+    renderMat();
+    renderCrit();
+    fillMachineSelect();
+  }
+}
+
+/* ─── KPIs ─────────────────────────────── */
+function updateKPIs(){
+  const d=S.data;
+  const total=d.length;
+  const mat=new Set(d.map(x=>x.codigo).filter(Boolean)).size;
+  const disp=d.filter(x=>x.status.lvl==='disponivel').length;
+  const atenc=d.filter(x=>x.status.lvl==='atencao').length;
+  const crit=d.filter(x=>x.status.lvl==='critico').length;
+  const maq=new Set(d.filter(x=>x.status.lvl==='critico').map(x=>x.local).filter(Boolean)).size;
+
+  const nums={total,mat,disp,atenc,crit,maq};
+  const maxes={total,mat:total,disp:total,atenc:total,crit:total,maq:total};
+  
+  Object.entries(nums).forEach(([k,v])=>{
+    animNum(`kv-${k}`,v);
+    // Animate bar
+    const bar=document.getElementById(`kb-${k}`);
+    if(bar){
+      const pct=maxes[k]>0?(v/maxes[k])*100:0;
+      setTimeout(()=>{bar.style.width=pct+'%'},100);
+    }
+  });
+
+  // Crit ribbon
+  if(crit>0){
+    document.getElementById('critRibbon').style.display='flex';
+    document.getElementById('critRibbonTitle').textContent=`${crit} material(is) crítico(s)`;
+    document.getElementById('critRibbonText').textContent=`${maq} equipamento(s) com risco de indisponibilidade para manutenção.`;
+    document.getElementById('navBadge').textContent=crit>99?'99+':crit;
+    document.getElementById('navBadge').style.display='inline-flex';
+    document.getElementById('btnHdrCrit').style.display='flex';
+    document.getElementById('hdrCritNum').textContent=crit;
+  }
+}
+
+function animNum(id,final){
+  const el=document.getElementById(id);if(!el)return;
+  let cur=0;const inc=Math.ceil(final/35)||1;
+  const t=setInterval(()=>{cur=Math.min(cur+inc,final);el.textContent=cur.toLocaleString('pt-BR');if(cur>=final)clearInterval(t)},16);
+}
+
+/* ─── Gauges ─────────────────────────────── */
+function buildGauges(){
+  const d=S.data,n=d.length;
+  const disp=d.filter(x=>x.status.lvl==='disponivel').length;
+  const atenc=d.filter(x=>x.status.lvl==='atencao').length;
+  const crit=d.filter(x=>x.status.lvl==='critico').length;
+  const pD=(disp/n)*100,pA=(atenc/n)*100,pC=(crit/n)*100;
+
+  document.getElementById('gTotalLabel').textContent=`${n.toLocaleString('pt-BR')} itens`;
+  document.getElementById('hbOkN').textContent=disp.toLocaleString('pt-BR');
+  document.getElementById('hbWarnN').textContent=atenc.toLocaleString('pt-BR');
+  document.getElementById('hbCritN').textContent=crit.toLocaleString('pt-BR');
+
+  setTimeout(()=>{
+    const showLabel=(seg,pct,val)=>{
+      seg.style.width=pct+'%';
+      seg.textContent=pct>8?val:'';
+    };
+    showLabel(document.getElementById('hbOk'),pD,disp.toLocaleString('pt-BR'));
+    showLabel(document.getElementById('hbWarn'),pA,atenc.toLocaleString('pt-BR'));
+    showLabel(document.getElementById('hbCrit'),pC,crit.toLocaleString('pt-BR'));
+  },200);
+}
+
+/* ─── Rankings ─────────────────────────────── */
+function buildRankings(){
+  const countBy=(key,n=8)=>{
+    const m={};
+    S.data.forEach(d=>{const v=d[key]?.trim();if(v)m[v]=(m[v]||0)+1});
+    return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n);
+  };
+
+  const areas=countBy('area',8);
+  const setores=countBy('setor',10);
+  const maxA=areas[0]?.[1]||1;
+  const maxS=setores[0]?.[1]||1;
+
+  const makeRank=(items,max,colors)=>items.map((x,i)=>`
+    <div class="rank-item">
+      <div class="rank-label" title="${x[0]}">${x[0]}</div>
+      <div class="rank-track"><div class="rank-fill" style="width:0%;background:${colors?colors[i%colors.length]:'var(--brand)'}" data-w="${(x[1]/max*100).toFixed(1)}"></div></div>
+      <div class="rank-val">${x[1].toLocaleString('pt-BR')}</div>
+    </div>`).join('');
+
+  const blues=['#2563EB','#3B82F6','#60A5FA','#93C5FD','#BFDBFE','#1D4ED8','#1E40AF','#1E3A8A'];
+  document.getElementById('rankAreas').innerHTML=makeRank(areas,maxA,blues);
+  document.getElementById('rankSetores').innerHTML=makeRank(setores,maxS,blues);
+
+  // Animate bars
+  setTimeout(()=>{
+    document.querySelectorAll('.rank-fill[data-w]').forEach(el=>{
+      el.style.transition='width 0.9s cubic-bezier(.4,0,.2,1)';
+      el.style.width=el.dataset.w+'%';
+    });
+  },100);
+}
+
+/* ─── Charts ─────────────────────────────── */
+const CD={
+  color:'#6B7280',
+  plugins:{
+    legend:{display:false},
+    tooltip:{
+      backgroundColor:'#111827',
+      titleColor:'#F9FAFB',
+      bodyColor:'#D1D5DB',
+      borderColor:'#374151',
+      borderWidth:1,
+      padding:10,
+      titleFont:{family:'Figtree',weight:'700',size:13},
+      bodyFont:{family:'JetBrains Mono',size:12}
+    }
+  }
+};
+
+Chart.defaults.color=CD.color;
+function dChart(id){if(S.charts[id]){S.charts[id].destroy();delete S.charts[id]}}
+
+function countBy(key,n=15){
+  const m={};
+  S.data.forEach(d=>{const v=d[key]?.trim();if(v)m[v]=(m[v]||0)+1});
+  return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n);
+}
+
+const BLUES=n=>[...Array(n)].map((_,i)=>`hsl(${217+i*3},${82-i*1.5}%,${48+i*2}%)`);
+
+function buildCharts(){
+  const gOpts={color:'rgba(107,114,128,.08)',drawBorder:false};
+  const tOpts={color:'#9CA3AF',font:{family:'JetBrains Mono',size:10}};
+  const animOpts={duration:800,easing:'easeOutQuart'};
+
+  // Area bar
+  const aD=countBy('area',15);
+  dChart('cArea');
+  S.charts.cArea=new Chart(document.getElementById('cArea').getContext('2d'),{
+    type:'bar',
+    data:{labels:aD.map(x=>x[0]),datasets:[{data:aD.map(x=>x[1]),backgroundColor:BLUES(aD.length),borderRadius:3,borderSkipped:false,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{afterLabel:ctx=>{const a=aD[ctx.dataIndex][0];const c=S.data.filter(x=>x.area===a&&x.status.lvl==='critico').length;return c>0?`⚠ ${c} crítico(s)`:''}}}},
+      scales:{x:{grid:{display:false},ticks:{...tOpts,maxRotation:45}},y:{grid:gOpts,ticks:tOpts,beginAtZero:true}},animation:animOpts}
+  });
+
+  buildFullCharts();
+}
+
+function buildFullCharts(){
+  const metric=document.getElementById('areaMetric')?.value||'total';
+  let src=S.data;
+  if(metric==='critico')   src=S.data.filter(x=>x.status.lvl==='critico');
+  if(metric==='disponivel') src=S.data.filter(x=>x.status.lvl==='disponivel');
+  const m={};src.forEach(d=>{const v=d.area?.trim();if(v)m[v]=(m[v]||0)+1});
+  const aF=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,30);
+
+  const gOpts={color:'rgba(107,114,128,.06)',drawBorder:false};
+  const tOpts={color:'#9CA3AF',font:{family:'JetBrains Mono',size:10}};
+  const animOpts={duration:900,easing:'easeOutQuart'};
+
+  dChart('cAreaFull');
+  S.charts.cAreaFull=new Chart(document.getElementById('cAreaFull').getContext('2d'),{
+    type:'bar',
+    data:{labels:aF.map(x=>x[0]),datasets:[{label:'Registros',data:aF.map(x=>x[1]),backgroundColor:BLUES(aF.length),borderRadius:4,borderSkipped:false,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{...CD.plugins,tooltip:{...CD.plugins.tooltip,callbacks:{afterLabel:ctx=>{const a=aF[ctx.dataIndex][0];const c=S.data.filter(x=>x.area===a&&x.status.lvl==='critico').length;return c>0?`⚠ ${c} crítico(s)`:'';}}}},
+      scales:{x:{grid:{display:false},ticks:{...tOpts,maxRotation:50}},y:{grid:gOpts,ticks:tOpts,beginAtZero:true}},
+      onClick:(ev,els)=>{if(els.length)showAreaDetail(aF[els[0].index][0])},animation:animOpts}
+  });
+
+  const sD=countBy('setor',30);
+  dChart('cSetorFull');
+  S.charts.cSetorFull=new Chart(document.getElementById('cSetorFull').getContext('2d'),{
+    type:'bar',
+    data:{labels:sD.map(x=>x[0]),datasets:[{label:'Registros',data:sD.map(x=>x[1]),backgroundColor:BLUES(sD.length),borderRadius:4,borderSkipped:false,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{...CD.plugins},
+      scales:{x:{grid:{display:false},ticks:{...tOpts,maxRotation:50}},y:{grid:gOpts,ticks:tOpts,beginAtZero:true}},animation:animOpts}
+  });
+}
+
+function showAreaDetail(area){
+  const items=S.data.filter(x=>x.area===area);
+  document.getElementById('areaDetailName').textContent=area;
+  document.getElementById('tbAreaDetail').innerHTML=items.map(r=>`
+    <tr class="${r.status.lvl==='critico'?'r-crit':r.status.lvl==='atencao'?'r-warn':''}">
+      <td>${r.setor}</td><td>${r.local}</td><td class="mono"><strong>${r.codigo}</strong></td>
+      <td>${r.descricao}</td><td class="mono tr"><strong>${r.qtd}</strong></td>
+      <td><span class="bdg ${r.status.bdg}"><i class="bi bi-${r.status.ico}"></i> ${r.status.txt}</span></td>
+    </tr>`).join('');
+  const el=document.getElementById('areaDetail');
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+document.getElementById('areaMetric')?.addEventListener('change',buildFullCharts);
+
+/* ─── Filter opts ─────────────────────────────── */
+function fillFilOpts(){
+  const areas=[...new Set(S.data.map(x=>x.area).filter(Boolean))].sort();
+  const setores=[...new Set(S.data.map(x=>x.setor).filter(Boolean))].sort();
+  const classes=[...new Set(S.data.map(x=>x.classe).filter(Boolean))].sort();
+  const fill=(id,opts)=>{
+    const el=document.getElementById(id);if(!el)return;
+    const first=el.options[0].outerHTML;
+    el.innerHTML=first+opts.map(o=>`<option value="${o}">${o}</option>`).join('');
+  };
+  fill('fa-area',areas);fill('fa-setor',setores);fill('fa-classe',classes);
+  fill('qfArea',areas);fill('qfCritArea',areas);
+}
+
+/* ─── Adv Filter ─────────────────────────────── */
+document.getElementById('btnFltApply').addEventListener('click',()=>{
+  S.AF={
+    area:document.getElementById('fa-area').value,
+    setor:document.getElementById('fa-setor').value,
+    status:document.getElementById('fa-status').value,
+    qmin:document.getElementById('fa-qmin').value,
+    qmax:document.getElementById('fa-qmax').value,
+    classe:document.getElementById('fa-classe').value
+  };
+  applyFlt();document.getElementById('advPanel').classList.remove('open');
+  renderPills();toast('Filtros aplicados','info',2500);
+});
+
+document.getElementById('btnFltClear').addEventListener('click',()=>{
+  ['fa-area','fa-setor','fa-status','fa-classe'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  ['fa-qmin','fa-qmax'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  S.AF={};S.q='';document.getElementById('searchMat').value='';
+  document.getElementById('qfArea').value='';document.getElementById('qfStatus').value='';
+  applyFlt();renderPills();document.getElementById('advPanel').classList.remove('open');
+});
+
+document.getElementById('qfArea').addEventListener('change',e=>{S.AF.area=e.target.value;applyFlt();renderPills()});
+document.getElementById('qfStatus').addEventListener('change',e=>{S.AF.status=e.target.value;applyFlt();renderPills()});
+
+function applyFlt(){
+  let d=[...S.data];
+  const f=S.AF,q=S.q.toLowerCase();
+  if(q)d=d.filter(r=>Object.entries(r).some(([k,v])=>k==='status'?v.txt.toLowerCase().includes(q):String(v).toLowerCase().includes(q)));
+  if(f.area)   d=d.filter(r=>r.area===f.area);
+  if(f.setor)  d=d.filter(r=>r.setor===f.setor);
+  if(f.status) d=d.filter(r=>r.status.lvl===f.status);
+  if(f.classe) d=d.filter(r=>r.classe===f.classe);
+  if(f.qmin!==undefined&&f.qmin!=='')d=d.filter(r=>r.qtd>=parseFloat(f.qmin));
+  if(f.qmax!==undefined&&f.qmax!=='')d=d.filter(r=>r.qtd<=parseFloat(f.qmax));
+  S.flt=d;S.pg=1;renderMat();
+}
+
+function renderPills(){
+  const f=S.AF;
+  const pills=[];
+  if(f.area)   pills.push({l:`Área: ${f.area}`,k:'area'});
+  if(f.setor)  pills.push({l:`Setor: ${f.setor}`,k:'setor'});
+  if(f.status) pills.push({l:`Status: ${f.status}`,k:'status'});
+  if(f.classe) pills.push({l:`Classe: ${f.classe}`,k:'classe'});
+  if(f.qmin)   pills.push({l:`Qtd ≥ ${f.qmin}`,k:'qmin'});
+  if(f.qmax)   pills.push({l:`Qtd ≤ ${f.qmax}`,k:'qmax'});
+  const el=document.getElementById('pillRow');
+  el.style.display=pills.length?'flex':'none';
+  el.innerHTML=pills.map(p=>`<span class="filter-pill">${p.l}<button onclick="rmPill('${p.k}')">✕</button></span>`).join('');
+}
+
+function rmPill(k){
+  delete S.AF[k];
+  if(k==='area')  {document.getElementById('qfArea').value=''}
+  if(k==='status'){document.getElementById('qfStatus').value=''}
+  applyFlt();renderPills();
+}
+
+/* ─── Search ─────────────────────────────── */
+const sm=document.getElementById('searchMat'),sc=document.getElementById('scMat');
+sm.addEventListener('input',e=>{S.q=e.target.value;sc.style.display=S.q?'block':'none';applyFlt()});
+sc.addEventListener('click',()=>{sm.value='';S.q='';sc.style.display='none';applyFlt()});
+
+document.getElementById('searchCrit').addEventListener('input',e=>renderCrit(e.target.value));
+document.getElementById('qfCritArea').addEventListener('change',e=>renderCrit(document.getElementById('searchCrit').value,e.target.value));
+
+/* ─── Sort ─────────────────────────────── */
+document.querySelectorAll('#tblMat th[data-s]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const c=th.dataset.s;
+    if(S.sortC===c)S.sortD=S.sortD==='asc'?'desc':'asc';
+    else{S.sortC=c;S.sortD='asc'}
+    const d=S.sortD==='asc'?1:-1;
+    const w={critico:1,atencao:2,disponivel:3};
+    S.flt.sort((a,b)=>{
+      let va=c==='status'?w[a.status.lvl]:a[c];
+      let vb=c==='status'?w[b.status.lvl]:b[c];
+      if(typeof va==='string')va=va.toLowerCase();
+      if(typeof vb==='string')vb=vb.toLowerCase();
+      return va<vb?-d:va>vb?d:0;
+    });
+    document.querySelectorAll('#tblMat th').forEach(t=>{t.classList.remove('s-asc','s-desc');const i=t.querySelector('i');if(i)i.className='bi bi-arrow-down-up'});
+    th.classList.add(S.sortD==='asc'?'s-asc':'s-desc');
+    const i=th.querySelector('i');if(i)i.className=`bi bi-arrow-${S.sortD==='asc'?'up':'down'}`;
+    S.pg=1;renderMat();
+  });
+});
+
+/* ─── Table ─────────────────────────────── */
+function renderMat(){
+  const tb=document.getElementById('tbMat');
+  document.getElementById('cntMat').textContent=S.flt.length.toLocaleString('pt-BR');
+  const start=(S.pg-1)*S.pp;
+  const slice=S.flt.slice(start,start+S.pp);
+  if(!slice.length){
+    tb.innerHTML=`<tr><td colspan="9"><div class="empty"><i class="bi bi-search"></i><h3>Nenhum resultado</h3><p>Ajuste os filtros ou o termo de busca.</p></div></td></tr>`;
+    document.getElementById('pagInfo').textContent='0 registros';
+    document.getElementById('pagCtrl').innerHTML='';return;
+  }
+  tb.innerHTML=slice.map(r=>`
+    <tr class="${r.status.lvl==='critico'?'r-crit':r.status.lvl==='atencao'?'r-warn':''}">
+      <td>${r.area||'—'}</td>
+      <td>${r.setor||'—'}</td>
+      <td>${r.local||'—'}</td>
+      <td class="mono"><strong>${r.codigo||'—'}</strong></td>
+      <td>${r.descricao||'—'}</td>
+      <td class="mono tc">${r.unid||'—'}</td>
+      <td class="mono tr"><strong>${r.qtd}</strong></td>
+      <td><span class="bdg ${r.status.bdg}"><i class="bi bi-${r.status.ico}"></i> ${r.status.txt}</span></td>
+      <td><div class="row-act"><button class="ia" title="Ver detalhes" onclick='openDrw(${JSON.stringify(r).replace(/'/g,"&#39;")})'><i class="bi bi-eye"></i></button></div></td>
+    </tr>`).join('');
+  buildPag(S.flt.length);
+}
+
+function buildPag(total){
+  const pages=Math.ceil(total/S.pp);
+  const s=(S.pg-1)*S.pp+1,e=Math.min(S.pg*S.pp,total);
+  document.getElementById('pagInfo').textContent=`${s.toLocaleString('pt-BR')}–${e.toLocaleString('pt-BR')} de ${total.toLocaleString('pt-BR')}`;
+  const ctrl=document.getElementById('pagCtrl');
+  if(pages<=1){ctrl.innerHTML='';return}
+  let h=`<button class="pg" onclick="goPg(${S.pg-1})" ${S.pg===1?'disabled':''}><i class="bi bi-chevron-left"></i></button>`;
+  const lo=Math.max(1,S.pg-2),hi=Math.min(pages,S.pg+2);
+  if(lo>1){h+=`<button class="pg" onclick="goPg(1)">1</button>`;if(lo>2)h+=`<span style="padding:0 4px;color:var(--t4)">…</span>`}
+  for(let i=lo;i<=hi;i++)h+=`<button class="pg ${i===S.pg?'on':''}" onclick="goPg(${i})">${i}</button>`;
+  if(hi<pages){if(hi<pages-1)h+=`<span style="padding:0 4px;color:var(--t4)">…</span>`;h+=`<button class="pg" onclick="goPg(${pages})">${pages}</button>`}
+  h+=`<button class="pg" onclick="goPg(${S.pg+1})" ${S.pg===pages?'disabled':''}><i class="bi bi-chevron-right"></i></button>`;
+  ctrl.innerHTML=h;
+}
+
+function goPg(p){const pages=Math.ceil(S.flt.length/S.pp);S.pg=Math.max(1,Math.min(p,pages));renderMat()}
+document.getElementById('ppSel').addEventListener('change',e=>{S.pp=parseInt(e.target.value);S.pg=1;renderMat()});
+
+/* ─── Críticos ─────────────────────────────── */
+function renderCrit(q='',aF=''){
+  const qt=(q||'').toLowerCase();
+  const af=aF||document.getElementById('qfCritArea').value||'';
+  let items=S.data.filter(x=>x.status.lvl==='critico');
+  if(af)items=items.filter(x=>x.area===af);
+  if(qt)items=items.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(qt)));
+  const tb=document.getElementById('tbCrit');
+  document.getElementById('critFt').textContent=`${items.length} material(is) crítico(s) exibido(s)`;
+  if(!items.length){
+    tb.innerHTML=`<tr><td colspan="8"><div class="empty"><i class="bi bi-check-circle" style="color:var(--ok);opacity:1"></i><h3 style="color:var(--ok)">Nenhum crítico</h3><p>Todos os materiais estão com estoque adequado.</p></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML=items.slice(0,200).map(r=>`
+    <tr class="r-crit">
+      <td>${r.area}</td><td>${r.setor}</td><td><strong>${r.local}</strong></td>
+      <td class="mono"><strong>${r.codigo}</strong></td>
+      <td>${r.descricao}</td>
+      <td class="tc"><span class="mono fw6" style="font-size:15px;color:var(--crit)">${r.qtd}</span></td>
+      <td><span class="bdg bdg-crit"><i class="bi bi-x-circle-fill"></i> Crítico</span></td>
+      <td><div class="row-act"><button class="ia" onclick='openDrw(${JSON.stringify(r).replace(/'/g,"&#39;")})' title="Detalhes"><i class="bi bi-eye"></i></button></div></td>
+    </tr>`).join('');
+}
+
+/* ─── Machine Select ─────────────────────────────── */
+function fillMachineSelect(){
+  // Usa os locais de instalação reais dos dados processados
+  const sel=document.getElementById('selMaq');
+  const locals=[...new Set(S.data.map(d=>d.local).filter(Boolean))].sort();
+  sel.innerHTML='<option value="">Selecione um equipamento...</option>'+
+    locals.map(l=>`<option value="${l}">${l}</option>`).join('');
+}
+
+function renderMatriz(maq,stFlt=''){
+  const res=document.getElementById('matrizRes');
+  if(!maq){res.style.display='none';return}
+  let items=S.data.filter(d=>d.local===maq);
+  if(stFlt)items=items.filter(d=>d.status.lvl===stFlt);
+
+  document.getElementById('matTitle').textContent=maq;
+  const crit=items.filter(x=>x.status.lvl==='critico').length;
+  const atenc=items.filter(x=>x.status.lvl==='atencao').length;
+  const disp=items.filter(x=>x.status.lvl==='disponivel').length;
+
+  document.getElementById('matKpis').innerHTML=`
+    <div class="mat-kpi"><div class="mat-kpi-val">${items.length}</div><div class="mat-kpi-lbl">Total</div></div>
+    <div class="mat-kpi"><div class="mat-kpi-val" style="color:var(--ok)">${disp}</div><div class="mat-kpi-lbl">Disponíveis</div></div>
+    <div class="mat-kpi"><div class="mat-kpi-val" style="color:var(--warn)">${atenc}</div><div class="mat-kpi-lbl">Em Atenção</div></div>
+    <div class="mat-kpi"><div class="mat-kpi-val" style="color:var(--crit)">${crit}</div><div class="mat-kpi-lbl">Críticos</div></div>
+  `;
+
+  document.getElementById('tbMatriz').innerHTML=items.length?items.map(r=>`
+    <tr class="${r.status.lvl==='critico'?'r-crit':r.status.lvl==='atencao'?'r-warn':''}">
+      <td class="mono"><strong>${r.codigo}</strong></td>
+      <td>${r.descricao}</td>
+      <td class="mono tc">${r.unid}</td>
+      <td class="mono tr"><strong>${r.qtd}</strong></td>
+      <td><span class="bdg ${r.status.bdg}"><i class="bi bi-${r.status.ico}"></i> ${r.status.txt}</span></td>
+      <td><div class="row-act"><button class="ia" onclick='openDrw(${JSON.stringify(r).replace(/'/g,"&#39;")})' title="Detalhes"><i class="bi bi-eye"></i></button></div></td>
+    </tr>`).join('')
+    :`<tr><td colspan="6" class="tc t4" style="padding:24px">Nenhum item para o filtro selecionado.</td></tr>`;
+
+  res.style.display='block';
+}
+
+document.getElementById('selMaq').addEventListener('change',e=>renderMatriz(e.target.value,document.getElementById('matFltSt').value));
+document.getElementById('matFltSt').addEventListener('change',e=>renderMatriz(document.getElementById('selMaq').value,e.target.value));
+
+document.getElementById('btnExpMatriz').addEventListener('click',()=>{
+  const m=document.getElementById('selMaq').value;if(!m)return;
+  exportXLSX(S.data.filter(d=>d.local===m),`PCM_Maquina_${m.replace(/[^a-z0-9]/gi,'_')}`);
+});
+
+/* ─── Export ─────────────────────────────── */
+function exportXLSX(rows,fname){
+  if(!rows.length){toast('Nenhum dado para exportar','warn');return}
+  const flat=rows.map(d=>({'Área':d.area,'Setor':d.setor,'Local de Instalação':d.local,'Código Material':d.codigo,'Descrição':d.descricao,'UNID':d.unid,'Quantidade':d.qtd,'Classe':d.classe,'Status':d.status.txt}));
+  const ws=XLSX.utils.json_to_sheet(flat);const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Dados');
+  XLSX.writeFile(wb,`${fname}_${new Date().toISOString().split('T')[0]}.xlsx`);
+  toast(`Exportado: <strong>${fname}.xlsx</strong>`,'ok');
+}
+
+function doExport(){
+  const t=document.getElementById('expType').value,n=document.getElementById('expName').value||'PCM';
+  let rows=S.data;
+  if(t==='filtered')rows=S.flt;
+  if(t==='criticos')rows=S.data.filter(x=>x.status.lvl==='critico');
+  if(t==='atencao') rows=S.data.filter(x=>x.status.lvl==='atencao');
+  exportXLSX(rows,n);closeMo('moExport');
+}
+
+document.getElementById('btnExpFull').addEventListener('click',()=>{
+  const f=document.getElementById('relFltSt').value;
+  exportXLSX(f?S.data.filter(x=>x.status.lvl===f):S.data,'PCM_Completo');
+});
+document.getElementById('btnExpCrit').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Criticos'));
+document.getElementById('btnExpCritRel').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Relatorio_Criticos'));
+
+/* ─── Boot ─────────────────────────────── */
+(async()=>{
+  loadCFG();
+  const fname=localStorage.getItem('pcm3_file');
+  if(!fname)return;
+  try{
+    setLdr(true,'Restaurando sessão...');
+    const cached=await DB.get('dados');
+    if(cached&&cached.length){
+      S.data=cached;S.flt=[...cached];
+      showLoaded(fname);
+      updateAll();
+      toast(`Sessão restaurada — ${cached.length.toLocaleString('pt-BR')} registros`,'info',3000);
+    }
+  }catch(e){console.error(e)}finally{setLdr(false)}
+})();
+</script>
+</body>
+</html>
