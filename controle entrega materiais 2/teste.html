@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PCM Intelligence — Manutenção Industrial</title>
+<title>CONTROLE DE ENTREGA DE MATERIAIS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
@@ -73,7 +73,7 @@
   --s4: 0 20px 48px rgba(0,0,0,.14), 0 4px 10px rgba(0,0,0,.07);
 
   /* Layout */
-  --hh: 54px;  /* header height */
+  --hh: 80px;  /* header height */
   --nh: 44px;  /* nav height */
 }
 
@@ -102,14 +102,16 @@ body {
    HEADER
 ══════════════════════════════════════════ */
 #hdr {
-  position: fixed;
+  /* position: fixed; */ /* O header agora rola com a página */
   top: 0; left: 0; right: 0;
   height: var(--hh);
-  background: var(--t1);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
+  position: relative;
   z-index: 300;
 }
 
@@ -117,37 +119,18 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.hdr-logo {
-  width: 32px; height: 32px;
-  background: var(--brand);
-  border-radius: var(--r2);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono);
-  font-weight: 500;
-  font-size: 11px;
-  color: white;
-  letter-spacing: -0.03em;
-  flex-shrink: 0;
-}
-
-.hdr-name {
-  font-weight: 700;
-  font-size: 15px;
-  color: white;
-  letter-spacing: -0.02em;
+  height: 100%;
 }
 
 .hdr-sep {
   width: 1px; height: 20px;
-  background: rgba(255,255,255,0.12);
+  background: var(--border);
   margin: 0 4px;
 }
 
 .hdr-module {
   font-size: 13px;
-  color: rgba(255,255,255,0.45);
+  color: var(--t3);
   font-weight: 400;
 }
 
@@ -157,39 +140,30 @@ body {
   gap: 8px;
 }
 
-.hdr-pill {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 99px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.07);
-  color: rgba(255,255,255,0.8);
-  transition: all 0.15s;
-  white-space: nowrap;
+/* Estilos para o Título Principal no Header */
+.hdr-main-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--t2);
+  letter-spacing: -0.01em;
 }
 
-.hdr-pill:hover {
-  background: rgba(255,255,255,0.14);
-  color: white;
-}
+/* Estilos para Logo e Perfil do Usuário */
+.hdr-logo-img { height: 38px; width: auto; max-width: 160px; object-fit: contain; }
+.hdr-meta { display: flex; align-items: center; gap: 14px; margin-left: 12px; padding-left: 16px; border-left: 1px solid var(--border); height: 32px; }
+.hdr-date { text-align: right; line-height: 1.1; }
+.hd-time { font-family: var(--mono); font-weight: 700; font-size: 15px; color: var(--t1); line-height: 1; }
+.hd-date { font-size: 10px; font-weight: 600; color: var(--t4); text-transform: uppercase; margin-top: 2px; }
 
-.hdr-pill i { font-size: 13px; }
-
-.hdr-pill.danger {
-  background: rgba(220,38,38,0.2);
-  border-color: rgba(220,38,38,0.4);
-  color: #FCA5A5;
-}
-
-.hdr-pill.danger:hover {
-  background: rgba(220,38,38,0.3);
-  color: #FEE2E2;
-}
+/* Weather Widget Styles */
+.w-box { display: flex; align-items: center; gap: 8px; text-align: right; padding-left: 8px; }
+.w-info { display: flex; flex-direction: column; justify-content: center; }
+.w-deg { font-family: var(--mono); font-size: 15px; font-weight: 700; color: var(--t1); line-height: 1; }
+.w-txt { font-size: 10px; color: var(--t4); font-weight: 600; text-transform: uppercase; margin-top: 2px; }
+.w-ico { font-size: 24px; color: var(--brand); display: flex; align-items: center; }
 
 .dot-live {
   width: 7px; height: 7px;
@@ -206,112 +180,84 @@ body {
 }
 
 /* ══════════════════════════════════════════
-   NAV BAR
+   NAV BAR (Linear Style)
 ══════════════════════════════════════════ */
 #nav {
-  position: fixed;
-  top: var(--hh);
+  position: sticky; /* A navegação agora 'gruda' no topo ao rolar */
+  top: 0;
   left: 0; right: 0;
   height: var(--nh);
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.85); /* Transparência para efeito vidro */
+  backdrop-filter: blur(12px);            /* Desfoque do fundo */
+  border-bottom: 1px solid rgba(228, 230, 237, 0.6);
   display: flex;
-  align-items: stretch;
-  padding: 0 16px;
+  align-items: center;
+  padding: 0 20px;
   z-index: 299;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03); /* Sombra mais suave e espalhada */
+  gap: 6px;
   overflow-x: auto;
-  scrollbar-width: none;
-  box-shadow: var(--s1);
+  scrollbar-width: none; /* Firefox */
 }
 
 #nav::-webkit-scrollbar { display: none; }
 
-.nav-group {
-  display: flex;
-  align-items: stretch;
-  gap: 2px;
-}
-
-.nav-group + .nav-group {
-  border-left: 1px solid var(--border);
-  margin-left: 8px;
-  padding-left: 8px;
-}
-
-.nav-group-right {
-  margin-left: auto;
-  border-left: 1px solid var(--border);
-  padding-left: 8px;
-}
-
-.nb {
+.nav-item {
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 0 13px;
-  height: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  font-family: var(--sans);
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 99px;
   font-size: 13px;
   font-weight: 500;
   color: var(--t3);
   cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+  background: transparent;
   white-space: nowrap;
-  transition: color 0.15s;
   outline: none;
+  font-family: var(--sans);
   position: relative;
+  overflow: hidden;
 }
 
-.nb i { font-size: 14px; transition: color 0.15s; }
-
-.nb:hover { color: var(--t1); }
-.nb:hover i { color: var(--brand); }
-
-.nb.active {
+.nav-item:hover {
   color: var(--brand);
-  border-bottom-color: var(--brand);
+  background: rgba(37, 99, 235, 0.08); /* Azul bem clarinho no hover */
+}
+
+.nav-item:focus-visible {
+  box-shadow: 0 0 0 2px var(--brand-mid);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark)); /* Gradiente */
+  color: white;
   font-weight: 600;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35); /* Sombra colorida (glow) */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  transform: translateY(-1px); /* Leve elevação */
 }
 
-.nb.active i { color: var(--brand); }
+.nav-item i { font-size: 14px; }
+.nav-sep { width: 1px; height: 20px; background: var(--border-2); margin: 0 8px; flex-shrink: 0; opacity: 0.6; }
 
-.nb:focus-visible {
-  outline: 2px solid var(--brand);
-  outline-offset: -2px;
-  border-radius: var(--r1);
-}
-
-.nb-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: 99px;
-  font-size: 10px;
-  font-weight: 700;
-  font-family: var(--mono);
-  line-height: 1;
-}
-
+.nb-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px; font-size: 10px; font-weight: 700; font-family: var(--mono); line-height: 1; margin-left: 6px; }
 .nb-badge.crit { background: var(--crit-bg); color: var(--crit); border: 1px solid var(--crit-border); }
-.nb-badge.warn { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn-border); }
 
 /* ══════════════════════════════════════════
    MAIN CANVAS
 ══════════════════════════════════════════ */
 #main {
-  margin-top: calc(var(--hh) + var(--nh));
-  padding: 24px 24px 48px;
-  min-height: calc(100vh - var(--hh) - var(--nh));
+  margin-top: 3em;
+  padding: 0 24px 48px;
+  min-height: auto;
 }
 
 .sec { display: none; animation: secIn 0.25s ease; }
 .sec.active { display: block; }
+#s-crit { margin-top: -14px; }
 
 @keyframes secIn {
   from { opacity: 0; transform: translateY(8px); }
@@ -420,8 +366,8 @@ body {
   padding: 16px 18px 14px;
   box-shadow: var(--s1);
   position: relative;
-  transition: box-shadow 0.2s, transform 0.2s;
-  cursor: default;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  cursor: pointer;
   overflow: hidden;
 }
 
@@ -496,7 +442,7 @@ body {
 ══════════════════════════════════════════ */
 .gauge-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   margin-bottom: 20px;
 }
@@ -649,7 +595,7 @@ body {
 
 .chart-2col {
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 14px;
   margin-bottom: 14px;
 }
@@ -670,6 +616,7 @@ body {
   margin-bottom: 18px;
   position: relative;
   overflow: hidden;
+  margin-top: -16px;
 }
 
 .crit-ribbon::before {
@@ -808,8 +755,8 @@ body {
   width: 100%;
   height: 32px;
   background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
+  border: 1px solid transparent;
+  border-radius: 99px; /* Mais arredondado */
   padding: 0 32px 0 32px;
   font-size: 13px;
   font-family: var(--sans);
@@ -820,7 +767,7 @@ body {
 
 .srch input:focus {
   background: var(--surface);
-  border-color: var(--brand);
+  border-color: var(--brand-mid);
   box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
 }
 
@@ -841,8 +788,8 @@ body {
 .flt-sel {
   height: 32px;
   background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--r2);
+  border: 1px solid transparent;
+  border-radius: 99px;
   padding: 0 28px 0 10px;
   font-size: 12px;
   font-family: var(--sans);
@@ -855,7 +802,7 @@ body {
   background-position: right 8px center;
   min-width: 130px;
   max-width: 190px;
-  transition: border-color 0.15s;
+  transition: all 0.15s;
 }
 
 .flt-sel:focus { border-color: var(--brand); background-color: var(--surface); outline: none; }
@@ -965,12 +912,13 @@ table.dt {
 .dt thead th.s-asc i, .dt thead th.s-desc i { opacity: 1; color: var(--brand); }
 
 .dt tbody tr {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid rgba(228, 230, 237, 0.5); /* Borda mais suave */
   transition: background 0.1s;
 }
 
 .dt tbody tr:last-child { border-bottom: none; }
-.dt tbody tr:hover { background: #F8FAFF; }
+.dt tbody tr:nth-of-type(even) { background-color: rgba(248, 249, 252, 0.7); } /* Efeito Zebra */
+.dt tbody tr:hover { background: #EFF6FF !important; } /* Hover com prioridade */
 .dt tbody tr.r-crit { background: #FEF9F9; }
 .dt tbody tr.r-crit:hover { background: var(--crit-bg); }
 .dt tbody tr.r-warn { background: #FEFDF5; }
@@ -982,7 +930,7 @@ table.dt {
   vertical-align: middle;
 }
 
-.dt td.mono { font-family: var(--mono); font-size: 12px; }
+.dt td.mono { font-family: var(--mono); font-size: 12px; letter-spacing: -0.02em; }
 .dt td.tr { text-align: right; }
 .dt td.tc { text-align: center; }
 
@@ -1016,19 +964,19 @@ table.dt {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px;
-  border-radius: var(--r1);
+  padding: 4px 10px;
+  border-radius: 99px; /* Pill shape */
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
   border: 1px solid transparent;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .bdg i { font-size: 10px; }
-.bdg-ok   { background:var(--ok-bg);   color:var(--ok);   border-color:var(--ok-border); }
-.bdg-warn { background:var(--warn-bg); color:var(--warn); border-color:var(--warn-border); }
-.bdg-crit { background:var(--crit-bg); color:var(--crit); border-color:var(--crit-border); }
+.bdg-ok   { background:var(--ok-bg);   color:var(--ok);   border-color:transparent; }
+.bdg-warn { background:var(--warn-bg); color:var(--warn); border-color:transparent; }
+.bdg-crit { background:var(--crit-bg); color:var(--crit); border-color:transparent; }
 .bdg-info { background:var(--info-bg); color:var(--info); border-color:var(--info-border); }
 .bdg-neu  { background:var(--surface-2); color:var(--t3); border-color:var(--border); }
 
@@ -1038,33 +986,34 @@ table.dt {
 .pag {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 10px 16px;
+  justify-content: center; /* Centralizado */
+  padding: 16px 24px;
   border-top: 1px solid var(--border);
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 20px;
 }
 
 .pag-info { font-size: 12px; color: var(--t4); font-family: var(--mono); }
 
-.pag-ctrl { display: flex; align-items: center; gap: 3px; }
+.pag-ctrl { display: flex; align-items: center; gap: 8px; }
 
 .pg {
-  min-width: 30px; height: 30px;
+  min-width: 42px; height: 42px; /* Botões maiores */
   display: flex; align-items: center; justify-content: center;
-  padding: 0 8px;
-  border: 1px solid var(--border);
-  border-radius: var(--r1);
-  background: var(--surface);
-  font-size: 12px;
-  font-family: var(--mono);
-  color: var(--t3);
+  border: 1px solid transparent;
+  border-radius: 50%; /* Circular */
+  background: var(--surface-2);
+  font-size: 14px;
+  font-family: var(--sans);
+  font-weight: 600;
+  color: var(--t2);
   cursor: pointer;
-  transition: all 0.12s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--s1);
 }
 
-.pg:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-light); }
-.pg.on  { background: var(--brand); color: white; border-color: var(--brand); font-weight: 600; }
+.pg:hover { color: var(--brand); background: white; transform: translateY(-2px); box-shadow: var(--s2); }
+.pg.on  { background: var(--brand); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.4); }
 .pg:disabled { opacity: 0.3; cursor: not-allowed; }
 
 .pag-sz {
@@ -1467,6 +1416,50 @@ table.dt {
 .fs13 { font-size: 13px; }
 .w100 { width: 100%; }
 
+/* Extra Stats Grid for Gauge Card */
+.stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+.stat-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.stat-val { font-family: var(--mono); font-size: 16px; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+.stat-lbl { font-size: 10px; color: var(--t4); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+
+/* Insights Box in Gauge Card */
+.g-insight { background: var(--surface-2); border-radius: var(--r2); padding: 12px 16px; margin-top: 14px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.gi-row { display: flex; align-items: center; gap: 12px; }
+.gi-ico { width: 32px; height: 32px; border-radius: 50%; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--t3); font-size: 15px; flex-shrink: 0; }
+.gi-txt { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+.gi-lbl { font-size: 10px; color: var(--t4); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; margin-bottom: 2px; }
+.gi-val { font-size: 13px; font-weight: 600; color: var(--t1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Toggle Switch */
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-2); border-radius: 34px; transition: .2s; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; border-radius: 50%; transition: .2s; box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+input:checked + .slider { background-color: var(--brand); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Tooltip */
+#tooltip {
+  position: fixed;
+  z-index: 9999;
+  padding: 10px 14px;
+  background: var(--t1);
+  color: rgba(255,255,255,0.9);
+  border-radius: var(--r2);
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 280px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.15s, transform 0.15s;
+  box-shadow: var(--s3);
+}
+#tooltip.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 @media (max-width:768px) { .g2,.g3 { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -1486,22 +1479,19 @@ table.dt {
 ══════════════════════════════════════ -->
 <header id="hdr">
   <div class="hdr-brand">
-    <div class="hdr-logo">PCM</div>
-    <span class="hdr-name">PCM Intelligence</span>
-    <div class="hdr-sep"></div>
-    <span class="hdr-module" id="hdrMod">Dashboard</span>
+    <!-- Espaço para Logo da Empresa -->
+    <img src="logo.png" class="hdr-logo-img" alt="Logo Empresa" title="Substitua pelo seu logo">
   </div>
+  <div class="hdr-main-title">CONTROLE DE ENTREGA DE MATERIAIS 2026</div>
   <div class="hdr-right">
-    <span class="hdr-pill" id="hdrStatus" style="cursor:default">
-      <span class="dot-live" style="background:#6B7280;box-shadow:none;animation:none"></span>
-      <span id="hdrStatusTxt">Sem dados</span>
-    </span>
-    <button class="hdr-pill" id="btnHdrImport"><i class="bi bi-cloud-upload"></i> Importar</button>
-    <button class="hdr-pill" id="btnHdrExport"><i class="bi bi-download"></i> Exportar</button>
-    <button class="hdr-pill danger" id="btnHdrCrit" style="display:none">
-      <i class="bi bi-exclamation-triangle"></i>
-      <span id="hdrCritNum">0</span> críticos
-    </button>
+    <!-- Meta: Data/Hora e Usuário -->
+    <div class="hdr-meta">
+      <div class="hdr-date" id="hdrClock"></div>
+      <div class="w-box" title="Clima Atual">
+        <div class="w-info"><div class="w-deg" id="wTemp">--°</div><div class="w-txt" id="wCity">...</div></div>
+        <div class="w-ico"><i class="bi bi-cloud-sun" id="wIcon"></i></div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -1509,25 +1499,17 @@ table.dt {
    NAV
 ══════════════════════════════════════ -->
 <nav id="nav" role="navigation">
-  <div class="nav-group">
-    <button class="nb active" data-t="s-dash"><i class="bi bi-speedometer2"></i> Dashboard</button>
-    <button class="nb" data-t="s-mat"><i class="bi bi-table"></i> Materiais</button>
-    <button class="nb" data-t="s-crit"><i class="bi bi-exclamation-triangle"></i> Críticos
-      <span class="nb-badge crit" id="navBadge" style="display:none">0</span>
-    </button>
-  </div>
-  <div class="nav-group">
-    <button class="nb" data-t="s-area"><i class="bi bi-building"></i> Por Área</button>
-    <button class="nb" data-t="s-setor"><i class="bi bi-diagram-3"></i> Por Setor</button>
-    <button class="nb" data-t="s-matriz"><i class="bi bi-grid-3x3"></i> Matriz Máq.×Mat.</button>
-  </div>
-  <div class="nav-group">
-    <button class="nb" data-t="s-rel"><i class="bi bi-file-earmark-spreadsheet"></i> Relatórios</button>
-  </div>
-  <div class="nav-group nav-group-right">
-    <button class="nb" data-t="s-imp"><i class="bi bi-cloud-upload"></i> Importar</button>
-    <button class="nb" data-t="s-cfg"><i class="bi bi-sliders"></i> Config.</button>
-  </div>
+  <button class="nav-item active" data-t="s-dash"><i class="bi bi-speedometer2"></i> Dashboard</button>
+  <button class="nav-item" data-t="s-mat"><i class="bi bi-table"></i> Materiais</button>
+  <button class="nav-item" data-t="s-crit"><i class="bi bi-exclamation-triangle"></i> Críticos <span class="nb-badge crit" id="navBadge" style="display:none">0</span></button>
+  <div class="nav-sep"></div>
+  <button class="nav-item" data-t="s-area"><i class="bi bi-building"></i> Por Área</button>
+  <button class="nav-item" data-t="s-setor"><i class="bi bi-diagram-3"></i> Por Setor</button>
+  <button class="nav-item" data-t="s-matriz"><i class="bi bi-grid-3x3"></i> Matriz</button>
+  <div class="nav-sep"></div>
+  <button class="nav-item" data-t="s-imp"><i class="bi bi-cloud-upload"></i> Importar</button>
+  <button class="nav-item" data-t="s-rel"><i class="bi bi-file-earmark-spreadsheet"></i> Relatórios</button>
+  <button class="nav-item" data-t="s-cfg"><i class="bi bi-sliders"></i> Config.</button>
 </nav>
 
 <!-- ══════════════════════════════════════
@@ -1558,7 +1540,7 @@ table.dt {
 
     <!-- KPI Row -->
     <div class="kpi-row" id="kpiRow">
-      <div class="kpi">
+      <div class="kpi" data-tooltip="<strong>Total de Registros</strong><br>Número total de linhas de materiais processadas da planilha importada." onclick="navTo('s-mat')">
         <div class="kpi-accent" style="background:var(--brand)"></div>
         <div class="kpi-header">
           <div class="kpi-label">Total Registros</div>
@@ -1568,7 +1550,7 @@ table.dt {
         <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-total" style="background:var(--brand)"></div></div>
         <div class="kpi-foot">Linhas processadas</div>
       </div>
-      <div class="kpi">
+      <div class="kpi" data-tooltip="<strong>Materiais Únicos</strong><br>Quantidade de códigos de material distintos encontrados nos dados." onclick="navTo('s-mat')">
         <div class="kpi-accent" style="background:#0891B2"></div>
         <div class="kpi-header">
           <div class="kpi-label">Mat. Únicos</div>
@@ -1578,7 +1560,7 @@ table.dt {
         <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-mat" style="background:#0891B2"></div></div>
         <div class="kpi-foot">Códigos distintos</div>
       </div>
-      <div class="kpi">
+      <div class="kpi" data-tooltip="<strong>Disponíveis</strong><br>Itens cujo estoque está acima do limiar de 'Atenção'. (Qtd. > ${CFG.atenc})" onclick="navTo('s-mat')">
         <div class="kpi-accent" style="background:var(--ok)"></div>
         <div class="kpi-header">
           <div class="kpi-label">Disponíveis</div>
@@ -1588,7 +1570,7 @@ table.dt {
         <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-disp" style="background:var(--ok)"></div></div>
         <div class="kpi-foot">Qtd. &gt; limiar</div>
       </div>
-      <div class="kpi">
+      <div class="kpi" data-tooltip="<strong>Em Atenção</strong><br>Itens cujo estoque está abaixo do limiar de 'Atenção', mas acima do 'Crítico'. (${CFG.crit} ≤ Qtd. ≤ ${CFG.atenc})" onclick="navTo('s-mat')">
         <div class="kpi-accent" style="background:var(--warn)"></div>
         <div class="kpi-header">
           <div class="kpi-label">Em Atenção</div>
@@ -1598,7 +1580,7 @@ table.dt {
         <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-atenc" style="background:var(--warn)"></div></div>
         <div class="kpi-foot">Abaixo do ideal</div>
       </div>
-      <div class="kpi">
+      <div class="kpi" data-tooltip="<strong>Críticos</strong><br>Itens cujo estoque está abaixo do limiar 'Crítico', indicando risco iminente. (Qtd. < ${CFG.crit})" onclick="navTo('s-crit')">
         <div class="kpi-accent" style="background:var(--crit)"></div>
         <div class="kpi-header">
           <div class="kpi-label">Críticos</div>
@@ -1608,7 +1590,7 @@ table.dt {
         <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-crit" style="background:var(--crit)"></div></div>
         <div class="kpi-foot">Risco iminente</div>
       </div>
-      <div class="kpi">
+      <div class="kpi" data-tooltip="<strong>Máquinas Críticas</strong><br>Número de equipamentos (locais de instalação) que possuem pelo menos um material em estado crítico associado." onclick="navTo('s-matriz')">
         <div class="kpi-accent" style="background:#7C3AED"></div>
         <div class="kpi-header">
           <div class="kpi-label">Máq. Críticas</div>
@@ -1623,7 +1605,7 @@ table.dt {
     <!-- Gauge row -->
     <div class="gauge-grid mb20">
       <!-- Stacked bar: status distribution -->
-      <div class="gauge-card" style="grid-column: span 2">
+      <div class="gauge-card" data-tooltip="<strong>Distribuição de Status</strong><br>Visão geral da proporção de materiais em cada estado (Disponível, Atenção, Crítico).">
         <div class="gauge-head">
           <div class="gauge-label"><i class="bi bi-bar-chart-steps" style="color:var(--brand);margin-right:6px"></i>Distribuição de Status</div>
           <div class="gauge-val" id="gTotalLabel">0 itens</div>
@@ -1647,21 +1629,40 @@ table.dt {
             Crítico <span class="hbar-count" id="hbCritN">0</span>
           </div>
         </div>
-      </div>
-
-      <!-- Top areas mini ranking -->
-      <div class="gauge-card">
-        <div class="gauge-head">
-          <div class="gauge-label"><i class="bi bi-building" style="color:var(--brand);margin-right:6px"></i>Top Áreas</div>
-          <div class="gauge-val">por volume</div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-val" style="color:var(--ok)" id="sOkPct">—</div>
+            <div class="stat-lbl">Disponibilidade</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" style="color:var(--warn)" id="sWarnPct">—</div>
+            <div class="stat-lbl">Risco Médio</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" style="color:var(--crit)" id="sCritPct">—</div>
+            <div class="stat-lbl">Criticidade</div>
+          </div>
         </div>
-        <div class="rank-list" id="rankAreas"></div>
+        <div class="g-insight">
+          <div class="gi-row" data-tooltip="<strong>Índice de Saúde</strong><br>Porcentagem de itens que NÃO estão em estado crítico. Um indicador geral da saúde do estoque. Quanto maior, melhor.">
+            <div class="gi-ico" style="color:var(--brand)"><i class="bi bi-activity"></i></div>
+            <div class="gi-txt">
+              <div class="gi-lbl">Índice de Saúde</div>
+              <div class="gi-val" id="gHealth">—</div>
+            </div>
+          </div>
+          <div class="gi-row" data-tooltip="<strong>Foco de Atenção</strong><br>Aponta a área com o maior número absoluto de materiais críticos, sugerindo uma prioridade de ação.">
+            <div class="gi-ico" style="color:var(--crit)"><i class="bi bi-bullseye"></i></div>
+            <div class="gi-txt">
+              <div class="gi-lbl">Foco de Atenção</div>
+              <div class="gi-val" id="gFocus">—</div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Charts -->
-    <div class="chart-2col mb14">
-      <div class="card">
+      <!-- Volume por Área Chart (Movido para cá) -->
+      <div class="card" data-tooltip="<strong>Volume por Área</strong><br>Gráfico de barras mostrando as 15 áreas com o maior volume de registros de materiais." onclick="navTo('s-area')" style="cursor:pointer">
         <div class="card-hd">
           <div class="card-title">
             <div class="card-icon ci-blue"><i class="bi bi-bar-chart-line"></i></div>
@@ -1673,15 +1674,33 @@ table.dt {
           <div style="position:relative;height:220px"><canvas id="cArea"></canvas></div>
         </div>
       </div>
-      <div class="card">
+    </div>
+
+    <!-- Charts -->
+    <div class="chart-2col mb14">
+      <!-- Top Areas Ranking (Movido para cá e estilizado como card) -->
+      <div class="card" data-tooltip="<strong>Top 10 Áreas</strong><br>Ranking das áreas com a maior quantidade de itens de material registrados." onclick="navTo('s-area')" style="cursor:pointer">
+        <div class="card-hd">
+          <div class="card-title">
+            <div class="card-icon ci-blue"><i class="bi bi-building"></i></div>
+            Top Áreas
+          </div>
+          <span class="fs11 t4 mono">TOP 10</span>
+        </div>
+        <div class="card-bd" style="padding:14px 16px">
+          <div class="rank-list" id="rankAreas" style="max-height:220px;overflow-y:auto"></div>
+        </div>
+      </div>
+
+      <div class="card" data-tooltip="<strong>Top 10 Setores</strong><br>Ranking dos setores de manutenção com a maior quantidade de itens de material registrados." onclick="navTo('s-setor')" style="cursor:pointer">
         <div class="card-hd">
           <div class="card-title">
             <div class="card-icon ci-slate"><i class="bi bi-diagram-3"></i></div>
             Top Setores
           </div>
         </div>
-        <div class="card-bd" style="padding:14px 16px">
-          <div class="rank-list" id="rankSetores" style="max-height:220px;overflow-y:auto"></div>
+        <div class="card-bd" style="padding:14px 4px 14px 16px">
+          <div class="rank-list" id="rankSetores" style="max-height:220px;overflow-y:auto;padding-right:12px"></div>
         </div>
       </div>
     </div>
@@ -1693,11 +1712,11 @@ table.dt {
 <section id="s-mat" class="sec">
   <div class="pg-head">
     <div>
-      <div class="pg-title">Tabela de Materiais</div>
-      <div class="pg-sub">Todos os registros com filtros avançados e exportação</div>
+      <div class="pg-title">Explorador de Materiais</div>
+      <div class="pg-sub">Gerencie e analise o estoque completo com visualização detalhada</div>
     </div>
     <div class="pg-actions">
-      <button class="btn btn-ghost btn-sm" id="btnAdvFlt"><i class="bi bi-funnel"></i> Filtros</button>
+      <button class="btn btn-ghost btn-sm" id="btnAdvFlt" style="background:white;border:1px solid var(--border)"><i class="bi bi-funnel"></i> Filtros Avançados</button>
       <button class="btn btn-ghost btn-sm" id="btnExpGeral"><i class="bi bi-download"></i> Exportar</button>
     </div>
   </div>
@@ -1732,37 +1751,33 @@ table.dt {
   </div>
 
   <div class="card">
+    
     <div class="toolbar">
       <div class="toolbar-l">
         <div class="srch">
           <i class="bi bi-search si"></i>
-          <input type="text" id="searchMat" placeholder="Buscar código, descrição, área, local...">
+          <input type="text" id="searchMat" placeholder="Buscar por código, descrição, local...">
           <button class="srch-clear" id="scMat"><i class="bi bi-x"></i></button>
         </div>
-        <select class="flt-sel" id="qfArea"><option value="">Área: Todas</option></select>
-        <select class="flt-sel" id="qfStatus">
-          <option value="">Status: Todos</option>
-          <option value="disponivel">✓ Disponível</option>
-          <option value="atencao">⚠ Atenção</option>
-          <option value="critico">✕ Crítico</option>
-        </select>
       </div>
       <div class="toolbar-r">
-        <span class="rec-count"><span id="cntMat">0</span> registros</span>
+        <span class="rec-count"><span id="cntMat">0</span> itens</span>
       </div>
     </div>
+
     <div class="pill-row" id="pillRow" style="display:none"></div>
-    <div class="tbl-wrap">
+    
+    <div class="tbl-wrap" style="max-height:calc(100vh - 280px);overflow-y:auto;">
       <table class="dt" id="tblMat">
         <thead><tr>
-          <th data-s="area">Área <i class="bi bi-arrow-down-up"></i></th>
-          <th data-s="setor">Setor <i class="bi bi-arrow-down-up"></i></th>
-          <th data-s="local">Local de Instalação <i class="bi bi-arrow-down-up"></i></th>
-          <th data-s="codigo">Código <i class="bi bi-arrow-down-up"></i></th>
-          <th data-s="descricao">Descrição <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="area" data-tooltip="Área de manutenção responsável pelo equipamento.">Área <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="setor" data-tooltip="Setor específico dentro da área de manutenção.">Setor <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="local" data-tooltip="Equipamento ou máquina onde o material é instalado. (Coluna F da planilha)">Equipamento / Local <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="codigo" data-tooltip="Código único de identificação do material.">Código <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="descricao" data-tooltip="Descrição do material.">Descrição <i class="bi bi-arrow-down-up"></i></th>
           <th data-s="unid" class="tc">Unid.</th>
-          <th data-s="qtd" class="tr">Qtd. <i class="bi bi-arrow-down-up"></i></th>
-          <th data-s="status">Status <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="qtd" class="tr" data-tooltip="Quantidade atual do material registrada na planilha.">Qtd. <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="status" data-tooltip="Status do material calculado com base nos limiares definidos nas configurações.">Status <i class="bi bi-arrow-down-up"></i></th>
           <th style="width:40px"></th>
         </tr></thead>
         <tbody id="tbMat">
@@ -1771,11 +1786,10 @@ table.dt {
       </table>
     </div>
     <div class="pag" id="pagMat">
-      <div class="pag-info" id="pagInfo">—</div>
+      <div class="pag-ctrl" id="pagCtrl"></div> <!-- Controles no centro visual -->
       <div style="display:flex;align-items:center;gap:8px">
-        <span class="fs12 t4">Por página:</span>
+        <div class="pag-info" id="pagInfo" style="margin-right:8px">—</div>
         <select class="pag-sz" id="ppSel"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option></select>
-        <div class="pag-ctrl" id="pagCtrl"></div>
       </div>
     </div>
   </div>
@@ -2038,6 +2052,13 @@ table.dt {
       <div><div class="cfg-lbl">Itens por página (tabela)</div><div class="cfg-hint">Quantidade de registros por página</div></div>
       <select class="flt-sel" id="cfgPP" style="min-width:80px"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option></select>
     </div>
+    <div class="cfg-row">
+      <div><div class="cfg-lbl">Exibir Dicas de Ajuda</div><div class="cfg-hint">Mostra explicações ao passar o mouse sobre os itens</div></div>
+      <label class="switch">
+        <input type="checkbox" id="cfgTooltips">
+        <span class="slider round"></span>
+      </label>
+    </div>
     <div style="padding:14px 20px;display:flex;justify-content:flex-end;gap:8px">
       <button class="btn btn-ghost btn-sm" onclick="resetCfg()">Restaurar padrão</button>
       <button class="btn btn-primary btn-sm" onclick="saveCfg()"><i class="bi bi-check2"></i> Salvar e Reaplicar</button>
@@ -2108,45 +2129,39 @@ const DB={name:'PCM_v3',store:'d',ver:1,
 };
 
 /* ─── Config ─────────────────────────────── */
-let CFG={crit:5,atenc:10,pp:50};
-function loadCFG(){const s=localStorage.getItem('pcm3_cfg');if(s)try{CFG={...CFG,...JSON.parse(s)}}catch(e){}; document.getElementById('cfgCrit').value=CFG.crit;document.getElementById('cfgAtenc').value=CFG.atenc;document.getElementById('cfgPP').value=CFG.pp;S.pp=CFG.pp}
-function saveCfg(){CFG.crit=parseInt(document.getElementById('cfgCrit').value)||5;CFG.atenc=parseInt(document.getElementById('cfgAtenc').value)||10;CFG.pp=parseInt(document.getElementById('cfgPP').value)||50;S.pp=CFG.pp;localStorage.setItem('pcm3_cfg',JSON.stringify(CFG));if(S.raw.length)processData(S.raw);toast('Configurações salvas e aplicadas','ok')}
-function resetCfg(){CFG={crit:5,atenc:10,pp:50};document.getElementById('cfgCrit').value=5;document.getElementById('cfgAtenc').value=10;document.getElementById('cfgPP').value=50;S.pp=50;toast('Configurações restauradas','info')}
+let CFG={crit:5,atenc:10,pp:50,tooltips:true};
+function loadCFG(){const s=localStorage.getItem('pcm3_cfg');if(s)try{CFG={...CFG,...JSON.parse(s)}}catch(e){}; document.getElementById('cfgCrit').value=CFG.crit;document.getElementById('cfgAtenc').value=CFG.atenc;document.getElementById('cfgPP').value=CFG.pp;document.getElementById('cfgTooltips').checked=CFG.tooltips;S.pp=CFG.pp}
+function saveCfg(){CFG.crit=parseInt(document.getElementById('cfgCrit').value)||5;CFG.atenc=parseInt(document.getElementById('cfgAtenc').value)||10;CFG.pp=parseInt(document.getElementById('cfgPP').value)||50;CFG.tooltips=document.getElementById('cfgTooltips').checked;S.pp=CFG.pp;localStorage.setItem('pcm3_cfg',JSON.stringify(CFG));if(S.raw.length)processData(S.raw);toast('Configurações salvas e aplicadas','ok')}
+function resetCfg(){CFG={crit:5,atenc:10,pp:50,tooltips:true};document.getElementById('cfgCrit').value=5;document.getElementById('cfgAtenc').value=10;document.getElementById('cfgPP').value=50;document.getElementById('cfgTooltips').checked=true;S.pp=50;toast('Configurações restauradas','info')}
 
 /* ─── State ─────────────────────────────── */
 const S={raw:[],data:[],flt:[],pg:1,pp:50,sortC:null,sortD:'asc',charts:{},AF:{},q:''};
 
 /* ─── Nav ─────────────────────────────── */
-const NAV_LABELS={
-  's-dash':'Dashboard','s-mat':'Materiais','s-crit':'Críticos',
-  's-area':'Por Área','s-setor':'Por Setor','s-matriz':'Matriz',
-  's-rel':'Relatórios','s-imp':'Importar','s-cfg':'Configurações'
-};
-
 function navTo(t){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
   const sec=document.getElementById(t);if(sec)sec.classList.add('active');
-  const btn=document.querySelector(`.nb[data-t="${t}"]`);if(btn)btn.classList.add('active');
-  document.getElementById('hdrMod').textContent=NAV_LABELS[t]||t;
+  const btn=document.querySelector(`.nav-item[data-t="${t}"]`);
+  if(btn){
+    btn.classList.add('active');
+    btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
 }
 
-document.querySelectorAll('.nb[data-t]').forEach(b=>b.addEventListener('click',()=>navTo(b.dataset.t)));
+// Click navigation
+document.querySelectorAll('.nav-item[data-t]').forEach(b=>b.addEventListener('click',()=>navTo(b.dataset.t)));
 
-// Keyboard arrow nav
-const allNBs=()=>[...document.querySelectorAll('.nb[data-t]')];
-document.getElementById('nav').addEventListener('keydown',e=>{
-  const bs=allNBs(),i=bs.indexOf(document.activeElement);if(i<0)return;
-  if(e.key==='ArrowRight'){e.preventDefault();const n=bs[(i+1)%bs.length];n.focus();n.click()}
-  else if(e.key==='ArrowLeft'){e.preventDefault();const n=bs[(i-1+bs.length)%bs.length];n.focus();n.click()}
-  else if(e.key==='Home'){e.preventDefault();bs[0].focus();bs[0].click()}
-  else if(e.key==='End'){e.preventDefault();bs[bs.length-1].focus();bs[bs.length-1].click()}
+// Keyboard navigation (Arrows)
+document.addEventListener('keydown', (e) => {
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT') return; // Ignore if typing
+  const items = Array.from(document.querySelectorAll('.nav-item[data-t]'));
+  const current = document.querySelector('.nav-item.active');
+  let idx = items.indexOf(current);
+  if (e.key === 'ArrowRight') { e.preventDefault(); idx = (idx + 1) % items.length; navTo(items[idx].dataset.t); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); idx = (idx - 1 + items.length) % items.length; navTo(items[idx].dataset.t); }
 });
 
-// Header buttons
-document.getElementById('btnHdrImport').addEventListener('click',()=>navTo('s-imp'));
-document.getElementById('btnHdrExport').addEventListener('click',()=>openMo('moExport'));
-document.getElementById('btnHdrCrit').addEventListener('click',()=>navTo('s-crit'));
 document.getElementById('btnAdvFlt').addEventListener('click',()=>document.getElementById('advPanel').classList.toggle('open'));
 document.getElementById('btnExpGeral').addEventListener('click',()=>openMo('moExport'));
 
@@ -2220,13 +2235,6 @@ function showLoaded(name){
   document.getElementById('dropFN').textContent=name;
   dz.classList.add('loaded');
   document.getElementById('btnExpFull').disabled=false;
-  document.getElementById('btnExpCritRel').disabled=false;
-  document.getElementById('btnExpCrit').disabled=false;
-  // Update header status
-  const st=document.getElementById('hdrStatus');
-  st.querySelector('span.dot-live').style.background='#34D399';
-  st.querySelector('span.dot-live').style.animation='livePulse 2.5s ease-in-out infinite';
-  st.querySelector('span.dot-live').style.boxShadow='0 0 0 2px rgba(52,211,153,.25)';
 }
 
 function processFile(file){
@@ -2312,7 +2320,6 @@ function updateAll(){
   document.getElementById('noBanner').style.display=has?'none':'flex';
   document.getElementById('dashMain').style.display=has?'block':'none';
   if(has){
-    document.getElementById('hdrStatusTxt').textContent=`${S.data.length.toLocaleString('pt-BR')} registros`;
     updateKPIs();
     buildGauges();
     buildRankings();
@@ -2354,8 +2361,9 @@ function updateKPIs(){
     document.getElementById('critRibbonText').textContent=`${maq} equipamento(s) com risco de indisponibilidade para manutenção.`;
     document.getElementById('navBadge').textContent=crit>99?'99+':crit;
     document.getElementById('navBadge').style.display='inline-flex';
-    document.getElementById('btnHdrCrit').style.display='flex';
-    document.getElementById('hdrCritNum').textContent=crit;
+  } else {
+    document.getElementById('critRibbon').style.display='none';
+    document.getElementById('navBadge').style.display='none';
   }
 }
 
@@ -2386,6 +2394,27 @@ function buildGauges(){
     showLabel(document.getElementById('hbOk'),pD,disp.toLocaleString('pt-BR'));
     showLabel(document.getElementById('hbWarn'),pA,atenc.toLocaleString('pt-BR'));
     showLabel(document.getElementById('hbCrit'),pC,crit.toLocaleString('pt-BR'));
+
+    // Update stats grid
+    const fmtP = (v) => n>0 ? v.toFixed(1)+'%' : '—';
+    document.getElementById('sOkPct').textContent = fmtP(pD);
+    document.getElementById('sWarnPct').textContent = fmtP(pA);
+    document.getElementById('sCritPct').textContent = fmtP(pC);
+
+    // Update insight box
+    // Health = % itens nao criticos (disponivel + atencao)
+    const health = n > 0 ? Math.round(((disp + atenc) / n) * 100) : 0;
+    const hEl = document.getElementById('gHealth');
+    hEl.textContent = health + '%';
+    hEl.style.color = health > 80 ? 'var(--ok)' : health > 50 ? 'var(--warn)' : 'var(--crit)';
+
+    // Focus area: area com mais criticos
+    const critCounts = {};
+    S.data.filter(x=>x.status.lvl==='critico').forEach(x => { critCounts[x.area] = (critCounts[x.area] || 0) + 1; });
+    const worst = Object.entries(critCounts).sort((a,b)=>b[1]-a[1])[0];
+    const fEl = document.getElementById('gFocus');
+    if(worst) { fEl.textContent = `${worst[0]} (${worst[1]})`; fEl.title = worst[0]; }
+    else { fEl.textContent = 'Nenhuma área crítica'; fEl.style.color = 'var(--t3)'; }
   },200);
 }
 
@@ -2397,7 +2426,7 @@ function buildRankings(){
     return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n);
   };
 
-  const areas=countBy('area',8);
+  const areas=countBy('area',10);
   const setores=countBy('setor',10);
   const maxA=areas[0]?.[1]||1;
   const maxS=setores[0]?.[1]||1;
@@ -2550,12 +2579,8 @@ document.getElementById('btnFltClear').addEventListener('click',()=>{
   ['fa-area','fa-setor','fa-status','fa-classe'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
   ['fa-qmin','fa-qmax'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
   S.AF={};S.q='';document.getElementById('searchMat').value='';
-  document.getElementById('qfArea').value='';document.getElementById('qfStatus').value='';
   applyFlt();renderPills();document.getElementById('advPanel').classList.remove('open');
 });
-
-document.getElementById('qfArea').addEventListener('change',e=>{S.AF.area=e.target.value;applyFlt();renderPills()});
-document.getElementById('qfStatus').addEventListener('change',e=>{S.AF.status=e.target.value;applyFlt();renderPills()});
 
 function applyFlt(){
   let d=[...S.data];
@@ -2586,8 +2611,6 @@ function renderPills(){
 
 function rmPill(k){
   delete S.AF[k];
-  if(k==='area')  {document.getElementById('qfArea').value=''}
-  if(k==='status'){document.getElementById('qfStatus').value=''}
   applyFlt();renderPills();
 }
 
@@ -2764,9 +2787,121 @@ document.getElementById('btnExpFull').addEventListener('click',()=>{
 document.getElementById('btnExpCrit').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Criticos'));
 document.getElementById('btnExpCritRel').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Relatorio_Criticos'));
 
+/* ─── Tooltip ─────────────────────────────── */
+const TT_DELAY = 350; // ms
+let ttTimer = null, currentTT = null, ttEl = null;
+
+function initTooltips() {
+  ttEl = document.createElement('div');
+  ttEl.id = 'tooltip';
+  document.body.appendChild(ttEl);
+
+  document.body.addEventListener('mouseover', e => {
+    if (!CFG.tooltips) return;
+    const target = e.target.closest('[data-tooltip]');
+    if (target) {
+      currentTT = target;
+      clearTimeout(ttTimer);
+      ttTimer = setTimeout(() => showTooltip(target, e), TT_DELAY);
+    }
+  });
+
+  document.body.addEventListener('mouseout', () => {
+    if (!CFG.tooltips) return;
+    clearTimeout(ttTimer);
+    if (currentTT) { hideTooltip(); currentTT = null; }
+  });
+
+  document.body.addEventListener('mousemove', e => { if (ttEl.classList.contains('show')) positionTooltip(e); });
+}
+
+function showTooltip(target, event) {
+  let msg = target.dataset.tooltip;
+  if (!msg) return;
+  msg = msg.replace(/\$\{CFG\.crit\}/g, `<strong>${CFG.crit}</strong>`).replace(/\$\{CFG\.atenc\}/g, `<strong>${CFG.atenc}</strong>`);
+  ttEl.innerHTML = msg;
+  ttEl.classList.add('show');
+  positionTooltip(event);
+}
+
+function hideTooltip() { ttEl.classList.remove('show'); }
+
+function positionTooltip(e) { const margin = 18; let x = e.clientX + margin, y = e.clientY + margin; if (x + ttEl.offsetWidth > window.innerWidth - margin) x = e.clientX - ttEl.offsetWidth - margin; if (y + ttEl.offsetHeight > window.innerHeight - margin) y = e.clientY - ttEl.offsetHeight - margin; ttEl.style.left = x + 'px'; ttEl.style.top = y + 'px'; }
+
+/* ─── Clock ─────────────────────────────── */
+function updateClock(){
+  const now = new Date();
+  const d = now.toLocaleDateString('pt-BR', {weekday:'short', day:'2-digit', month:'short'}).toUpperCase().replace('.','');
+  const t = now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  const el = document.getElementById('hdrClock');
+  if(el) el.innerHTML = `<div class="hd-time">${t}</div><div class="hd-date">${d}</div>`;
+}
+
+/* ─── Weather ─────────────────────────────── */
+async function initWeather(){
+  const setW=(t,c,i)=>{
+    document.getElementById('wTemp').textContent=Math.round(t)+'°C';
+    document.getElementById('wCity').textContent=c;
+    document.getElementById('wIcon').className=`bi bi-${i}`;
+  };
+
+  let lat=-23.55, lon=-46.63, city='São Paulo'; // Default fallback
+
+  // Tenta pegar localização do navegador (timeout curto para não travar)
+  try {
+    const pos = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject, {timeout: 3000});
+    });
+    lat = pos.coords.latitude;
+    lon = pos.coords.longitude;
+    
+    // Tenta obter o nome da cidade via reverse geocoding
+    try {
+      // Usando BigDataCloud API, que tem uma política de CORS mais permissiva para testes locais.
+      const geoRes = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=pt`);
+      const geoData = await geoRes.json();
+      city = geoData?.city || 'Local';
+      if (city === 'Local') {
+        document.getElementById('wCity').title = 'Não foi possível determinar o nome da cidade.';
+      }
+    } catch (geoErr) {
+      city = 'Local'; // Fallback se geocoding falhar
+      document.getElementById('wCity').title = 'Falha ao buscar nome da cidade. Pode ser uma restrição de segurança do navegador.';
+    }
+  } catch(e) {
+    // Geolocalização falhou ou foi negada, usa o padrão.
+  }
+
+  try {
+    // API Open-Meteo (Gratuita, sem chave)
+    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+    const data = await res.json();
+    const w = data.current_weather;
+    const code = w.weathercode;
+    // Mapa simples de códigos WMO para ícones Bootstrap
+    let icon='sun';
+    if(code>3) icon='cloud-sun';
+    if(code>45) icon='cloud-fog';
+    if(code>50) icon='cloud-drizzle';
+    if(code>60) icon='cloud-rain';
+    if(code>70) icon='snow';
+    if(code>80) icon='cloud-rain-heavy';
+    if(code>95) icon='lightning';
+    
+    setW(w.temperature, city, icon);
+  } catch(err) {
+    console.error('Erro clima:', err);
+    setW(25, 'São Paulo', 'sun'); // Fallback final
+  }
+}
+
 /* ─── Boot ─────────────────────────────── */
 (async()=>{
   loadCFG();
+  setInterval(updateClock, 1000); updateClock(); // Start clock
+  initWeather(); // Fetch inicial do clima
+  setInterval(initWeather, 900000); // Atualiza o clima a cada 15 minutos
+  initTooltips();
   const fname=localStorage.getItem('pcm3_file');
   if(!fname)return;
   try{
