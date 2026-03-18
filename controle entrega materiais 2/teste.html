@@ -78,6 +78,38 @@
   --nh: 44px;  /* nav height */
 }
 
+body.dark {
+  /* Surface */
+  --bg:          #111827; /* slate-900 */
+  --surface:     #1F2937; /* slate-800 */
+  --surface-2:   #374151; /* slate-700 */
+  --surface-3:   #4B5563; /* slate-600 */
+
+  /* Borders */
+  --border:      #374151; /* slate-700 */
+  --border-2:    #4B5563; /* slate-600 */
+
+  /* Brand */
+  --brand-light: #1E40AF; /* blue-800, for backgrounds */
+
+  /* Semantic */
+  --ok-bg:       #064E3B; /* green-900 */
+  --ok-border:   #10B981; /* green-500 */
+  --warn-bg:     #78350F; /* amber-900 */
+  --warn-border: #F59E0B; /* amber-500 */
+  --crit-bg:     #991B1B; /* red-800 */
+  --crit-border: #EF4444; /* red-500 */
+  --info-bg:     #1E40AF; /* blue-800 */
+  --info-border: #3B82F6; /* blue-500 */
+
+  /* Text */
+  --t1: #F9FAFB; /* slate-50 */
+  --t2: #E5E7EB; /* slate-200 */
+  --t3: #9CA3AF; /* slate-400 */
+  --t4: #6B7280; /* slate-500 */
+  --t-inv: #1F2937; /* slate-800 */
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 
@@ -1382,10 +1414,21 @@ table.dt {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239CA3AF' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background-color 0.15s;
+  cursor: pointer;
 }
 
 .fs:focus { border-color: var(--brand); outline: none; }
+.fs:hover { border-color: var(--t3); background-color: var(--surface-2); }
+
+/* Estilização das opções do select (tentativa de suporte a cursor/cores no dropdown) */
+select option {
+  background-color: var(--surface);
+  color: var(--t1);
+  cursor: pointer;
+  padding: 6px;
+}
+
 .fh { font-size: 11px; color: var(--t4); margin-top: 4px; }
 
 /* ══════════════════════════════════════════
@@ -1538,6 +1581,112 @@ input:checked + .slider:before { transform: translateX(20px); }
   transform: translateY(0) scale(1);
 }
 
+/* ══════════════════════════════════════════
+   DARK MODE OVERRIDES
+══════════════════════════════════════════ */
+body.dark #nav {
+  background: rgba(31, 41, 55, 0.85); /* slate-800 with transparency */
+}
+body.dark .nav-item.active {
+  background: var(--t1);
+  color: var(--t-inv);
+}
+body.dark .nav-item.active .nb-badge {
+  background: rgba(0,0,0,0.25);
+  color: var(--t1);
+}
+body.dark .dt tbody tr:nth-of-type(even) {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+body.dark .dt tbody tr:hover {
+  background: var(--brand-light) !important;
+}
+body.dark .dt tbody tr.r-crit { background: rgba(153, 27, 27, 0.2); }
+body.dark .dt tbody tr.r-crit:hover { background: rgba(153, 27, 27, 0.4); }
+body.dark .dt tbody tr.r-warn { background: rgba(120, 53, 15, 0.2); }
+body.dark .dt tbody tr.r-warn:hover { background: rgba(120, 53, 15, 0.4); }
+
+body.dark .flt-panel {
+  background: #1a2230;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+}
+body.dark .flt-panel .fs,
+body.dark .flt-panel .fc {
+  background: var(--surface);
+  border-color: var(--border-2);
+}
+body.dark .flt-panel .fs:focus,
+body.dark .flt-panel .fc:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+body.dark .srch input {
+  background: var(--surface);
+}
+body.dark .srch input:focus {
+  background: var(--bg);
+}
+body.dark .flt-sel {
+  background-color: var(--surface);
+}
+body.dark .pg {
+  background: var(--surface-2);
+}
+body.dark .pg:hover {
+  background: var(--surface);
+}
+body.dark #ldr {
+  background: rgba(17, 24, 39, 0.9);
+}
+body.dark .g-insight {
+  background: var(--bg);
+  border-color: var(--border);
+}
+body.dark .gi-ico {
+  background: var(--surface);
+  border-color: var(--border-2);
+}
+body.dark .drw-stock-box div[style*="background:rgba(255,255,255,0.6)"] {
+  background: rgba(0,0,0,0.2) !important;
+}
+body.dark #tooltip {
+  background: #111827; /* slate-900, fundo escuro consistente */
+  color: var(--t2);   /* slate-200, texto claro do tema */
+  border: 1px solid var(--border);
+}
+/* Forçar texto branco em elementos críticos no modo escuro para contraste */
+body.dark .bdg-crit,
+body.dark .nb-badge.crit,
+body.dark .crit-ribbon-title,
+body.dark .ci-red,
+body.dark .ci-red i,
+body.dark .dt tbody tr.r-crit .mono.fw6,
+body.dark .drw-stock-box[style*="var(--crit-bg)"] .drw-stock-val {
+  color: #FFFFFF !important;
+}
+/* Forçar texto branco em elementos informativos (azul) no modo escuro */
+body.dark .ci-blue,
+body.dark .ci-blue i,
+body.dark .bdg-info,
+body.dark .info-banner,
+body.dark .info-banner i,
+body.dark .info-banner .ib-close,
+body.dark .filter-pill,
+body.dark .filter-pill button,
+body.dark .flt-sel.active,
+body.dark .dt tbody tr:hover td,
+body.dark .dt tbody tr:hover strong,
+body.dark .dt tbody tr:hover .mono {
+  color: #FFFFFF !important;
+}
+
+/* Índice de Saúde: Ícone vermelho e texto branco (no modo escuro para garantir contraste) */
+body.dark .g-insight .gi-row:first-child .gi-ico {
+  color: var(--crit) !important;
+}
+body.dark .g-insight .gi-row:first-child .gi-lbl,
+body.dark #gHealth {
+  color: #FFFFFF !important;
+}
 @media (max-width:768px) { .g2,.g3 { grid-template-columns: 1fr; } }
 </style>
 </head>
@@ -1606,16 +1755,6 @@ input:checked + .slider:before { transform: translateX(20px); }
 
   <div id="dashMain" style="display:none">
 
-    <!-- Ribbon críticos -->
-    <div class="crit-ribbon" id="critRibbon" style="display:none">
-      <div class="crit-ribbon-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
-      <div class="crit-ribbon-body">
-        <div class="crit-ribbon-title" id="critRibbonTitle">Materiais Críticos</div>
-        <div class="crit-ribbon-text"  id="critRibbonText">—</div>
-      </div>
-      <button class="btn btn-danger btn-sm" onclick="navTo('s-crit')">Ver Críticos</button>
-    </div>
-
     <!-- KPI Row -->
     <div class="kpi-row" id="kpiRow">
       <div class="kpi" data-tooltip="<strong>Total de Registros</strong><br>Número total de linhas de materiais processadas da planilha importada." onclick="navTo('s-mat')">
@@ -1646,7 +1785,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
         <div class="kpi-val" id="kv-disp">—</div>
         <div class="kpi-bar-wrap"><div class="kpi-bar-fill" id="kb-disp" style="background:var(--ok)"></div></div>
-        <div class="kpi-foot">Qtd. &gt; limiar</div>
+        <div class="kpi-foot">Qtd. &gt; limite</div>
       </div>
       <div class="kpi" data-tooltip="<strong>Em Atenção</strong><br>Itens cujo estoque está abaixo do limite de 'Atenção', mas acima do 'Crítico'. (${CFG.crit} ≤ Qtd. ≤ ${CFG.atenc})" onclick="navTo('s-mat')">
         <div class="kpi-accent" style="background:var(--warn)"></div>
@@ -1791,10 +1930,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title">Base de Materiais</div>
-      <div class="pg-sub">Visão geral unificada do estoque e alocações</div>
-    </div>
-    <div class="pg-actions">
-      <button class="btn btn-primary btn-sm" id="btnExpGeral"><i class="bi bi-cloud-download"></i> Exportar Tabela</button>
+      <div class="pg-sub">Visualize o inventário completo com indicadores de status em tempo real. Utilize filtros avançados para analisar a disponibilidade por área, setor e classe de material.</div>
     </div>
   </div>
 
@@ -1808,6 +1944,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-primary" id="btnExpGeral" style="height:38px;padding:0 18px;box-shadow:var(--s1)"><i class="bi bi-cloud-download" style="margin-right:6px"></i> Exportar Tabela</button>
         <button class="btn" id="btnAdvFlt" style="height:38px;padding:0 18px;background:var(--surface);border:1px solid var(--border-2);color:var(--t2);font-weight:600;box-shadow:var(--s1)"><i class="bi bi-sliders2" style="margin-right:6px"></i> Filtros</button>
         <div class="srch" style="width:280px">
           <i class="bi bi-search si" style="left:14px;font-size:14px"></i>
@@ -1880,15 +2017,12 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title" style="color:var(--crit)"><i class="bi bi-exclamation-triangle-fill" style="font-size:18px;margin-right:6px"></i>Materiais Críticos</div>
-      <div class="pg-sub">Itens abaixo do estoque mínimo — risco de parada de manutenção</div>
-    </div>
-    <div class="pg-actions">
-      <button class="btn btn-danger btn-sm" id="btnExpCrit"><i class="bi bi-download"></i> Exportar Críticos</button>
+      <div class="pg-sub">Lista prioritária de itens com estoque abaixo do nível de segurança. Ação imediata recomendada para evitar indisponibilidade de peças em manutenções corretivas ou preventivas.</div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-hd" style="padding:20px 24px">
+    <div class="card-hd" style="padding:20px 24px; flex-wrap: nowrap;">
       <div style="display:flex;align-items:center;gap:16px">
         <div class="card-icon ci-red" style="width:46px;height:46px;font-size:20px;border-radius:12px;box-shadow:0 4px 10px rgba(220,38,38,0.15)"><i class="bi bi-exclamation-octagon"></i></div>
         <div>
@@ -1897,6 +2031,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-danger" id="btnExpCrit" style="height:38px;padding:0 18px;box-shadow:var(--s1)"><i class="bi bi-download" style="margin-right:6px"></i> Exportar Críticos</button>
         <button class="btn" id="btnAdvFltCrit" style="height:38px;padding:0 18px;background:var(--surface);border:1px solid var(--border-2);color:var(--t2);font-weight:600;box-shadow:var(--s1)"><i class="bi bi-sliders2" style="margin-right:6px"></i> Filtros</button>
         <div class="srch" style="width:280px">
           <i class="bi bi-search si" style="left:14px;font-size:14px"></i>
@@ -1957,7 +2092,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title">Análise por Área</div>
-      <div class="pg-sub">Clique em uma barra para ver o detalhe daquela área</div>
+      <div class="pg-sub">Panorama da distribuição de materiais pelas áreas físicas da planta. Interaja com o gráfico para isolar locais específicos e analisar a concentração de itens críticos versus disponíveis.</div>
     </div>
     <div class="pg-actions">
       <select class="flt-sel" id="areaMetric">
@@ -1991,7 +2126,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title">Análise por Setor</div>
-      <div class="pg-sub">Distribuição operacional por setor de manutenção</div>
+      <div class="pg-sub">Segmentação de estoque por disciplina de manutenção (Mecânica, Elétrica, Instrumentação, etc.). Analise o volume de materiais sob responsabilidade de cada equipe técnica.</div>
     </div>
   </div>
   <div class="card">
@@ -2006,7 +2141,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title">Matriz Máquina × Material</div>
-      <div class="pg-sub">Selecione um equipamento para ver todos os materiais e status</div>
+      <div class="pg-sub">Rastreabilidade focada no equipamento. Selecione um Local de Instalação para verificar a saúde do estoque de todas as peças de reposição vitais para aquela máquina específica.</div>
     </div>
   </div>
   <div class="card mb14">
@@ -2054,7 +2189,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title">Relatórios e Exportação</div>
-      <div class="pg-sub">Gere arquivos Excel com os dados processados e filtrados</div>
+      <div class="pg-sub">Exportação de dados processados para planilhas Excel. Gere relatórios executivos da base completa ou listas focadas em compras para reposição de itens críticos.</div>
     </div>
   </div>
   <div class="g2">
@@ -2088,7 +2223,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title">Importar Dados</div>
-      <div class="pg-sub">Carregue planilhas Excel para alimentar o sistema de análise</div>
+      <div class="pg-sub">Alimentação do sistema. Carregue as planilhas de Planejamento, SAP e Estoque Físico para que o algoritmo cruze as informações e atualize os indicadores de desempenho.</div>
     </div>
   </div>
 
@@ -2174,7 +2309,7 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="pg-head">
     <div>
       <div class="pg-title">Configurações</div>
-      <div class="pg-sub">Ajuste os parâmetros de classificação e preferências do sistema</div>
+      <div class="pg-sub">Definições globais do sistema. Ajuste os limites de quantidade para os alertas de 'Atenção' e 'Crítico' e personalize a experiência visual da interface.</div>
     </div>
   </div>
   <div class="card" style="max-width:540px">
@@ -2195,6 +2330,13 @@ input:checked + .slider:before { transform: translateX(20px); }
       <div><div class="cfg-lbl">Exibir Dicas de Ajuda</div><div class="cfg-hint">Mostra explicações ao passar o mouse sobre os itens</div></div>
       <label class="switch">
         <input type="checkbox" id="cfgTooltips">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    <div class="cfg-row">
+      <div><div class="cfg-lbl">Tema Escuro</div><div class="cfg-hint">Alterna entre o modo claro e escuro da interface</div></div>
+      <label class="switch">
+        <input type="checkbox" id="cfgTheme">
         <span class="slider round"></span>
       </label>
     </div>
@@ -2291,10 +2433,35 @@ const DB={name:'PCM_v3',store:'d',ver:1,
 };
 
 /* ─── Config ─────────────────────────────── */
-let CFG={crit:5,atenc:10,pp:50,tooltips:true};
-function loadCFG(){const s=localStorage.getItem('pcm3_cfg');if(s)try{CFG={...CFG,...JSON.parse(s)}}catch(e){}; document.getElementById('cfgCrit').value=CFG.crit;document.getElementById('cfgAtenc').value=CFG.atenc;document.getElementById('cfgPP').value=CFG.pp;document.getElementById('cfgTooltips').checked=CFG.tooltips;S.pp=CFG.pp}
-function saveCfg(){CFG.crit=parseInt(document.getElementById('cfgCrit').value)||5;CFG.atenc=parseInt(document.getElementById('cfgAtenc').value)||10;CFG.pp=parseInt(document.getElementById('cfgPP').value)||50;CFG.tooltips=document.getElementById('cfgTooltips').checked;S.pp=CFG.pp;localStorage.setItem('pcm3_cfg',JSON.stringify(CFG));if(S.raw.length)processData(S.raw);toast('Configurações salvas e aplicadas','ok')}
-function resetCfg(){CFG={crit:5,atenc:10,pp:50,tooltips:true};document.getElementById('cfgCrit').value=5;document.getElementById('cfgAtenc').value=10;document.getElementById('cfgPP').value=50;document.getElementById('cfgTooltips').checked=true;S.pp=50;toast('Configurações restauradas','info')}
+let CFG={crit:5,atenc:10,pp:50,tooltips:true, theme:'light'};
+
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.body.classList.add('dark');
+    document.getElementById('cfgTheme').checked = true;
+    CD.color = '#9CA3AF'; // --t3 in dark mode
+  } else {
+    document.body.classList.remove('dark');
+    document.getElementById('cfgTheme').checked = false;
+    CD.color = '#6B7280'; // --t3 in light mode
+  }
+  CFG.theme = theme;
+  Chart.defaults.color = CD.color;
+  if (S.data.length > 0) {
+      buildCharts();
+  }
+}
+
+function toggleTheme() {
+  const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
+  applyTheme(newTheme);
+  localStorage.setItem('pcm3_cfg', JSON.stringify(CFG));
+  toast(`Tema alterado para modo ${newTheme === 'dark' ? 'escuro' : 'claro'}`, 'info');
+}
+
+function loadCFG(){const s=localStorage.getItem('pcm3_cfg');if(s)try{CFG={...CFG,...JSON.parse(s)}}catch(e){}; let initialTheme=CFG.theme;if(!initialTheme||initialTheme==='system'){initialTheme=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'} applyTheme(initialTheme); document.getElementById('cfgCrit').value=CFG.crit;document.getElementById('cfgAtenc').value=CFG.atenc;document.getElementById('cfgPP').value=CFG.pp;document.getElementById('cfgTooltips').checked=CFG.tooltips;S.pp=CFG.pp}
+function saveCfg(){CFG.crit=parseInt(document.getElementById('cfgCrit').value)||5;CFG.atenc=parseInt(document.getElementById('cfgAtenc').value)||10;CFG.pp=parseInt(document.getElementById('cfgPP').value)||50;CFG.tooltips=document.getElementById('cfgTooltips').checked;CFG.theme=document.getElementById('cfgTheme').checked?'dark':'light';S.pp=CFG.pp;localStorage.setItem('pcm3_cfg',JSON.stringify(CFG));if(S.raw.length)processData(S.raw);toast('Configurações salvas e aplicadas','ok')}
+function resetCfg(){CFG={crit:5,atenc:10,pp:50,tooltips:true,theme:'light'};document.getElementById('cfgCrit').value=5;document.getElementById('cfgAtenc').value=10;document.getElementById('cfgPP').value=50;document.getElementById('cfgTooltips').checked=true;applyTheme('light');S.pp=50;toast('Configurações restauradas','info')}
 
 /* ─── State ─────────────────────────────── */
 const S={raw:[],sap:[],almox:[],data:[],flt:[],pg:1,pp:50,charts:{},AF:{},q:'',
@@ -2624,15 +2791,10 @@ function updateKPIs(){
     }
   });
 
-  // Crit ribbon
   if(crit>0){
-    document.getElementById('critRibbon').style.display='flex';
-    document.getElementById('critRibbonTitle').textContent=`${crit} material(is) crítico(s)`;
-    document.getElementById('critRibbonText').textContent=`${maq} equipamento(s) com risco de indisponibilidade para manutenção.`;
     document.getElementById('navBadge').textContent=crit>99?'99+':crit;
     document.getElementById('navBadge').style.display='inline-flex';
   } else {
-    document.getElementById('critRibbon').style.display='none';
     document.getElementById('navBadge').style.display='none';
   }
 }
@@ -3162,17 +3324,75 @@ document.getElementById('matFltSt').addEventListener('change',e=>renderMatriz(do
 
 document.getElementById('btnExpMatriz').addEventListener('click',()=>{
   const m=document.getElementById('selMaq').value;if(!m)return;
-  exportXLSX(S.data.filter(d=>d.local===m),`PCM_Maquina_${m.replace(/[^a-z0-9]/gi,'_')}`);
+  exportXLSX(S.data.filter(d=>d.local===m),`PCM_Maquina_${m.replace(/[^a-z0-9]/gi,'_')}`, `Materiais para a Máquina: ${m}`);
 });
 
 /* ─── Export ─────────────────────────────── */
-function exportXLSX(rows,fname){
-  if(!rows.length){toast('Nenhum dado para exportar','warn');return}
-  const flat=rows.map(d=>({'Área':d.area,'Setor':d.setor,'Local de Instalação':d.local,'Código Material':d.codigo,'Descrição':d.descricao,'UNID':d.unid,'Quantidade':d.qtd,'Classe':d.classe,'Status':d.status.txt}));
-  const ws=XLSX.utils.json_to_sheet(flat);const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,'Dados');
-  XLSX.writeFile(wb,`${fname}_${new Date().toISOString().split('T')[0]}.xlsx`);
-  toast(`Exportado: <strong>${fname}.xlsx</strong>`,'ok');
+function exportXLSX(rows, fname, reportTitle) {
+  if (!rows.length) {
+    toast('Nenhum dado para exportar', 'warn');
+    return;
+  }
+
+  // A biblioteca (sheet.js na versão gratuita) não suporta estilização avançada como cores de fundo ou negrito de forma direta.
+  // A melhoria foca em um cabeçalho informativo, títulos e ajuste automático da largura das colunas.
+
+  // 1. Preparar cabeçalho da tabela e linhas de dados
+  const headers = ['Área', 'Setor', 'Local de Instalação', 'Código Material', 'Descrição', 'UNID', 'Quantidade', 'Classe', 'Status'];
+  const dataRows = rows.map(d => [
+    d.area || '',
+    d.setor || '',
+    d.local || '',
+    d.codigo || '',
+    d.descricao || '',
+    d.unid || '',
+    d.qtd, // Manter como número para cálculos no Excel
+    d.classe || '',
+    d.status.txt || ''
+  ]);
+
+  // 2. Preparar cabeçalho do relatório (título, data, etc.)
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR');
+  const timeStr = now.toLocaleTimeString('pt-BR');
+
+  const titleRow = [reportTitle || `Relatório de Materiais`];
+  // Preenche a linha do título para que a mesclagem funcione corretamente
+  while (titleRow.length < headers.length) titleRow.push('');
+
+  const headerAOA = [
+    titleRow,
+    [`Gerado em: ${dateStr} às ${timeStr}`],
+    [`Total de Registros: ${rows.length}`],
+    [], // Linha em branco como espaçador
+    headers.map(h => h.toUpperCase()) // Deixa os cabeçalhos da tabela em maiúsculo para destaque
+  ];
+
+  // 3. Combinar todos os dados em uma única matriz (Array of Arrays)
+  const finalAOA = [...headerAOA, ...dataRows];
+
+  // 4. Criar a planilha a partir da matriz
+  const ws = XLSX.utils.aoa_to_sheet(finalAOA);
+
+  // 5. Calcular e definir a largura das colunas
+  // Itera em cada coluna para encontrar o conteúdo mais longo
+  const colWidths = headers.map((_, i) => {
+    const widths = finalAOA.map(row => (row[i] ? String(row[i]).length : 0));
+    return { wch: Math.max(...widths) + 2 }; // Adiciona um preenchimento extra
+  });
+  ws['!cols'] = colWidths;
+
+  // 6. Definir a mesclagem para a célula do título principal
+  ws['!merges'] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: headers.length - 1 } } // Mescla a primeira linha
+  ];
+  
+  // 7. Criar o arquivo e iniciar o download
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Dados');
+  const finalFilename = `${fname}_${new Date().toISOString().split('T')[0]}.xlsx`;
+  XLSX.writeFile(wb, finalFilename);
+  toast(`Exportado: <strong>${finalFilename}</strong>`, 'ok');
 }
 
 function doExport(){
@@ -3181,15 +3401,23 @@ function doExport(){
   if(t==='filtered')rows=S.flt;
   if(t==='criticos')rows=S.data.filter(x=>x.status.lvl==='critico');
   if(t==='atencao') rows=S.data.filter(x=>x.status.lvl==='atencao');
-  exportXLSX(rows,n);closeMo('moExport');
+  
+  const sel = document.getElementById('expType');
+  const reportTitleText = sel.options[sel.selectedIndex].text;
+  
+  exportXLSX(rows,n, `Relatório - ${reportTitleText}`);
+  closeMo('moExport');
 }
 
 document.getElementById('btnExpFull').addEventListener('click',()=>{
   const f=document.getElementById('relFltSt').value;
-  exportXLSX(f?S.data.filter(x=>x.status.lvl===f):S.data,'PCM_Completo');
+  const data = f?S.data.filter(x=>x.status.lvl===f):S.data;
+  const sel = document.getElementById('relFltSt');
+  const filterText = f ? sel.options[sel.selectedIndex].text.replace(/✅|⚠️|❌/g, '').trim() : 'Todos';
+  exportXLSX(data,'PCM_Completo', `Relatório Base Completa (${filterText})`);
 });
-document.getElementById('btnExpCrit').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Criticos'));
-document.getElementById('btnExpCritRel').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Relatorio_Criticos'));
+document.getElementById('btnExpCrit').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Criticos', 'Relatório de Materiais Críticos'));
+document.getElementById('btnExpCritRel').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Relatorio_Criticos', 'Relatório de Compras - Itens Críticos'));
 
 /* ─── Tooltip ─────────────────────────────── */
 const TT_DELAY = 350; // ms
@@ -3288,6 +3516,7 @@ async function initWeather(){
   setInterval(updateClock, 1000); updateClock(); // Start clock
   initWeather(); // Fetch inicial do clima
   setInterval(initWeather, 900000); // Atualiza o clima a cada 15 minutos
+  document.getElementById('cfgTheme').addEventListener('change', toggleTheme);
   initTooltips();
   
   setupDropZone('Base');
