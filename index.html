@@ -1,0 +1,2957 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCM Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ════════════════════════════════════════════════════
+   PCM INTELLIGENCE v4 — DARK INDUSTRIAL PRECISION
+   Aesthetic: Dark Industrial · Monochrome Authority
+   Inspired by: Linear, Vercel, Raycast, Basement Studio
+════════════════════════════════════════════════════ */
+:root {
+  /* Dark Surfaces */
+  --bg:         #0A0A0B;
+  --bg-2:       #0F0F11;
+  --surface:    #141416;
+  --surface-2:  #1A1A1E;
+  --surface-3:  #222228;
+  --surface-4:  #2A2A32;
+  --overlay:    rgba(10,10,11,0.85);
+
+  /* Borders */
+  --border:     rgba(255,255,255,0.07);
+  --border-2:   rgba(255,255,255,0.12);
+  --border-3:   rgba(255,255,255,0.18);
+
+  /* Brand — Electric Cyan */
+  --brand:      #00D4FF;
+  --brand-dim:  rgba(0,212,255,0.12);
+  --brand-glow: rgba(0,212,255,0.25);
+  --brand-mid:  rgba(0,212,255,0.5);
+
+  /* Semantic */
+  --ok:         #00E5A0;
+  --ok-dim:     rgba(0,229,160,0.12);
+  --ok-glow:    rgba(0,229,160,0.25);
+  --warn:       #F5A623;
+  --warn-dim:   rgba(245,166,35,0.12);
+  --warn-glow:  rgba(245,166,35,0.25);
+  --crit:       #FF4757;
+  --crit-dim:   rgba(255,71,87,0.12);
+  --crit-glow:  rgba(255,71,87,0.25);
+  --info:       #5B8DEF;
+  --info-dim:   rgba(91,141,239,0.12);
+
+  /* Text */
+  --t1: #F0F0F2;
+  --t2: #A8A8B3;
+  --t3: #65656F;
+  --t4: #3C3C46;
+  --t-brand: #00D4FF;
+
+  /* Fonts */
+  --sans: 'DM Sans', -apple-system, system-ui, sans-serif;
+  --mono: 'DM Mono', 'SF Mono', Consolas, monospace;
+  --display: 'Syne', sans-serif;
+
+  /* Geometry */
+  --r1: 4px;
+  --r2: 6px;
+  --r3: 10px;
+  --r4: 14px;
+  --r5: 20px;
+  --r6: 24px;
+
+  /* Shadows */
+  --s1: 0 1px 3px rgba(0,0,0,0.4);
+  --s2: 0 4px 16px rgba(0,0,0,0.5);
+  --s3: 0 8px 32px rgba(0,0,0,0.6);
+  --s4: 0 24px 64px rgba(0,0,0,0.7);
+  --glow-brand: 0 0 24px rgba(0,212,255,0.15);
+  --glow-crit:  0 0 24px rgba(255,71,87,0.15);
+
+  /* Layout */
+  --hh: 56px;
+  --nh: 42px;
+}
+
+[data-theme="light"] {
+  --bg:         #F4F5F7;
+  --bg-2:       #ECEEF2;
+  --surface:    #FFFFFF;
+  --surface-2:  #F8F9FB;
+  --surface-3:  #F0F2F5;
+  --surface-4:  #E8EBF0;
+  --overlay:    rgba(244,245,247,0.9);
+  --border:     rgba(0,0,0,0.07);
+  --border-2:   rgba(0,0,0,0.12);
+  --border-3:   rgba(0,0,0,0.18);
+  --brand:      #0099CC;
+  --brand-dim:  rgba(0,153,204,0.10);
+  --brand-glow: rgba(0,153,204,0.20);
+  --brand-mid:  rgba(0,153,204,0.5);
+  --ok:         #00A870;
+  --ok-dim:     rgba(0,168,112,0.10);
+  --ok-glow:    rgba(0,168,112,0.20);
+  --warn:       #D4890A;
+  --warn-dim:   rgba(212,137,10,0.10);
+  --warn-glow:  rgba(212,137,10,0.20);
+  --crit:       #E03040;
+  --crit-dim:   rgba(224,48,64,0.10);
+  --crit-glow:  rgba(224,48,64,0.20);
+  --info:       #3D6BD4;
+  --info-dim:   rgba(61,107,212,0.10);
+  --t1: #111118;
+  --t2: #3A3A4A;
+  --t3: #70708A;
+  --t4: #A0A0B8;
+  --t-brand: #0077AA;
+  --s1: 0 1px 3px rgba(0,0,0,0.06);
+  --s2: 0 4px 16px rgba(0,0,0,0.08);
+  --s3: 0 8px 32px rgba(0,0,0,0.10);
+  --s4: 0 24px 64px rgba(0,0,0,0.12);
+  --glow-brand: none;
+  --glow-crit:  none;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+html, body { height: 100%; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--t1);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Noise texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+[data-theme="light"] body::before { opacity: 0.2; }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-4); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--t3); }
+
+/* ══════ HEADER ══════ */
+#hdr {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--hh);
+  background: rgba(10,10,11,0.85);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 300;
+}
+
+[data-theme="light"] #hdr {
+  background: rgba(255,255,255,0.85);
+}
+
+.hdr-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hdr-logo-mark {
+  width: 30px; height: 30px;
+  border-radius: var(--r2);
+  background: var(--brand);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.hdr-logo-mark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 60%);
+}
+
+.hdr-logo-mark i {
+  font-size: 14px;
+  color: #000;
+  z-index: 1;
+}
+
+.hdr-wordmark {
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: -0.02em;
+}
+
+.hdr-wordmark span {
+  color: var(--brand);
+}
+
+.hdr-sep {
+  width: 1px; height: 18px;
+  background: var(--border-2);
+  margin: 0 12px;
+}
+
+.hdr-module {
+  font-size: 12px;
+  color: var(--t3);
+  font-weight: 400;
+  font-family: var(--mono);
+}
+
+.hdr-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hdr-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: var(--r3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--t3);
+  cursor: default;
+}
+
+.dot-live {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--t3);
+  flex-shrink: 0;
+}
+
+.dot-live.active {
+  background: var(--ok);
+  box-shadow: 0 0 0 3px var(--ok-dim);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 3px var(--ok-dim); }
+  50%      { box-shadow: 0 0 0 6px rgba(0,229,160,0.05); }
+}
+
+.hdr-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  height: 32px;
+  border-radius: var(--r2);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border-2);
+  background: var(--surface-2);
+  color: var(--t2);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.hdr-btn:hover {
+  background: var(--surface-3);
+  border-color: var(--border-3);
+  color: var(--t1);
+}
+
+.hdr-btn.danger {
+  border-color: var(--crit-dim);
+  background: var(--crit-dim);
+  color: var(--crit);
+}
+
+.hdr-btn.danger:hover {
+  background: rgba(255,71,87,0.2);
+}
+
+.hdr-btn i { font-size: 12px; }
+
+.hdr-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+  font-family: var(--mono);
+}
+
+.hdr-clock .hd-time {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t1);
+  letter-spacing: 0.04em;
+}
+
+.hdr-clock .hd-date {
+  font-size: 10px;
+  color: var(--t3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Avatar */
+.u-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border-2);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.u-avatar:hover { border-color: var(--brand); }
+
+/* Theme toggle */
+.theme-toggle {
+  width: 32px; height: 32px;
+  border-radius: var(--r2);
+  border: 1px solid var(--border-2);
+  background: var(--surface-2);
+  color: var(--t3);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 14px;
+  transition: all 0.15s;
+}
+.theme-toggle:hover { background: var(--surface-3); color: var(--brand); border-color: var(--border-3); }
+
+/* ══════ NAV ══════ */
+#nav {
+  position: fixed;
+  top: var(--hh); left: 0; right: 0;
+  height: var(--nh);
+  background: rgba(10,10,11,0.75);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  align-items: stretch;
+  padding: 0 20px;
+  z-index: 299;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 2px;
+}
+
+[data-theme="light"] #nav { background: rgba(248,249,251,0.85); }
+
+#nav::-webkit-scrollbar { display: none; }
+
+.nav-divider {
+  width: 1px;
+  background: var(--border);
+  margin: 8px 6px;
+  flex-shrink: 0;
+}
+
+.nav-spacer { flex: 1; }
+
+.nb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--t3);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s;
+  outline: none;
+  position: relative;
+  letter-spacing: 0.01em;
+}
+
+.nb i { font-size: 13px; transition: color 0.15s; }
+.nb:hover { color: var(--t2); }
+
+.nb.active {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+}
+
+.nb.active::before {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 2px;
+  background: var(--brand);
+  box-shadow: 0 0 8px var(--brand-mid);
+}
+
+.nb:focus-visible {
+  outline: 1px solid var(--brand);
+  outline-offset: -2px;
+  border-radius: var(--r1);
+}
+
+.nb-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  border-radius: 99px;
+  font-size: 9px;
+  font-weight: 700;
+  font-family: var(--mono);
+  line-height: 1;
+  background: var(--crit-dim);
+  color: var(--crit);
+  border: 1px solid rgba(255,71,87,0.3);
+}
+
+/* ══════ MAIN ══════ */
+#main {
+  margin-top: calc(var(--hh) + var(--nh));
+  padding: 24px 24px 60px;
+  min-height: calc(100vh - var(--hh) - var(--nh));
+  position: relative;
+  z-index: 1;
+}
+
+.sec { display: none; }
+.sec.active { display: block; animation: fadeUp 0.3s cubic-bezier(0.4,0,0.2,1); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ══════ PAGE HEAD ══════ */
+.pg-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pg-title {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--t1);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.pg-sub {
+  font-size: 12px;
+  color: var(--t3);
+  margin-top: 5px;
+  font-family: var(--mono);
+}
+
+.pg-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ══════ CARD ══════ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r4);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.card:hover { border-color: var(--border-2); }
+
+.card-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--t2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.card-icon {
+  width: 26px; height: 26px;
+  border-radius: var(--r1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.ci-brand  { background: var(--brand-dim);  color: var(--brand); }
+.ci-ok     { background: var(--ok-dim);     color: var(--ok); }
+.ci-crit   { background: var(--crit-dim);   color: var(--crit); }
+.ci-warn   { background: var(--warn-dim);   color: var(--warn); }
+.ci-muted  { background: var(--surface-3);  color: var(--t3); }
+
+.card-bd { padding: 18px; }
+.card-ft {
+  padding: 10px 18px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--t3);
+  font-family: var(--mono);
+  background: var(--surface-2);
+}
+
+/* ══════ KPI GRID ══════ */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (max-width:1400px) { .kpi-row { grid-template-columns: repeat(3,1fr); } }
+@media (max-width:800px)  { .kpi-row { grid-template-columns: repeat(2,1fr); } }
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r4);
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.kpi::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top left, var(--kpi-glow,transparent) 0%, transparent 60%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.kpi:hover {
+  border-color: var(--border-2);
+  transform: translateY(-2px);
+}
+
+.kpi:hover::before { opacity: 1; }
+
+.kpi-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--t3);
+  font-family: var(--mono);
+}
+
+.kpi-ico {
+  width: 28px; height: 28px;
+  border-radius: var(--r2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+
+.kpi-val {
+  font-family: var(--mono);
+  font-size: 30px;
+  font-weight: 300;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  margin-bottom: 12px;
+  color: var(--t1);
+}
+
+.kpi-progress {
+  height: 2px;
+  background: var(--surface-3);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.kpi-progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.kpi-foot {
+  font-size: 10px;
+  color: var(--t3);
+  font-family: var(--mono);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ══════ GAUGE / DISTRIBUTION CARD ══════ */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (max-width:1200px) { .dash-grid { grid-template-columns: 1fr; } }
+
+.dist-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r4);
+  padding: 20px;
+}
+
+.dist-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.dist-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--t3);
+  font-family: var(--mono);
+}
+
+/* Segmented bar */
+.seg-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 99px;
+  overflow: hidden;
+  gap: 2px;
+  margin-bottom: 16px;
+}
+
+.seg {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  min-width: 0;
+}
+
+.seg-ok   { background: var(--ok); }
+.seg-warn { background: var(--warn); }
+.seg-crit { background: var(--crit); }
+
+.dist-stats {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1px;
+  background: var(--border);
+  border-radius: var(--r3);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.dist-stat {
+  background: var(--surface-2);
+  padding: 12px;
+  text-align: center;
+}
+
+.dist-stat-val {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.dist-stat-lbl {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--t3);
+  font-family: var(--mono);
+}
+
+.dist-insights {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dist-insight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r3);
+}
+
+.insight-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.insight-content { flex: 1; overflow: hidden; }
+
+.insight-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--t4);
+  font-family: var(--mono);
+  margin-bottom: 2px;
+}
+
+.insight-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ══════ CHART GRID ══════ */
+.chart-2col {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+@media (max-width:1100px) { .chart-2col { grid-template-columns: 1fr; } }
+
+/* ══════ RANK LIST ══════ */
+.rank-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.rank-item {
+  display: grid;
+  grid-template-columns: 1fr 100px 42px;
+  align-items: center;
+  gap: 10px;
+}
+
+.rank-label {
+  font-size: 12px;
+  color: var(--t2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+}
+
+.rank-track {
+  height: 3px;
+  background: var(--surface-3);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.rank-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--brand);
+  width: 0;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+.rank-val {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--t3);
+  text-align: right;
+}
+
+/* ══════ CRITICAL RIBBON ══════ */
+.crit-ribbon {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--crit-dim);
+  border: 1px solid rgba(255,71,87,0.2);
+  border-radius: var(--r4);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.crit-ribbon::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--crit);
+  box-shadow: 0 0 10px var(--crit);
+}
+
+.crit-ribbon-icon {
+  width: 34px; height: 34px;
+  background: rgba(255,71,87,0.2);
+  border: 1px solid rgba(255,71,87,0.3);
+  border-radius: var(--r2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--crit);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.crit-ribbon-body { flex: 1; }
+.crit-ribbon-title { font-size: 13px; font-weight: 600; color: var(--crit); }
+.crit-ribbon-text  { font-size: 11px; color: var(--t3); margin-top: 2px; font-family: var(--mono); }
+
+/* ══════ BANNER ══════ */
+.info-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--brand-dim);
+  border: 1px solid rgba(0,212,255,0.15);
+  border-radius: var(--r4);
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--brand);
+}
+
+.info-banner i { font-size: 16px; flex-shrink: 0; }
+.info-banner .ib-txt { flex: 1; color: var(--t2); }
+.info-banner .ib-txt strong { color: var(--t1); }
+.info-banner .ib-close {
+  background: none; border: none; cursor: pointer;
+  color: var(--t3); font-size: 14px; padding: 2px;
+  border-radius: var(--r1); transition: color 0.1s;
+}
+.info-banner .ib-close:hover { color: var(--t1); }
+
+/* ══════ BUTTONS ══════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 14px;
+  height: 32px;
+  border-radius: var(--r2);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  white-space: nowrap;
+  outline: none;
+  text-decoration: none;
+}
+
+.btn:focus-visible { outline: 1px solid var(--brand); outline-offset: 2px; }
+.btn i { font-size: 12px; }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+.btn-primary {
+  background: var(--brand);
+  color: #000;
+  border-color: var(--brand);
+  font-weight: 600;
+}
+.btn-primary:hover {
+  background: #22DFFF;
+  box-shadow: 0 0 20px var(--brand-glow);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--t2);
+  border-color: var(--border-2);
+}
+.btn-ghost:hover { background: var(--surface-3); border-color: var(--border-3); color: var(--t1); }
+
+.btn-danger {
+  background: var(--crit-dim);
+  color: var(--crit);
+  border-color: rgba(255,71,87,0.25);
+  font-weight: 600;
+}
+.btn-danger:hover { background: rgba(255,71,87,0.2); box-shadow: var(--glow-crit); }
+
+.btn-success {
+  background: var(--ok-dim);
+  color: var(--ok);
+  border-color: rgba(0,229,160,0.25);
+  font-weight: 600;
+}
+.btn-success:hover { background: rgba(0,229,160,0.2); }
+
+.btn-sm { height: 28px; padding: 0 10px; font-size: 11.5px; }
+.btn-lg { height: 38px; padding: 0 18px; font-size: 13px; }
+.btn-full { width: 100%; justify-content: center; }
+
+/* ══════ TOOLBAR ══════ */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.toolbar-l { display: flex; align-items: center; gap: 8px; flex: 1; flex-wrap: wrap; }
+.toolbar-r { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* Search */
+.srch {
+  position: relative;
+  min-width: 220px;
+}
+
+.srch i.si {
+  position: absolute;
+  left: 10px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--t4);
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.srch input {
+  width: 100%;
+  height: 32px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 0 32px 0 32px;
+  font-size: 12.5px;
+  font-family: var(--sans);
+  color: var(--t1);
+  outline: none;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.srch input:focus {
+  background: var(--surface);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-dim);
+}
+
+.srch input::placeholder { color: var(--t4); font-size: 12px; }
+
+.srch-clear {
+  position: absolute;
+  right: 8px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer; color: var(--t4);
+  font-size: 11px; display: none;
+  padding: 2px; border-radius: 2px;
+}
+.srch-clear:hover { color: var(--t1); }
+
+/* Select */
+.flt-sel {
+  height: 32px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 0 26px 0 10px;
+  font-size: 12px;
+  font-family: var(--sans);
+  color: var(--t2);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2365656F' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  min-width: 130px;
+  transition: border-color 0.15s;
+}
+
+.flt-sel:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-dim); outline: none; }
+
+.rec-count {
+  font-size: 11px;
+  color: var(--t4);
+  white-space: nowrap;
+  font-family: var(--mono);
+}
+
+/* ══════ FILTER PANEL ══════ */
+.flt-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r4);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  display: none;
+  animation: fadeUp 0.2s ease;
+}
+
+.flt-panel.open { display: block; }
+
+.flt-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.flt-panel-ft {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* Pills row */
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px 16px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px 3px 10px;
+  background: var(--brand-dim);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--brand);
+  font-family: var(--mono);
+}
+
+.filter-pill button {
+  background: none; border: none; cursor: pointer;
+  color: var(--brand); font-size: 11px; padding: 0;
+  margin-left: 2px; opacity: 0.6; line-height: 1;
+}
+.filter-pill button:hover { opacity: 1; }
+
+/* ══════ TABLE ══════ */
+.tbl-wrap { overflow-x: auto; }
+
+table.dt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+.dt thead th {
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  padding: 9px 14px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--t4);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.12s;
+  font-family: var(--mono);
+}
+
+.dt thead th:hover { color: var(--t2); }
+.dt thead th.s-asc, .dt thead th.s-desc { color: var(--brand); }
+.dt thead th i { margin-left: 4px; font-size: 9px; opacity: 0.4; }
+.dt thead th.s-asc i, .dt thead th.s-desc i { opacity: 1; }
+
+.dt tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.dt tbody tr:last-child { border-bottom: none; }
+.dt tbody tr:hover { background: var(--surface-2); }
+.dt tbody tr.r-crit { background: rgba(255,71,87,0.04); }
+.dt tbody tr.r-crit:hover { background: rgba(255,71,87,0.07); }
+.dt tbody tr.r-warn { background: rgba(245,166,35,0.04); }
+.dt tbody tr.r-warn:hover { background: rgba(245,166,35,0.07); }
+
+.dt td {
+  padding: 10px 14px;
+  color: var(--t2);
+  vertical-align: middle;
+}
+
+.dt td.mono { font-family: var(--mono); font-size: 12px; }
+.dt td.tr { text-align: right; }
+.dt td.tc { text-align: center; }
+.dt td strong { color: var(--t1); font-weight: 500; }
+
+.row-act {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+}
+
+.ia {
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--r1);
+  background: transparent;
+  color: var(--t4);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.ia:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-dim); }
+
+/* ══════ BADGES ══════ */
+.bdg {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border-radius: var(--r1);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  letter-spacing: 0.04em;
+  font-family: var(--mono);
+}
+
+.bdg i { font-size: 9px; }
+.bdg-ok   { background: var(--ok-dim);   color: var(--ok);   border-color: rgba(0,229,160,0.2); }
+.bdg-warn { background: var(--warn-dim); color: var(--warn); border-color: rgba(245,166,35,0.2); }
+.bdg-crit { background: var(--crit-dim); color: var(--crit); border-color: rgba(255,71,87,0.2); }
+.bdg-info { background: var(--info-dim); color: var(--info); border-color: rgba(91,141,239,0.2); }
+.bdg-neu  { background: var(--surface-3); color: var(--t3);  border-color: var(--border); }
+
+/* ══════ PAGINATION ══════ */
+.pag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 8px;
+  background: var(--surface-2);
+}
+
+.pag-info { font-size: 11px; color: var(--t4); font-family: var(--mono); }
+.pag-ctrl { display: flex; align-items: center; gap: 3px; }
+
+.pg {
+  min-width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--r1);
+  background: transparent;
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--t3);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+
+.pg:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-dim); }
+.pg.on { background: var(--brand); color: #000; border-color: var(--brand); font-weight: 600; }
+.pg:disabled { opacity: 0.2; cursor: not-allowed; }
+
+.pag-sz {
+  height: 28px;
+  font-size: 11px;
+  font-family: var(--mono);
+  border: 1px solid var(--border);
+  border-radius: var(--r1);
+  padding: 0 20px 0 8px;
+  background: var(--surface-2);
+  color: var(--t3);
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%2365656F' stroke-width='1.2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+}
+
+/* ══════ MODAL ══════ */
+.mo-wrap {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.mo-wrap.open { opacity: 1; pointer-events: all; }
+
+.mo {
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r5);
+  box-shadow: var(--s4);
+  width: 100%;
+  max-width: 480px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(-20px) scale(0.97);
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+.mo-wrap.open .mo { transform: translateY(0) scale(1); }
+.mo.lg { max-width: 740px; }
+
+.mo-hd {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mo-title { font-size: 15px; font-weight: 700; color: var(--t1); letter-spacing: -0.02em; font-family: var(--display); }
+.mo-sub   { font-size: 11px; color: var(--t3); margin-top: 3px; font-family: var(--mono); }
+
+.mo-x {
+  background: none; border: none; cursor: pointer;
+  color: var(--t4); font-size: 16px; padding: 4px;
+  border-radius: var(--r1); line-height: 1;
+  transition: all 0.12s;
+}
+.mo-x:hover { color: var(--t1); background: var(--surface-3); }
+
+.mo-bd { padding: 20px; overflow-y: auto; flex: 1; }
+
+.mo-ft {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--surface-2);
+  border-radius: 0 0 var(--r5) var(--r5);
+}
+
+/* ══════ DRAWER ══════ */
+.drw-bg {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 400;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.drw-bg.open { opacity: 1; pointer-events: all; }
+
+.drw {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 420px;
+  background: var(--surface);
+  border-left: 1px solid var(--border-2);
+  box-shadow: var(--s4);
+  z-index: 401;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+}
+
+.drw-bg.open .drw { transform: translateX(0); }
+
+.drw-hd {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--surface-2);
+}
+
+.drw-title { font-size: 15px; font-weight: 700; color: var(--t1); font-family: var(--display); }
+.drw-sub   { font-size: 11px; color: var(--t3); margin-top: 2px; font-family: var(--mono); }
+.drw-x { background: none; border: none; cursor: pointer; font-size: 16px; color: var(--t4); padding: 4px; border-radius: var(--r1); transition: all .12s; }
+.drw-x:hover { color: var(--t1); background: var(--surface-3); }
+
+.drw-bd { padding: 20px; overflow-y: auto; flex: 1; }
+
+.drow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.drow:last-child { border-bottom: none; }
+.drow-lbl { font-size: 11px; color: var(--t3); font-weight: 500; flex-shrink: 0; min-width: 130px; font-family: var(--mono); }
+.drow-val { font-size: 13px; color: var(--t1); font-weight: 500; text-align: right; }
+.drow-val.mono { font-family: var(--mono); font-size: 12px; }
+
+.dg-title {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--t4);
+  padding: 14px 0 8px;
+  font-family: var(--mono);
+}
+
+.prog { height: 4px; background: var(--surface-3); border-radius: 99px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 99px; transition: width 0.8s ease; }
+
+/* ══════ TOAST ══════ */
+#toasts {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  pointer-events: none;
+  max-width: 320px;
+}
+
+.toast {
+  pointer-events: all;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r3);
+  box-shadow: var(--s4);
+  font-size: 12.5px;
+  color: var(--t2);
+  animation: toastIn 0.25s cubic-bezier(0.4,0,0.2,1);
+  cursor: pointer;
+  min-width: 240px;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(20px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.t-ok i   { color: var(--ok); }
+.t-info i { color: var(--brand); }
+.t-warn i { color: var(--warn); }
+.t-err i  { color: var(--crit); }
+
+.toast-ico { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.toast-bd { flex: 1; }
+.toast-title { font-weight: 600; color: var(--t1); font-size: 12.5px; margin-bottom: 1px; }
+.toast-msg { font-size: 11.5px; color: var(--t3); line-height: 1.4; }
+
+/* ══════ LOADING ══════ */
+#ldr {
+  position: fixed; inset: 0;
+  background: var(--overlay);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ldr-ring {
+  width: 36px; height: 36px;
+  border: 2px solid var(--border-2);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  box-shadow: var(--glow-brand);
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ldr-txt { font-size: 12px; color: var(--t3); font-family: var(--mono); letter-spacing: 0.04em; }
+
+/* ══════ EMPTY STATE ══════ */
+.empty {
+  text-align: center;
+  padding: 48px 24px;
+}
+
+.empty i { font-size: 36px; color: var(--t4); display: block; margin-bottom: 14px; }
+.empty h3 { font-size: 14px; font-weight: 600; color: var(--t2); margin-bottom: 5px; }
+.empty p  { font-size: 12px; color: var(--t3); max-width: 260px; margin: 0 auto 18px; }
+
+/* ══════ FORMS ══════ */
+.fg { margin-bottom: 14px; }
+.fl { display: block; font-size: 11px; font-weight: 600; color: var(--t3); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.07em; font-family: var(--mono); }
+
+.fc {
+  width: 100%; height: 34px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 0 10px;
+  font-size: 13px; font-family: var(--sans);
+  color: var(--t1); outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.fc:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-dim); }
+.fc::placeholder { color: var(--t4); }
+
+.fs {
+  width: 100%; height: 34px;
+  padding: 0 26px 0 10px;
+  font-size: 12.5px; font-family: var(--sans);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  background: var(--surface-2);
+  color: var(--t1); outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2365656F' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.fs:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-dim); outline: none; }
+.fh { font-size: 10.5px; color: var(--t4); margin-top: 4px; font-family: var(--mono); }
+
+/* ══════ IMPORT ══════ */
+.imp-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (max-width:900px) { .imp-grid { grid-template-columns: 1fr; } }
+
+.imp-card {
+  background: var(--surface);
+  border: 1px dashed var(--border-2);
+  border-radius: var(--r4);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.imp-card:hover:not(.disabled) {
+  border-color: var(--brand);
+  background: var(--brand-dim);
+}
+
+.imp-card.loaded {
+  border-style: solid;
+  border-color: var(--ok);
+  background: var(--ok-dim);
+}
+
+.imp-card.disabled { cursor: not-allowed; opacity: 0.4; }
+.imp-card.drag-ov { border-color: var(--brand); background: var(--brand-dim); transform: scale(1.01); }
+
+.imp-ico { font-size: 36px; margin-bottom: 12px; display: block; }
+.imp-ttl { font-size: 13px; font-weight: 700; margin-bottom: 4px; color: var(--t1); }
+.imp-sub { font-size: 11.5px; color: var(--t3); line-height: 1.5; }
+
+/* ══════ SETTINGS ══════ */
+.cfg-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+.cfg-row:last-child { border-bottom: none; }
+.cfg-lbl  { font-size: 13px; font-weight: 500; color: var(--t1); margin-bottom: 2px; }
+.cfg-hint { font-size: 11px; color: var(--t3); font-family: var(--mono); }
+
+/* Toggle */
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--surface-3); border-radius: 34px; transition: .2s; border: 1px solid var(--border-2); }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: var(--t3); border-radius: 50%; transition: .2s; }
+input:checked + .slider { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 10px var(--brand-glow); }
+input:checked + .slider:before { transform: translateX(18px); background: #000; }
+
+/* Matrix KPIs */
+.mat-kpis { display: flex; gap: 20px; flex-wrap: wrap; }
+.mat-kpi { text-align: center; min-width: 68px; }
+.mat-kpi-val { font-family: var(--mono); font-size: 24px; font-weight: 300; line-height: 1; margin-bottom: 4px; letter-spacing: -0.04em; }
+.mat-kpi-lbl { font-size: 10px; color: var(--t4); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ══════ UTILS ══════ */
+.g2  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.g3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.mb12 { margin-bottom: 12px; }
+.mb20 { margin-bottom: 20px; }
+.sep  { height: 1px; background: var(--border); margin: 14px 0; }
+.mono { font-family: var(--mono); }
+.t3   { color: var(--t3); }
+.t4   { color: var(--t4); }
+.fw5  { font-weight: 500; }
+.fw6  { font-weight: 600; }
+.fs11 { font-size: 11px; }
+.fs12 { font-size: 12px; }
+.tc   { text-align: center; }
+.tr   { text-align: right; }
+
+/* Tooltip */
+#tooltip {
+  position: fixed;
+  z-index: 9999;
+  padding: 8px 12px;
+  background: var(--surface-4);
+  border: 1px solid var(--border-2);
+  color: var(--t2);
+  border-radius: var(--r2);
+  font-size: 11.5px;
+  line-height: 1.5;
+  max-width: 260px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.15s, transform 0.15s;
+  box-shadow: var(--s3);
+  font-family: var(--sans);
+}
+
+#tooltip.show { opacity: 1; transform: translateY(0); }
+
+@media (max-width:768px) { .g2,.g3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div id="ldr" style="display:none">
+  <div class="ldr-ring"></div>
+  <div class="ldr-txt" id="ldrTxt">processando...</div>
+</div>
+
+<div id="toasts"></div>
+
+<!-- ══ HEADER ══ -->
+<header id="hdr">
+  <div style="display:flex;align-items:center">
+    <div class="hdr-logo">
+      <div class="hdr-logo-mark"><i class="bi bi-activity"></i></div>
+      <div class="hdr-wordmark">PCM<span>.</span>Intel</div>
+    </div>
+    <div class="hdr-sep"></div>
+    <span class="hdr-module" id="hdrMod">dashboard</span>
+  </div>
+
+  <div class="hdr-right">
+    <div class="hdr-status" id="hdrStatus">
+      <span class="dot-live" id="dotLive"></span>
+      <span id="hdrStatusTxt">sem dados</span>
+    </div>
+    <button class="hdr-btn" id="btnHdrImport"><i class="bi bi-upload"></i> Importar</button>
+    <button class="hdr-btn" id="btnHdrExport"><i class="bi bi-download"></i> Exportar</button>
+    <button class="hdr-btn danger" id="btnHdrCrit" style="display:none">
+      <i class="bi bi-exclamation-triangle"></i>
+      <span id="hdrCritNum">0</span> críticos
+    </button>
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+      <i class="bi bi-moon-fill" id="themeIco"></i>
+    </button>
+    <div class="hdr-clock" id="hdrClock"></div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0b/Netflix-avatar.png" class="u-avatar" alt="">
+  </div>
+</header>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <button class="nb active" data-t="s-dash"><i class="bi bi-grid-1x2"></i> Dashboard</button>
+  <button class="nb" data-t="s-mat"><i class="bi bi-table"></i> Materiais</button>
+  <button class="nb" data-t="s-crit">
+    <i class="bi bi-exclamation-triangle"></i> Críticos
+    <span class="nb-badge" id="navBadge" style="display:none">0</span>
+  </button>
+  <div class="nav-divider"></div>
+  <button class="nb" data-t="s-area"><i class="bi bi-building"></i> Por Área</button>
+  <button class="nb" data-t="s-setor"><i class="bi bi-diagram-3"></i> Por Setor</button>
+  <button class="nb" data-t="s-matriz"><i class="bi bi-grid-3x3"></i> Matriz</button>
+  <div class="nav-divider"></div>
+  <button class="nb" data-t="s-rel"><i class="bi bi-file-earmark-spreadsheet"></i> Relatórios</button>
+  <div class="nav-spacer"></div>
+  <div class="nav-divider"></div>
+  <button class="nb" data-t="s-imp"><i class="bi bi-cloud-upload"></i> Importar</button>
+  <button class="nb" data-t="s-cfg"><i class="bi bi-sliders"></i> Config</button>
+</nav>
+
+<!-- ══ MAIN ══ -->
+<main id="main">
+
+<!-- ════ DASHBOARD ════ -->
+<section id="s-dash" class="sec active">
+  <div class="info-banner" id="noBanner">
+    <i class="bi bi-database-slash"></i>
+    <span class="ib-txt">Nenhuma planilha carregada. Acesse <strong>Importar</strong> para iniciar.</span>
+    <button class="ib-close" onclick="this.closest('.info-banner').style.display='none'"><i class="bi bi-x"></i></button>
+  </div>
+
+  <div id="dashMain" style="display:none">
+    <div class="crit-ribbon" id="critRibbon" style="display:none">
+      <div class="crit-ribbon-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+      <div class="crit-ribbon-body">
+        <div class="crit-ribbon-title" id="critRibbonTitle">Materiais Críticos</div>
+        <div class="crit-ribbon-text" id="critRibbonText">—</div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="navTo('s-crit')">Ver Críticos</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-row">
+      <div class="kpi" style="--kpi-glow:rgba(0,212,255,0.08)" data-tooltip="Total de linhas processadas da planilha importada.">
+        <div class="kpi-header">
+          <div class="kpi-label">Registros</div>
+          <div class="kpi-ico ci-brand"><i class="bi bi-database"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-total">—</div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" id="kb-total" style="background:var(--brand)"></div></div>
+        <div class="kpi-foot">linhas processadas</div>
+      </div>
+      <div class="kpi" style="--kpi-glow:rgba(91,141,239,0.08)" data-tooltip="Quantidade de códigos de material distintos.">
+        <div class="kpi-header">
+          <div class="kpi-label">Mat. Únicos</div>
+          <div class="kpi-ico ci-info" style="background:var(--info-dim);color:var(--info)"><i class="bi bi-box-seam"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-mat">—</div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" id="kb-mat" style="background:var(--info)"></div></div>
+        <div class="kpi-foot">códigos distintos</div>
+      </div>
+      <div class="kpi" style="--kpi-glow:rgba(0,229,160,0.08)" data-tooltip="Itens com estoque acima do limiar de atenção.">
+        <div class="kpi-header">
+          <div class="kpi-label">Disponíveis</div>
+          <div class="kpi-ico ci-ok"><i class="bi bi-check-circle"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-disp">—</div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" id="kb-disp" style="background:var(--ok)"></div></div>
+        <div class="kpi-foot">estoque adequado</div>
+      </div>
+      <div class="kpi" style="--kpi-glow:rgba(245,166,35,0.08)" data-tooltip="Itens entre os limiares crítico e de atenção.">
+        <div class="kpi-header">
+          <div class="kpi-label">Em Atenção</div>
+          <div class="kpi-ico ci-warn"><i class="bi bi-exclamation-circle"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-atenc">—</div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" id="kb-atenc" style="background:var(--warn)"></div></div>
+        <div class="kpi-foot">abaixo do ideal</div>
+      </div>
+      <div class="kpi" style="--kpi-glow:rgba(255,71,87,0.08)" data-tooltip="Itens abaixo do limiar crítico — risco iminente.">
+        <div class="kpi-header">
+          <div class="kpi-label">Críticos</div>
+          <div class="kpi-ico ci-crit"><i class="bi bi-x-circle"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-crit">—</div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" id="kb-crit" style="background:var(--crit)"></div></div>
+        <div class="kpi-foot">risco de parada</div>
+      </div>
+      <div class="kpi" style="--kpi-glow:rgba(155,80,255,0.08)" data-tooltip="Equipamentos com pelo menos um material crítico.">
+        <div class="kpi-header">
+          <div class="kpi-label">Máq. Críticas</div>
+          <div class="kpi-ico" style="background:rgba(155,80,255,0.12);color:#9B50FF"><i class="bi bi-gear"></i></div>
+        </div>
+        <div class="kpi-val" id="kv-maq">—</div>
+        <div class="kpi-progress"><div class="kpi-progress-fill" id="kb-maq" style="background:#9B50FF"></div></div>
+        <div class="kpi-foot">equipamentos afetados</div>
+      </div>
+    </div>
+
+    <!-- Dist + Chart -->
+    <div class="dash-grid mb12">
+      <div class="dist-card">
+        <div class="dist-head">
+          <div class="dist-label"><i class="bi bi-distribute-horizontal" style="margin-right:6px;color:var(--brand)"></i>Distribuição de Status</div>
+          <span class="fs11 mono t3" id="gTotalLabel">0</span>
+        </div>
+        <div class="seg-bar">
+          <div class="seg seg-ok"   id="hbOk"   style="width:0%"></div>
+          <div class="seg seg-warn" id="hbWarn" style="width:0%"></div>
+          <div class="seg seg-crit" id="hbCrit" style="width:0%"></div>
+        </div>
+        <div class="dist-stats">
+          <div class="dist-stat">
+            <div class="dist-stat-val" style="color:var(--ok)" id="sOkPct">—</div>
+            <div class="dist-stat-lbl">Disponível</div>
+          </div>
+          <div class="dist-stat">
+            <div class="dist-stat-val" style="color:var(--warn)" id="sWarnPct">—</div>
+            <div class="dist-stat-lbl">Atenção</div>
+          </div>
+          <div class="dist-stat">
+            <div class="dist-stat-val" style="color:var(--crit)" id="sCritPct">—</div>
+            <div class="dist-stat-lbl">Crítico</div>
+          </div>
+        </div>
+        <div class="dist-insights">
+          <div class="dist-insight" data-tooltip="Percentual de itens fora do estado crítico. Quanto maior, melhor.">
+            <div class="insight-dot" style="background:var(--brand)"></div>
+            <div class="insight-content">
+              <div class="insight-label">Índice de Saúde</div>
+              <div class="insight-value" id="gHealth">—</div>
+            </div>
+          </div>
+          <div class="dist-insight" data-tooltip="Área com maior concentração de materiais críticos.">
+            <div class="insight-dot" style="background:var(--crit)"></div>
+            <div class="insight-content">
+              <div class="insight-label">Foco de Atenção</div>
+              <div class="insight-value" id="gFocus">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-title">
+            <div class="card-icon ci-brand"><i class="bi bi-bar-chart-line"></i></div>
+            Volume por Área
+          </div>
+          <span class="fs11 t3 mono">top 15</span>
+        </div>
+        <div class="card-bd" style="padding:14px 16px">
+          <div style="position:relative;height:220px"><canvas id="cArea"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-2col">
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-title"><div class="card-icon ci-brand"><i class="bi bi-building"></i></div>Top Áreas</div>
+          <span class="fs11 t3 mono">top 10</span>
+        </div>
+        <div class="card-bd" style="padding:14px 16px">
+          <div class="rank-list" id="rankAreas" style="max-height:220px;overflow-y:auto"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-title"><div class="card-icon ci-muted"><i class="bi bi-diagram-3"></i></div>Top Setores</div>
+          <span class="fs11 t3 mono">top 10</span>
+        </div>
+        <div class="card-bd" style="padding:14px 16px">
+          <div class="rank-list" id="rankSetores" style="max-height:220px;overflow-y:auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ MATERIAIS ════ -->
+<section id="s-mat" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Materiais</div>
+      <div class="pg-sub">tabela completa com filtros avançados</div>
+    </div>
+    <div class="pg-actions">
+      <button class="btn btn-ghost btn-sm" id="btnAdvFlt"><i class="bi bi-funnel"></i> Filtros</button>
+      <button class="btn btn-ghost btn-sm" id="btnExpGeral"><i class="bi bi-download"></i> Exportar</button>
+    </div>
+  </div>
+
+  <div class="flt-panel" id="advPanel">
+    <div class="fs11 mono" style="color:var(--t3);margin-bottom:14px;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.08em">
+      <i class="bi bi-funnel-fill" style="color:var(--brand)"></i> Filtros Avançados
+    </div>
+    <div class="flt-panel-grid">
+      <div class="fg" style="margin:0"><label class="fl">Área</label>
+        <select class="fs" id="fa-area"><option value="">Todas</option></select></div>
+      <div class="fg" style="margin:0"><label class="fl">Setor</label>
+        <select class="fs" id="fa-setor"><option value="">Todos</option></select></div>
+      <div class="fg" style="margin:0"><label class="fl">Status</label>
+        <select class="fs" id="fa-status">
+          <option value="">Todos</option>
+          <option value="disponivel">Disponível</option>
+          <option value="atencao">Em Atenção</option>
+          <option value="critico">Crítico</option>
+        </select></div>
+      <div class="fg" style="margin:0"><label class="fl">Qtd. mín.</label>
+        <input type="number" class="fc" id="fa-qmin" placeholder="0" min="0"></div>
+      <div class="fg" style="margin:0"><label class="fl">Qtd. máx.</label>
+        <input type="number" class="fc" id="fa-qmax" placeholder="sem limite" min="0"></div>
+      <div class="fg" style="margin:0"><label class="fl">Classe</label>
+        <select class="fs" id="fa-classe"><option value="">Todas</option></select></div>
+    </div>
+    <div class="flt-panel-ft">
+      <button class="btn btn-ghost btn-sm" id="btnFltClear"><i class="bi bi-x"></i> Limpar</button>
+      <button class="btn btn-primary btn-sm" id="btnFltApply"><i class="bi bi-check2"></i> Aplicar</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <div class="toolbar-l">
+        <div class="srch">
+          <i class="bi bi-search si"></i>
+          <input type="text" id="searchMat" placeholder="Buscar código, descrição, área...">
+          <button class="srch-clear" id="scMat"><i class="bi bi-x"></i></button>
+        </div>
+        <select class="flt-sel" id="qfArea"><option value="">Área: Todas</option></select>
+        <select class="flt-sel" id="qfStatus">
+          <option value="">Status: Todos</option>
+          <option value="disponivel">Disponível</option>
+          <option value="atencao">Atenção</option>
+          <option value="critico">Crítico</option>
+        </select>
+      </div>
+      <div class="toolbar-r">
+        <span class="rec-count"><span id="cntMat">0</span> registros</span>
+      </div>
+    </div>
+    <div class="pill-row" id="pillRow" style="display:none"></div>
+    <div class="tbl-wrap">
+      <table class="dt" id="tblMat">
+        <thead><tr>
+          <th data-s="area">Área <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="setor">Setor <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="local">Local de Instalação <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="codigo">Código <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="descricao">Descrição <i class="bi bi-arrow-down-up"></i></th>
+          <th class="tc">Unid.</th>
+          <th data-s="qtd" class="tr">Qtd. <i class="bi bi-arrow-down-up"></i></th>
+          <th data-s="status">Status <i class="bi bi-arrow-down-up"></i></th>
+          <th style="width:36px"></th>
+        </tr></thead>
+        <tbody id="tbMat">
+          <tr><td colspan="9"><div class="empty"><i class="bi bi-inbox"></i><h3>Sem dados</h3><p>Importe uma planilha para visualizar os registros.</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pag" id="pagMat">
+      <div class="pag-info" id="pagInfo">—</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <select class="pag-sz" id="ppSel"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option></select>
+        <div class="pag-ctrl" id="pagCtrl"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CRÍTICOS ════ -->
+<section id="s-crit" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title" style="color:var(--crit)">Materiais Críticos</div>
+      <div class="pg-sub">itens abaixo do estoque mínimo — risco de parada</div>
+    </div>
+    <div class="pg-actions">
+      <button class="btn btn-danger btn-sm" id="btnExpCrit"><i class="bi bi-download"></i> Exportar</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-title"><div class="card-icon ci-crit"><i class="bi bi-exclamation-octagon"></i></div>Lista de Criticidade</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="srch" style="min-width:180px">
+          <i class="bi bi-search si"></i>
+          <input type="text" id="searchCrit" placeholder="Buscar...">
+        </div>
+        <select class="flt-sel" id="qfCritArea"><option value="">Área: Todas</option></select>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table class="dt">
+        <thead><tr>
+          <th>Área</th><th>Setor</th><th>Local</th>
+          <th>Código</th><th>Descrição</th>
+          <th class="tc">Qtd.</th><th>Status</th><th></th>
+        </tr></thead>
+        <tbody id="tbCrit"></tbody>
+      </table>
+    </div>
+    <div class="card-ft" id="critFt">—</div>
+  </div>
+</section>
+
+<!-- ════ POR ÁREA ════ -->
+<section id="s-area" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Por Área</div>
+      <div class="pg-sub">clique em uma barra para ver detalhes</div>
+    </div>
+    <div class="pg-actions">
+      <select class="flt-sel" id="areaMetric">
+        <option value="total">Total de registros</option>
+        <option value="critico">Apenas Críticos</option>
+        <option value="disponivel">Apenas Disponíveis</option>
+      </select>
+    </div>
+  </div>
+  <div class="card mb12">
+    <div class="card-bd" style="padding:16px">
+      <div style="position:relative;height:400px"><canvas id="cAreaFull"></canvas></div>
+    </div>
+  </div>
+  <div class="card" id="areaDetail" style="display:none">
+    <div class="card-hd">
+      <div class="card-title"><div class="card-icon ci-brand"><i class="bi bi-table"></i></div>Detalhe: <span id="areaDetailName">—</span></div>
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('areaDetail').style.display='none'">Fechar</button>
+    </div>
+    <div class="tbl-wrap">
+      <table class="dt">
+        <thead><tr><th>Setor</th><th>Local</th><th>Código</th><th>Descrição</th><th class="tr">Qtd</th><th>Status</th></tr></thead>
+        <tbody id="tbAreaDetail"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════ POR SETOR ════ -->
+<section id="s-setor" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Por Setor</div>
+      <div class="pg-sub">distribuição por setor de manutenção</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-bd" style="padding:16px">
+      <div style="position:relative;height:420px"><canvas id="cSetorFull"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ MATRIZ ════ -->
+<section id="s-matriz" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Matriz Máquina × Material</div>
+      <div class="pg-sub">selecione um equipamento para ver todos os materiais</div>
+    </div>
+  </div>
+  <div class="card mb12">
+    <div class="card-bd" style="padding:16px 18px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:580px">
+        <div class="fg" style="margin:0">
+          <label class="fl">Equipamento / Local de Instalação</label>
+          <select class="fs" id="selMaq"><option value="">Selecione...</option></select>
+        </div>
+        <div class="fg" style="margin:0">
+          <label class="fl">Filtrar por status</label>
+          <select class="fs" id="matFltSt">
+            <option value="">Todos</option>
+            <option value="critico">Crítico</option>
+            <option value="atencao">Atenção</option>
+            <option value="disponivel">Disponível</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="matrizRes" style="display:none">
+    <div class="card mb12" style="background:var(--surface-2)">
+      <div class="card-bd" style="padding:14px 18px">
+        <div class="mat-kpis" id="matKpis"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-title"><div class="card-icon ci-muted"><i class="bi bi-gear-wide-connected"></i></div><span id="matTitle">—</span></div>
+        <button class="btn btn-ghost btn-sm" id="btnExpMatriz"><i class="bi bi-download"></i> Exportar</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="dt">
+          <thead><tr><th>Código</th><th>Descrição</th><th class="tc">Unid.</th><th class="tr">Qtd.</th><th>Status</th><th></th></tr></thead>
+          <tbody id="tbMatriz"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ RELATÓRIOS ════ -->
+<section id="s-rel" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Relatórios</div>
+      <div class="pg-sub">gere arquivos excel com dados filtrados</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-hd"><div class="card-title"><div class="card-icon ci-ok"><i class="bi bi-file-earmark-excel"></i></div>Base Completa</div></div>
+      <div class="card-bd">
+        <p class="fs12 t3 mb12">Exporta todos os registros com status calculado, área, setor, local, código e quantidade.</p>
+        <div class="fg">
+          <label class="fl">Filtrar por status</label>
+          <select class="fs" id="relFltSt"><option value="">Todos</option><option value="disponivel">Disponível</option><option value="atencao">Em Atenção</option><option value="critico">Crítico</option></select>
+        </div>
+        <button class="btn btn-success btn-full btn-lg" id="btnExpFull" disabled><i class="bi bi-download"></i> Baixar Excel</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><div class="card-title"><div class="card-icon ci-crit"><i class="bi bi-exclamation-triangle"></i></div>Relatório Críticos</div></div>
+      <div class="card-bd">
+        <p class="fs12 t3 mb12">Exporta apenas os materiais críticos para requisições de compra e prevenção de paradas.</p>
+        <div class="fg">
+          <label class="fl">Agrupamento</label>
+          <select class="fs" id="relGrp"><option value="none">Sem agrupamento</option><option value="area">Por Área</option><option value="setor">Por Setor</option></select>
+        </div>
+        <button class="btn btn-danger btn-full btn-lg" id="btnExpCritRel" disabled><i class="bi bi-download"></i> Baixar Críticos</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ IMPORTAR ════ -->
+<section id="s-imp" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Importar Dados</div>
+      <div class="pg-sub">carregue planilhas excel para alimentar o sistema</div>
+    </div>
+  </div>
+
+  <div class="imp-grid mb20">
+    <div class="imp-card" id="dropZone">
+      <div id="dropPr">
+        <span class="imp-ico bi bi-file-earmark-excel" style="color:#00C853"></span>
+        <div class="imp-ttl">Base Trab</div>
+        <div class="imp-sub">Arraste o arquivo .xlsx<br>ou clique para selecionar</div>
+        <div style="margin-top:12px"><span class="bdg bdg-info">Aba: Base Trab</span></div>
+      </div>
+      <div id="dropHUD" style="display:none">
+        <span class="imp-ico bi bi-check-circle-fill" style="color:var(--ok)"></span>
+        <div class="imp-ttl" style="color:var(--ok)">Carregado</div>
+        <div class="imp-sub" id="dropFN" style="word-break:break-all;margin:6px 0 14px"></div>
+        <button class="btn btn-danger btn-sm" id="btnClear"><i class="bi bi-trash"></i> Remover</button>
+      </div>
+      <input type="file" id="fileIn" accept=".xlsx,.xls" style="display:none">
+    </div>
+    <div class="imp-card disabled">
+      <span class="imp-ico bi bi-person-rolodex" style="color:var(--brand)"></span>
+      <div class="imp-ttl">Planilha SAP</div>
+      <div class="imp-sub">Materiais solicitados no SAP</div>
+      <div style="margin-top:12px"><span class="bdg bdg-neu">Em breve</span></div>
+    </div>
+    <div class="imp-card disabled">
+      <span class="imp-ico bi bi-boxes" style="color:var(--ok)"></span>
+      <div class="imp-ttl">Almoxarifado</div>
+      <div class="imp-sub">Estoque físico disponível</div>
+      <div style="margin-top:12px"><span class="bdg bdg-neu">Em breve</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><div class="card-title"><div class="card-icon ci-brand"><i class="bi bi-info-circle"></i></div>Como funciona</div></div>
+    <div class="card-bd">
+      <div class="g3 mb12">
+        <div style="padding:14px;background:var(--surface-2);border-radius:var(--r3);border-left:2px solid var(--brand)">
+          <div class="fs11 fw6 mono" style="color:var(--brand);letter-spacing:.08em;margin-bottom:8px">01 · BASE DE MANUTENÇÃO</div>
+          <div class="fs12 t3">Equipamentos, materiais necessários, área, setor, local de instalação e quantidades.</div>
+        </div>
+        <div style="padding:14px;background:var(--surface-2);border-radius:var(--r3);border-left:2px solid var(--info)">
+          <div class="fs11 fw6 mono" style="color:var(--info);letter-spacing:.08em;margin-bottom:8px">02 · PLANILHA SAP</div>
+          <div class="fs12 t3">Materiais já solicitados ou comprados para atender as manutenções planejadas.</div>
+        </div>
+        <div style="padding:14px;background:var(--surface-2);border-radius:var(--r3);border-left:2px solid var(--ok)">
+          <div class="fs11 fw6 mono" style="color:var(--ok);letter-spacing:.08em;margin-bottom:8px">03 · ALMOXARIFADO</div>
+          <div class="fs12 t3">Materiais fisicamente disponíveis em estoque para uso imediato.</div>
+        </div>
+      </div>
+      <div style="padding:12px 16px;background:var(--warn-dim);border:1px solid rgba(245,166,35,0.2);border-radius:var(--r3)">
+        <div class="fs11 fw6 mono" style="color:var(--warn);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em">Critérios de Classificação</div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px">
+          <span class="bdg bdg-ok"><i class="bi bi-check-circle-fill"></i> Disponível — acima do limiar</span>
+          <span class="bdg bdg-warn"><i class="bi bi-exclamation-circle-fill"></i> Atenção — entre os limiares</span>
+          <span class="bdg bdg-crit"><i class="bi bi-x-circle-fill"></i> Crítico — abaixo do limiar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CONFIG ════ -->
+<section id="s-cfg" class="sec">
+  <div class="pg-head">
+    <div>
+      <div class="pg-title">Configurações</div>
+      <div class="pg-sub">parâmetros de classificação e preferências</div>
+    </div>
+  </div>
+  <div class="g2" style="max-width:900px">
+    <div class="card">
+      <div class="card-hd"><div class="card-title"><div class="card-icon ci-muted"><i class="bi bi-sliders"></i></div>Classificação</div></div>
+      <div class="cfg-row">
+        <div><div class="cfg-lbl">Limiar Crítico (qtd. &lt; X)</div><div class="cfg-hint">abaixo deste valor → Crítico</div></div>
+        <input type="number" class="fc" id="cfgCrit" value="5" min="1" style="width:72px;text-align:center">
+      </div>
+      <div class="cfg-row">
+        <div><div class="cfg-lbl">Limiar Atenção (qtd. &lt; X)</div><div class="cfg-hint">abaixo deste valor → Atenção</div></div>
+        <input type="number" class="fc" id="cfgAtenc" value="10" min="1" style="width:72px;text-align:center">
+      </div>
+      <div class="cfg-row">
+        <div><div class="cfg-lbl">Itens por página</div><div class="cfg-hint">quantidade de registros por página</div></div>
+        <select class="flt-sel" id="cfgPP" style="min-width:80px"><option value="25">25</option><option value="50" selected>50</option><option value="100">100</option><option value="200">200</option></select>
+      </div>
+      <div style="padding:14px 20px;display:flex;justify-content:flex-end;gap:8px;border-top:1px solid var(--border)">
+        <button class="btn btn-ghost btn-sm" onclick="resetCfg()">Restaurar padrão</button>
+        <button class="btn btn-primary btn-sm" onclick="saveCfg()"><i class="bi bi-check2"></i> Salvar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hd"><div class="card-title"><div class="card-icon ci-muted"><i class="bi bi-palette"></i></div>Interface</div></div>
+      <div class="cfg-row">
+        <div><div class="cfg-lbl">Modo Escuro</div><div class="cfg-hint">alterna entre tema dark e light</div></div>
+        <label class="switch">
+          <input type="checkbox" id="cfgDark" checked onchange="toggleTheme()">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="cfg-row">
+        <div><div class="cfg-lbl">Dicas de Ajuda</div><div class="cfg-hint">mostra tooltips ao passar o mouse</div></div>
+        <label class="switch">
+          <input type="checkbox" id="cfgTooltips" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="cfg-row">
+        <div><div class="cfg-lbl">Animações</div><div class="cfg-hint">ativa micro-interações e transições</div></div>
+        <label class="switch">
+          <input type="checkbox" id="cfgAnim" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ DRAWER ══ -->
+<div class="drw-bg" id="drwBg">
+  <div class="drw">
+    <div class="drw-hd">
+      <div>
+        <div class="drw-title" id="drwTitle">Detalhe do Material</div>
+        <div class="drw-sub" id="drwSub">—</div>
+      </div>
+      <button class="drw-x" onclick="closeDrw()"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="drw-bd" id="drwBd"></div>
+  </div>
+</div>
+
+<!-- ══ MODAL EXPORT ══ -->
+<div class="mo-wrap" id="moExport">
+  <div class="mo">
+    <div class="mo-hd">
+      <div><div class="mo-title">Exportar Dados</div><div class="mo-sub">selecione o conjunto e nome do arquivo</div></div>
+      <button class="mo-x" onclick="closeMo('moExport')"><i class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="mo-bd">
+      <div class="fg">
+        <label class="fl">Dados a exportar</label>
+        <select class="fs" id="expType">
+          <option value="all">Todos os registros</option>
+          <option value="filtered">Registros filtrados</option>
+          <option value="criticos">Apenas Críticos</option>
+          <option value="atencao">Apenas Em Atenção</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="fl">Nome do arquivo</label>
+        <input type="text" class="fc" id="expName" value="PCM_Relatorio">
+        <div class="fh">A data será adicionada automaticamente</div>
+      </div>
+    </div>
+    <div class="mo-ft">
+      <button class="btn btn-ghost" onclick="closeMo('moExport')">Cancelar</button>
+      <button class="btn btn-primary" onclick="doExport()"><i class="bi bi-download"></i> Exportar</button>
+    </div>
+  </div>
+</div>
+
+<div id="tooltip"></div>
+
+<!-- ══ JS ══ -->
+<script>
+/* ─── IndexedDB ─── */
+const DB={name:'PCM_v4',store:'d',ver:1,
+  async op(){return new Promise((r,j)=>{const q=indexedDB.open(this.name,this.ver);q.onerror=()=>j(q.error);q.onsuccess=()=>r(q.result);q.onupgradeneeded=e=>{if(!e.target.result.objectStoreNames.contains(this.store))e.target.result.createObjectStore(this.store)}})},
+  async set(k,v){const db=await this.op();return new Promise((r,j)=>{const t=db.transaction(this.store,'readwrite');t.objectStore(this.store).put(v,k).onsuccess=()=>r();t.onerror=()=>j()})},
+  async get(k){const db=await this.op();return new Promise((r,j)=>{const q=db.transaction(this.store,'readonly').objectStore(this.store).get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>j()})},
+  async clear(){const db=await this.op();return new Promise((r,j)=>{const q=db.transaction(this.store,'readwrite').objectStore(this.store).clear();q.onsuccess=()=>r();q.onerror=()=>j()})}
+};
+
+/* ─── Config ─── */
+let CFG={crit:5,atenc:10,pp:50,tooltips:true,dark:true,anim:true};
+
+function loadCFG(){
+  const s=localStorage.getItem('pcm4_cfg');
+  if(s)try{CFG={...CFG,...JSON.parse(s)}}catch(e){}
+  document.getElementById('cfgCrit').value=CFG.crit;
+  document.getElementById('cfgAtenc').value=CFG.atenc;
+  document.getElementById('cfgPP').value=CFG.pp;
+  document.getElementById('cfgTooltips').checked=CFG.tooltips;
+  document.getElementById('cfgDark').checked=CFG.dark;
+  document.getElementById('cfgAnim').checked=CFG.anim;
+  document.documentElement.setAttribute('data-theme',CFG.dark?'dark':'light');
+  document.getElementById('themeIco').className=CFG.dark?'bi bi-moon-fill':'bi bi-sun-fill';
+  S.pp=CFG.pp;
+}
+
+function saveCfg(){
+  CFG.crit=parseInt(document.getElementById('cfgCrit').value)||5;
+  CFG.atenc=parseInt(document.getElementById('cfgAtenc').value)||10;
+  CFG.pp=parseInt(document.getElementById('cfgPP').value)||50;
+  CFG.tooltips=document.getElementById('cfgTooltips').checked;
+  CFG.anim=document.getElementById('cfgAnim').checked;
+  S.pp=CFG.pp;
+  localStorage.setItem('pcm4_cfg',JSON.stringify(CFG));
+  if(S.raw.length)processData(S.raw);
+  toast('Configurações salvas','ok');
+}
+
+function resetCfg(){
+  CFG={crit:5,atenc:10,pp:50,tooltips:true,dark:true,anim:true};
+  loadCFG();toast('Restaurado padrão','info');
+}
+
+function toggleTheme(){
+  CFG.dark=!CFG.dark;
+  document.documentElement.setAttribute('data-theme',CFG.dark?'dark':'light');
+  document.getElementById('themeIco').className=CFG.dark?'bi bi-moon-fill':'bi bi-sun-fill';
+  document.getElementById('cfgDark').checked=CFG.dark;
+  localStorage.setItem('pcm4_cfg',JSON.stringify(CFG));
+  if(S.data.length)buildCharts();
+}
+
+document.getElementById('themeToggle').addEventListener('click',toggleTheme);
+
+/* ─── State ─── */
+const S={raw:[],data:[],flt:[],pg:1,pp:50,sortC:null,sortD:'asc',charts:{},AF:{},q:''};
+
+/* ─── Nav ─── */
+const NAV_LABELS={'s-dash':'dashboard','s-mat':'materiais','s-crit':'críticos','s-area':'por área','s-setor':'por setor','s-matriz':'matriz','s-rel':'relatórios','s-imp':'importar','s-cfg':'configurações'};
+
+function navTo(t){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  const sec=document.getElementById(t);if(sec)sec.classList.add('active');
+  const btn=document.querySelector(`.nb[data-t="${t}"]`);if(btn)btn.classList.add('active');
+  document.getElementById('hdrMod').textContent=NAV_LABELS[t]||t;
+}
+
+document.querySelectorAll('.nb[data-t]').forEach(b=>b.addEventListener('click',()=>navTo(b.dataset.t)));
+document.getElementById('btnHdrImport').addEventListener('click',()=>navTo('s-imp'));
+document.getElementById('btnHdrExport').addEventListener('click',()=>openMo('moExport'));
+document.getElementById('btnHdrCrit').addEventListener('click',()=>navTo('s-crit'));
+document.getElementById('btnAdvFlt').addEventListener('click',()=>document.getElementById('advPanel').classList.toggle('open'));
+document.getElementById('btnExpGeral').addEventListener('click',()=>openMo('moExport'));
+
+/* ─── Toast ─── */
+const TI={ok:'check-circle-fill',info:'info-circle-fill',warn:'exclamation-triangle-fill',err:'x-circle-fill'};
+const TT={ok:'Sucesso',info:'Info',warn:'Atenção',err:'Erro'};
+function toast(msg,type='info',ms=4000){
+  const c=document.getElementById('toasts'),el=document.createElement('div');
+  el.className=`toast t-${type}`;
+  el.innerHTML=`<i class="bi bi-${TI[type]} toast-ico"></i><div class="toast-bd"><div class="toast-title">${TT[type]}</div><div class="toast-msg">${msg}</div></div>`;
+  el.onclick=()=>el.remove();c.appendChild(el);
+  setTimeout(()=>{el.style.transition='opacity .3s,transform .3s';el.style.opacity='0';el.style.transform='translateX(20px)';setTimeout(()=>el.remove(),350)},ms);
+}
+
+/* ─── Loading ─── */
+const setLdr=(v,t='processando...')=>{document.getElementById('ldr').style.display=v?'flex':'none';document.getElementById('ldrTxt').textContent=t};
+
+/* ─── Modal ─── */
+function openMo(id){document.getElementById(id).classList.add('open')}
+function closeMo(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.mo-wrap').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open')}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.mo-wrap.open').forEach(o=>o.classList.remove('open'));closeDrw()}});
+
+/* ─── Drawer ─── */
+function openDrw(item){
+  document.getElementById('drwTitle').textContent=item.codigo||'Material';
+  document.getElementById('drwSub').textContent=item.descricao||'';
+  const pct=Math.min((item.qtd/Math.max(CFG.atenc*2,20))*100,100);
+  const barClr=item.status.lvl==='critico'?'var(--crit)':item.status.lvl==='atencao'?'var(--warn)':'var(--ok)';
+  const bdg=`<span class="bdg ${item.status.lvl==='critico'?'bdg-crit':item.status.lvl==='atencao'?'bdg-warn':'bdg-ok'}"><i class="bi bi-${item.status.ico}"></i> ${item.status.txt}</span>`;
+  document.getElementById('drwBd').innerHTML=`
+    <div class="dg-title" style="padding-top:0">Identificação</div>
+    <div class="drow"><span class="drow-lbl">Código</span><span class="drow-val mono">${item.codigo||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Descrição</span><span class="drow-val">${item.descricao||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Classe</span><span class="drow-val">${item.classe||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Unidade</span><span class="drow-val mono">${item.unid||'—'}</span></div>
+    <div class="dg-title">Localização</div>
+    <div class="drow"><span class="drow-lbl">Área</span><span class="drow-val">${item.area||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Setor</span><span class="drow-val">${item.setor||'—'}</span></div>
+    <div class="drow"><span class="drow-lbl">Local de Instalação</span><span class="drow-val">${item.local||'—'}</span></div>
+    <div class="dg-title">Estoque</div>
+    <div class="drow"><span class="drow-lbl">Quantidade</span><span class="drow-val mono" style="font-size:22px;font-weight:300;letter-spacing:-0.04em">${item.qtd}</span></div>
+    <div class="drow"><span class="drow-lbl">Status</span><span class="drow-val">${bdg}</span></div>
+    <div class="drow"><span class="drow-lbl">Limiar Crítico</span><span class="drow-val mono">&lt; ${CFG.crit}</span></div>
+    <div class="drow"><span class="drow-lbl">Limiar Atenção</span><span class="drow-val mono">&lt; ${CFG.atenc}</span></div>
+    <div style="margin-top:16px">
+      <div class="fs11 mono t4 mb12" style="text-transform:uppercase;letter-spacing:.08em">Nível de estoque</div>
+      <div class="prog"><div class="prog-fill" id="drwProg" style="width:0%;background:${barClr}"></div></div>
+      <div class="fs11 mono t3" style="margin-top:6px">${item.qtd} unidades</div>
+    </div>
+  `;
+  document.getElementById('drwBg').classList.add('open');
+  requestAnimationFrame(()=>setTimeout(()=>{const el=document.getElementById('drwProg');if(el)el.style.width=pct+'%'},100));
+}
+
+function closeDrw(){document.getElementById('drwBg').classList.remove('open')}
+document.getElementById('drwBg').addEventListener('click',e=>{if(e.target===document.getElementById('drwBg'))closeDrw()});
+
+/* ─── File Upload ─── */
+const dz=document.getElementById('dropZone'),fi=document.getElementById('fileIn');
+dz.addEventListener('click',()=>fi.click());
+fi.addEventListener('change',e=>e.target.files[0]&&processFile(e.target.files[0]));
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-ov')});
+['dragleave','dragend'].forEach(ev=>dz.addEventListener(ev,()=>dz.classList.remove('drag-ov')));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-ov');if(e.dataTransfer.files[0])processFile(e.dataTransfer.files[0])});
+document.getElementById('btnClear').addEventListener('click',e=>{
+  e.stopPropagation();
+  if(!confirm('Remover planilha e limpar todos os dados?'))return;
+  DB.clear();localStorage.removeItem('pcm4_file');location.reload();
+});
+
+function showLoaded(name){
+  document.getElementById('dropPr').style.display='none';
+  document.getElementById('dropHUD').style.display='block';
+  document.getElementById('dropFN').textContent=name;
+  dz.classList.add('loaded');
+  document.getElementById('btnExpFull').disabled=false;
+  document.getElementById('btnExpCritRel').disabled=false;
+  if(document.getElementById('btnExpCrit'))document.getElementById('btnExpCrit').disabled=false;
+  const dot=document.getElementById('dotLive');
+  dot.classList.add('active');
+}
+
+function processFile(file){
+  setLdr(true,'lendo arquivo...');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      setLdr(true,'analisando estrutura...');
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+      let sn=wb.SheetNames.find(n=>n.trim().toLowerCase()==='base trab');
+      if(!sn){sn=wb.SheetNames[0];toast(`Aba "Base Trab" não localizada. Usando: ${sn}`,'warn')}
+      const ws=wb.Sheets[sn];
+      const raw=XLSX.utils.sheet_to_json(ws,{header:1});
+      let hRow=0;
+      for(let i=0;i<Math.min(raw.length,20);i++){
+        const str=(raw[i]||[]).map(c=>String(c).toLowerCase()).join(' ');
+        if(str.includes('código')||str.includes('codigo')||str.includes('quantidade')){hRow=i;break}
+      }
+      const json=XLSX.utils.sheet_to_json(ws,{range:hRow,defval:''});
+      setLdr(true,'calculando status...');
+      S.raw=json;
+      processData(json);
+      localStorage.setItem('pcm4_file',file.name);
+      showLoaded(file.name);
+      toast(`${file.name} — ${S.data.length.toLocaleString('pt-BR')} registros`,'ok');
+      navTo('s-dash');
+    }catch(err){
+      console.error(err);
+      toast(err.message||'Erro ao processar planilha','err',8000);
+    }finally{setLdr(false)}
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ─── Data Processing ─── */
+function gV(row,keys){for(const k in row){const ck=k.toLowerCase().trim();if(keys.some(n=>ck.includes(n)))return row[k]}return''}
+function cl(v){if(v==null)return'';const s=String(v).trim();return['undefined','null','-'].includes(s.toLowerCase())?'':s}
+
+function calcSt(qtd){
+  if(qtd>CFG.atenc)return{txt:'Disponível',lvl:'disponivel',bdg:'bdg-ok',  ico:'check-circle-fill'};
+  if(qtd>=CFG.crit) return{txt:'Em Atenção', lvl:'atencao',  bdg:'bdg-warn',ico:'exclamation-circle-fill'};
+  return              {txt:'Crítico',     lvl:'critico',  bdg:'bdg-crit',ico:'x-circle-fill'};
+}
+
+function processData(json){
+  S.data=[];
+  json.forEach((row)=>{
+    const keys=Object.keys(row);
+    const area=cl(gV(row,['área','area']));
+    const setor=cl(gV(row,['setor']));
+    let local=cl(gV(row,['descrição do local de instalação','descricao do local de instalacao','local de instalação','local instalacao','local de instalation','functional location','localização funcional','local funcional','local']));
+    if(!local&&keys.length>=6)local=cl(row[keys[5]]);
+    const codigo=cl(gV(row,['código material','codigo material','cód. material','cod. material','código','material','cod material']));
+    const descricao=cl(gV(row,['descrição sistema','descricao sistema','descrição do material','descricao do material','texto breve','descrição','descricao']));
+    const unid=cl(gV(row,['unid','unidade','un.','un']));
+    const qtdRaw=gV(row,['quantidade','qtd','montante','qty','amount']);
+    const classe=cl(gV(row,['classe']));
+    if(!codigo&&!descricao)return;
+    if(!area||/^(total|geral|subtotal)/i.test(area.trim()))return;
+    let qtd=parseFloat(String(qtdRaw).replace(',','.'));
+    if(isNaN(qtd))qtd=0;
+    S.data.push({area,setor,local,codigo,descricao,unid,qtd,classe,status:calcSt(qtd)});
+  });
+  S.flt=[...S.data];S.AF={};
+  DB.set('dados',S.data).catch(()=>{});
+  updateAll();
+}
+
+/* ─── Update All ─── */
+function updateAll(){
+  const has=S.data.length>0;
+  document.getElementById('noBanner').style.display=has?'none':'flex';
+  document.getElementById('dashMain').style.display=has?'block':'none';
+  if(has){
+    document.getElementById('hdrStatusTxt').textContent=`${S.data.length.toLocaleString('pt-BR')} registros`;
+    updateKPIs();buildGauges();buildRankings();buildCharts();fillFilOpts();renderMat();renderCrit();fillMachineSelect();
+  }
+}
+
+/* ─── KPIs ─── */
+function updateKPIs(){
+  const d=S.data,n=d.length;
+  const mat=new Set(d.map(x=>x.codigo).filter(Boolean)).size;
+  const disp=d.filter(x=>x.status.lvl==='disponivel').length;
+  const atenc=d.filter(x=>x.status.lvl==='atencao').length;
+  const crit=d.filter(x=>x.status.lvl==='critico').length;
+  const maq=new Set(d.filter(x=>x.status.lvl==='critico').map(x=>x.local).filter(Boolean)).size;
+
+  const nums={total:n,mat,disp,atenc,crit,maq};
+  Object.entries(nums).forEach(([k,v])=>{
+    animNum(`kv-${k}`,v);
+    const bar=document.getElementById(`kb-${k}`);
+    if(bar)setTimeout(()=>{bar.style.width=(n>0?(v/n)*100:0)+'%'},150);
+  });
+
+  if(crit>0){
+    document.getElementById('critRibbon').style.display='flex';
+    document.getElementById('critRibbonTitle').textContent=`${crit} material(is) crítico(s)`;
+    document.getElementById('critRibbonText').textContent=`${maq} equipamento(s) com risco de indisponibilidade.`;
+    document.getElementById('navBadge').textContent=crit>99?'99+':crit;
+    document.getElementById('navBadge').style.display='inline-flex';
+    document.getElementById('btnHdrCrit').style.display='flex';
+    document.getElementById('hdrCritNum').textContent=crit;
+  }
+}
+
+function animNum(id,final){
+  const el=document.getElementById(id);if(!el)return;
+  if(!CFG.anim){el.textContent=final.toLocaleString('pt-BR');return}
+  let cur=0;const inc=Math.ceil(final/40)||1;
+  const t=setInterval(()=>{cur=Math.min(cur+inc,final);el.textContent=cur.toLocaleString('pt-BR');if(cur>=final)clearInterval(t)},14);
+}
+
+/* ─── Gauges ─── */
+function buildGauges(){
+  const d=S.data,n=d.length;
+  const disp=d.filter(x=>x.status.lvl==='disponivel').length;
+  const atenc=d.filter(x=>x.status.lvl==='atencao').length;
+  const crit=d.filter(x=>x.status.lvl==='critico').length;
+  const pD=(disp/n)*100,pA=(atenc/n)*100,pC=(crit/n)*100;
+  document.getElementById('gTotalLabel').textContent=`${n.toLocaleString('pt-BR')} itens`;
+  setTimeout(()=>{
+    document.getElementById('hbOk').style.width=pD+'%';
+    document.getElementById('hbWarn').style.width=pA+'%';
+    document.getElementById('hbCrit').style.width=pC+'%';
+    document.getElementById('sOkPct').textContent=n>0?pD.toFixed(1)+'%':'—';
+    document.getElementById('sWarnPct').textContent=n>0?pA.toFixed(1)+'%':'—';
+    document.getElementById('sCritPct').textContent=n>0?pC.toFixed(1)+'%':'—';
+    const health=n>0?Math.round(((disp+atenc)/n)*100):0;
+    const hEl=document.getElementById('gHealth');
+    hEl.textContent=health+'%';
+    hEl.style.color=health>80?'var(--ok)':health>50?'var(--warn)':'var(--crit)';
+    const critCounts={};
+    S.data.filter(x=>x.status.lvl==='critico').forEach(x=>{critCounts[x.area]=(critCounts[x.area]||0)+1});
+    const worst=Object.entries(critCounts).sort((a,b)=>b[1]-a[1])[0];
+    const fEl=document.getElementById('gFocus');
+    if(worst){fEl.textContent=`${worst[0]} (${worst[1]})`;fEl.title=worst[0];}
+    else{fEl.textContent='Nenhuma área crítica';fEl.style.color='var(--t3)';}
+  },200);
+}
+
+/* ─── Rankings ─── */
+function buildRankings(){
+  const countBy=(key,n=10)=>{const m={};S.data.forEach(d=>{const v=d[key]?.trim();if(v)m[v]=(m[v]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n)};
+  const areas=countBy('area',10),setores=countBy('setor',10);
+  const maxA=areas[0]?.[1]||1,maxS=setores[0]?.[1]||1;
+  const makeRank=(items,max)=>items.map((x,i)=>`
+    <div class="rank-item">
+      <div class="rank-label" title="${x[0]}">${x[0]}</div>
+      <div class="rank-track"><div class="rank-fill" style="width:0%" data-w="${(x[1]/max*100).toFixed(1)}" data-delay="${i*40}"></div></div>
+      <div class="rank-val mono">${x[1].toLocaleString('pt-BR')}</div>
+    </div>`).join('');
+  document.getElementById('rankAreas').innerHTML=makeRank(areas,maxA);
+  document.getElementById('rankSetores').innerHTML=makeRank(setores,maxS);
+  setTimeout(()=>{
+    document.querySelectorAll('.rank-fill[data-w]').forEach(el=>{
+      const delay=parseInt(el.dataset.delay)||0;
+      setTimeout(()=>{el.style.transition='width 0.9s cubic-bezier(.4,0,.2,1)';el.style.width=el.dataset.w+'%'},delay);
+    });
+  },100);
+}
+
+/* ─── Charts ─── */
+function isDark(){return document.documentElement.getAttribute('data-theme')==='dark'}
+
+const chartColors=()=>({
+  grid:isDark()?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.06)',
+  tick:isDark()?'rgba(255,255,255,0.2)':'rgba(0,0,0,0.3)',
+  label:isDark()?'#65656F':'#9CA3AF',
+  tooltip:{bg:isDark()?'#1A1A1E':'#FFFFFF',title:isDark()?'#F0F0F2':'#111118',body:isDark()?'#A8A8B3':'#3A3A4A',border:isDark()?'rgba(255,255,255,0.12)':'rgba(0,0,0,0.12)'}
+});
+
+function mkCyan(n){
+  const base=[0,212,255];
+  return Array.from({length:n},(_,i)=>`rgba(${base[0]},${base[1]},${base[2]},${0.85-i*0.025})`);
+}
+
+function countBy(key,n=15){const m={};S.data.forEach(d=>{const v=d[key]?.trim();if(v)m[v]=(m[v]||0)+1});return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,n)}
+
+function dChart(id){if(S.charts[id]){S.charts[id].destroy();delete S.charts[id]}}
+
+function buildCharts(){
+  const C=chartColors();
+  const baseOpts={
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{backgroundColor:C.tooltip.bg,titleColor:C.tooltip.title,bodyColor:C.tooltip.body,borderColor:C.tooltip.border,borderWidth:1,padding:10,titleFont:{family:'Syne',weight:'700',size:13},bodyFont:{family:'DM Mono',size:11},cornerRadius:8}
+    },
+    scales:{
+      x:{grid:{display:false},border:{display:false},ticks:{color:C.label,font:{family:'DM Mono',size:10},maxRotation:45}},
+      y:{grid:{color:C.grid,lineWidth:1},border:{display:false},ticks:{color:C.label,font:{family:'DM Mono',size:10}},beginAtZero:true}
+    },
+    animation:{duration:CFG.anim?800:0,easing:'easeOutQuart'}
+  };
+
+  // Dashboard area bar
+  const aD=countBy('area',15);
+  dChart('cArea');
+  S.charts.cArea=new Chart(document.getElementById('cArea').getContext('2d'),{
+    type:'bar',
+    data:{labels:aD.map(x=>x[0]),datasets:[{data:aD.map(x=>x[1]),backgroundColor:mkCyan(aD.length),borderRadius:3,borderSkipped:false,borderWidth:0}]},
+    options:baseOpts
+  });
+
+  buildFullCharts();
+}
+
+function buildFullCharts(){
+  const C=chartColors();
+  const metric=document.getElementById('areaMetric')?.value||'total';
+  let src=S.data;
+  if(metric==='critico')src=S.data.filter(x=>x.status.lvl==='critico');
+  if(metric==='disponivel')src=S.data.filter(x=>x.status.lvl==='disponivel');
+  const m={};src.forEach(d=>{const v=d.area?.trim();if(v)m[v]=(m[v]||0)+1});
+  const aF=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,30);
+  const baseOpts={
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{backgroundColor:C.tooltip.bg,titleColor:C.tooltip.title,bodyColor:C.tooltip.body,borderColor:C.tooltip.border,borderWidth:1,padding:10,titleFont:{family:'Syne',weight:'700',size:13},bodyFont:{family:'DM Mono',size:11},cornerRadius:8}},
+    scales:{x:{grid:{display:false},border:{display:false},ticks:{color:C.label,font:{family:'DM Mono',size:10},maxRotation:50}},y:{grid:{color:C.grid},border:{display:false},ticks:{color:C.label,font:{family:'DM Mono',size:10}},beginAtZero:true}},
+    animation:{duration:CFG.anim?900:0,easing:'easeOutQuart'}
+  };
+
+  dChart('cAreaFull');
+  S.charts.cAreaFull=new Chart(document.getElementById('cAreaFull').getContext('2d'),{
+    type:'bar',
+    data:{labels:aF.map(x=>x[0]),datasets:[{data:aF.map(x=>x[1]),backgroundColor:mkCyan(aF.length),borderRadius:4,borderSkipped:false,borderWidth:0}]},
+    options:{...baseOpts,onClick:(ev,els)=>{if(els.length)showAreaDetail(aF[els[0].index][0])}}
+  });
+
+  const sD=countBy('setor',30);
+  dChart('cSetorFull');
+  S.charts.cSetorFull=new Chart(document.getElementById('cSetorFull').getContext('2d'),{
+    type:'bar',
+    data:{labels:sD.map(x=>x[0]),datasets:[{data:sD.map(x=>x[1]),backgroundColor:mkCyan(sD.length),borderRadius:4,borderSkipped:false,borderWidth:0}]},
+    options:baseOpts
+  });
+}
+
+function showAreaDetail(area){
+  const items=S.data.filter(x=>x.area===area);
+  document.getElementById('areaDetailName').textContent=area;
+  document.getElementById('tbAreaDetail').innerHTML=items.map(r=>`
+    <tr class="${r.status.lvl==='critico'?'r-crit':r.status.lvl==='atencao'?'r-warn':''}">
+      <td>${r.setor}</td><td>${r.local}</td><td class="mono"><strong>${r.codigo}</strong></td>
+      <td>${r.descricao}</td><td class="mono tr"><strong>${r.qtd}</strong></td>
+      <td><span class="bdg ${r.status.bdg}"><i class="bi bi-${r.status.ico}"></i> ${r.status.txt}</span></td>
+    </tr>`).join('');
+  const el=document.getElementById('areaDetail');
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+document.getElementById('areaMetric')?.addEventListener('change',buildFullCharts);
+
+/* ─── Filter opts ─── */
+function fillFilOpts(){
+  const areas=[...new Set(S.data.map(x=>x.area).filter(Boolean))].sort();
+  const setores=[...new Set(S.data.map(x=>x.setor).filter(Boolean))].sort();
+  const classes=[...new Set(S.data.map(x=>x.classe).filter(Boolean))].sort();
+  const fill=(id,opts)=>{const el=document.getElementById(id);if(!el)return;const first=el.options[0].outerHTML;el.innerHTML=first+opts.map(o=>`<option value="${o}">${o}</option>`).join('')};
+  fill('fa-area',areas);fill('fa-setor',setores);fill('fa-classe',classes);
+  fill('qfArea',areas);fill('qfCritArea',areas);
+}
+
+/* ─── Adv Filter ─── */
+document.getElementById('btnFltApply').addEventListener('click',()=>{
+  S.AF={
+    area:document.getElementById('fa-area').value,
+    setor:document.getElementById('fa-setor').value,
+    status:document.getElementById('fa-status').value,
+    qmin:document.getElementById('fa-qmin').value,
+    qmax:document.getElementById('fa-qmax').value,
+    classe:document.getElementById('fa-classe').value
+  };
+  applyFlt();document.getElementById('advPanel').classList.remove('open');renderPills();toast('Filtros aplicados','info',2500);
+});
+
+document.getElementById('btnFltClear').addEventListener('click',()=>{
+  ['fa-area','fa-setor','fa-status','fa-classe'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  ['fa-qmin','fa-qmax'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});
+  S.AF={};S.q='';document.getElementById('searchMat').value='';
+  document.getElementById('qfArea').value='';document.getElementById('qfStatus').value='';
+  applyFlt();renderPills();document.getElementById('advPanel').classList.remove('open');
+});
+
+document.getElementById('qfArea').addEventListener('change',e=>{S.AF.area=e.target.value;applyFlt();renderPills()});
+document.getElementById('qfStatus').addEventListener('change',e=>{S.AF.status=e.target.value;applyFlt();renderPills()});
+
+function applyFlt(){
+  let d=[...S.data];
+  const f=S.AF,q=S.q.toLowerCase();
+  if(q)d=d.filter(r=>Object.entries(r).some(([k,v])=>k==='status'?v.txt.toLowerCase().includes(q):String(v).toLowerCase().includes(q)));
+  if(f.area)   d=d.filter(r=>r.area===f.area);
+  if(f.setor)  d=d.filter(r=>r.setor===f.setor);
+  if(f.status) d=d.filter(r=>r.status.lvl===f.status);
+  if(f.classe) d=d.filter(r=>r.classe===f.classe);
+  if(f.qmin!==undefined&&f.qmin!=='')d=d.filter(r=>r.qtd>=parseFloat(f.qmin));
+  if(f.qmax!==undefined&&f.qmax!=='')d=d.filter(r=>r.qtd<=parseFloat(f.qmax));
+  S.flt=d;S.pg=1;renderMat();
+}
+
+function renderPills(){
+  const f=S.AF,pills=[];
+  if(f.area)   pills.push({l:`Área: ${f.area}`,k:'area'});
+  if(f.setor)  pills.push({l:`Setor: ${f.setor}`,k:'setor'});
+  if(f.status) pills.push({l:`Status: ${f.status}`,k:'status'});
+  if(f.classe) pills.push({l:`Classe: ${f.classe}`,k:'classe'});
+  if(f.qmin)   pills.push({l:`Qtd ≥ ${f.qmin}`,k:'qmin'});
+  if(f.qmax)   pills.push({l:`Qtd ≤ ${f.qmax}`,k:'qmax'});
+  const el=document.getElementById('pillRow');
+  el.style.display=pills.length?'flex':'none';
+  el.innerHTML=pills.map(p=>`<span class="filter-pill">${p.l}<button onclick="rmPill('${p.k}')">✕</button></span>`).join('');
+}
+
+function rmPill(k){
+  delete S.AF[k];
+  if(k==='area')document.getElementById('qfArea').value='';
+  if(k==='status')document.getElementById('qfStatus').value='';
+  applyFlt();renderPills();
+}
+
+/* ─── Search ─── */
+const sm=document.getElementById('searchMat'),sc=document.getElementById('scMat');
+sm.addEventListener('input',e=>{S.q=e.target.value;sc.style.display=S.q?'block':'none';applyFlt()});
+sc.addEventListener('click',()=>{sm.value='';S.q='';sc.style.display='none';applyFlt()});
+document.getElementById('searchCrit').addEventListener('input',e=>renderCrit(e.target.value));
+document.getElementById('qfCritArea').addEventListener('change',e=>renderCrit(document.getElementById('searchCrit').value,e.target.value));
+
+/* ─── Sort ─── */
+document.querySelectorAll('#tblMat th[data-s]').forEach(th=>{
+  th.addEventListener('click',()=>{
+    const c=th.dataset.s;
+    if(S.sortC===c)S.sortD=S.sortD==='asc'?'desc':'asc';
+    else{S.sortC=c;S.sortD='asc'}
+    const d=S.sortD==='asc'?1:-1;
+    const w={critico:1,atencao:2,disponivel:3};
+    S.flt.sort((a,b)=>{
+      let va=c==='status'?w[a.status.lvl]:a[c];
+      let vb=c==='status'?w[b.status.lvl]:b[c];
+      if(typeof va==='string')va=va.toLowerCase();
+      if(typeof vb==='string')vb=vb.toLowerCase();
+      return va<vb?-d:va>vb?d:0;
+    });
+    document.querySelectorAll('#tblMat th').forEach(t=>{t.classList.remove('s-asc','s-desc');const i=t.querySelector('i');if(i)i.className='bi bi-arrow-down-up'});
+    th.classList.add(S.sortD==='asc'?'s-asc':'s-desc');
+    const i=th.querySelector('i');if(i)i.className=`bi bi-arrow-${S.sortD==='asc'?'up':'down'}`;
+    S.pg=1;renderMat();
+  });
+});
+
+/* ─── Table Render ─── */
+function renderMat(){
+  const tb=document.getElementById('tbMat');
+  document.getElementById('cntMat').textContent=S.flt.length.toLocaleString('pt-BR');
+  const start=(S.pg-1)*S.pp;
+  const slice=S.flt.slice(start,start+S.pp);
+  if(!slice.length){
+    tb.innerHTML=`<tr><td colspan="9"><div class="empty"><i class="bi bi-search"></i><h3>Nenhum resultado</h3><p>Ajuste os filtros ou o termo de busca.</p></div></td></tr>`;
+    document.getElementById('pagInfo').textContent='0 registros';
+    document.getElementById('pagCtrl').innerHTML='';return;
+  }
+  tb.innerHTML=slice.map(r=>`
+    <tr class="${r.status.lvl==='critico'?'r-crit':r.status.lvl==='atencao'?'r-warn':''}">
+      <td>${r.area||'—'}</td>
+      <td>${r.setor||'—'}</td>
+      <td>${r.local||'—'}</td>
+      <td class="mono"><strong>${r.codigo||'—'}</strong></td>
+      <td>${r.descricao||'—'}</td>
+      <td class="mono tc">${r.unid||'—'}</td>
+      <td class="mono tr"><strong>${r.qtd}</strong></td>
+      <td><span class="bdg ${r.status.bdg}"><i class="bi bi-${r.status.ico}"></i> ${r.status.txt}</span></td>
+      <td><div class="row-act"><button class="ia" title="Detalhes" onclick='openDrw(${JSON.stringify(r).replace(/'/g,"&#39;")})'><i class="bi bi-arrow-right"></i></button></div></td>
+    </tr>`).join('');
+  buildPag(S.flt.length);
+}
+
+function buildPag(total){
+  const pages=Math.ceil(total/S.pp);
+  const s=(S.pg-1)*S.pp+1,e=Math.min(S.pg*S.pp,total);
+  document.getElementById('pagInfo').textContent=`${s.toLocaleString('pt-BR')} – ${e.toLocaleString('pt-BR')} / ${total.toLocaleString('pt-BR')}`;
+  const ctrl=document.getElementById('pagCtrl');
+  if(pages<=1){ctrl.innerHTML='';return}
+  let h=`<button class="pg" onclick="goPg(${S.pg-1})" ${S.pg===1?'disabled':''}><i class="bi bi-chevron-left"></i></button>`;
+  const lo=Math.max(1,S.pg-2),hi=Math.min(pages,S.pg+2);
+  if(lo>1){h+=`<button class="pg" onclick="goPg(1)">1</button>`;if(lo>2)h+=`<span style="padding:0 3px;color:var(--t4)">…</span>`}
+  for(let i=lo;i<=hi;i++)h+=`<button class="pg ${i===S.pg?'on':''}" onclick="goPg(${i})">${i}</button>`;
+  if(hi<pages){if(hi<pages-1)h+=`<span style="padding:0 3px;color:var(--t4)">…</span>`;h+=`<button class="pg" onclick="goPg(${pages})">${pages}</button>`}
+  h+=`<button class="pg" onclick="goPg(${S.pg+1})" ${S.pg===pages?'disabled':''}><i class="bi bi-chevron-right"></i></button>`;
+  ctrl.innerHTML=h;
+}
+
+function goPg(p){const pages=Math.ceil(S.flt.length/S.pp);S.pg=Math.max(1,Math.min(p,pages));renderMat()}
+document.getElementById('ppSel').addEventListener('change',e=>{S.pp=parseInt(e.target.value);S.pg=1;renderMat()});
+
+/* ─── Críticos ─── */
+function renderCrit(q='',aF=''){
+  const qt=(q||'').toLowerCase();
+  const af=aF||document.getElementById('qfCritArea').value||'';
+  let items=S.data.filter(x=>x.status.lvl==='critico');
+  if(af)items=items.filter(x=>x.area===af);
+  if(qt)items=items.filter(r=>Object.values(r).some(v=>String(v).toLowerCase().includes(qt)));
+  const tb=document.getElementById('tbCrit');
+  document.getElementById('critFt').textContent=`${items.length} material(is) crítico(s)`;
+  if(!items.length){
+    tb.innerHTML=`<tr><td colspan="8"><div class="empty"><i class="bi bi-check-circle" style="color:var(--ok)"></i><h3 style="color:var(--ok)">Nenhum crítico</h3><p>Todos os materiais estão com estoque adequado.</p></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML=items.slice(0,200).map(r=>`
+    <tr class="r-crit">
+      <td>${r.area}</td><td>${r.setor}</td><td><strong>${r.local}</strong></td>
+      <td class="mono"><strong>${r.codigo}</strong></td><td>${r.descricao}</td>
+      <td class="tc mono fw5" style="color:var(--crit);font-size:15px">${r.qtd}</td>
+      <td><span class="bdg bdg-crit"><i class="bi bi-x-circle-fill"></i> Crítico</span></td>
+      <td><div class="row-act"><button class="ia" onclick='openDrw(${JSON.stringify(r).replace(/'/g,"&#39;")})'><i class="bi bi-arrow-right"></i></button></div></td>
+    </tr>`).join('');
+}
+
+/* ─── Machine Select ─── */
+function fillMachineSelect(){
+  const sel=document.getElementById('selMaq');
+  const locals=[...new Set(S.data.map(d=>d.local).filter(Boolean))].sort();
+  sel.innerHTML='<option value="">Selecione um equipamento...</option>'+locals.map(l=>`<option value="${l}">${l}</option>`).join('');
+}
+
+function renderMatriz(maq,stFlt=''){
+  const res=document.getElementById('matrizRes');
+  if(!maq){res.style.display='none';return}
+  let items=S.data.filter(d=>d.local===maq);
+  if(stFlt)items=items.filter(d=>d.status.lvl===stFlt);
+  document.getElementById('matTitle').textContent=maq;
+  const crit=items.filter(x=>x.status.lvl==='critico').length;
+  const atenc=items.filter(x=>x.status.lvl==='atencao').length;
+  const disp=items.filter(x=>x.status.lvl==='disponivel').length;
+  document.getElementById('matKpis').innerHTML=`
+    <div class="mat-kpi"><div class="mat-kpi-val">${items.length}</div><div class="mat-kpi-lbl">Total</div></div>
+    <div class="mat-kpi"><div class="mat-kpi-val" style="color:var(--ok)">${disp}</div><div class="mat-kpi-lbl">Disponíveis</div></div>
+    <div class="mat-kpi"><div class="mat-kpi-val" style="color:var(--warn)">${atenc}</div><div class="mat-kpi-lbl">Atenção</div></div>
+    <div class="mat-kpi"><div class="mat-kpi-val" style="color:var(--crit)">${crit}</div><div class="mat-kpi-lbl">Críticos</div></div>
+  `;
+  document.getElementById('tbMatriz').innerHTML=items.length?items.map(r=>`
+    <tr class="${r.status.lvl==='critico'?'r-crit':r.status.lvl==='atencao'?'r-warn':''}">
+      <td class="mono"><strong>${r.codigo}</strong></td><td>${r.descricao}</td>
+      <td class="mono tc">${r.unid}</td><td class="mono tr"><strong>${r.qtd}</strong></td>
+      <td><span class="bdg ${r.status.bdg}"><i class="bi bi-${r.status.ico}"></i> ${r.status.txt}</span></td>
+      <td><div class="row-act"><button class="ia" onclick='openDrw(${JSON.stringify(r).replace(/'/g,"&#39;")})'><i class="bi bi-arrow-right"></i></button></div></td>
+    </tr>`).join('')
+    :`<tr><td colspan="6" class="tc t3" style="padding:24px;font-family:var(--mono);font-size:11px">nenhum item</td></tr>`;
+  res.style.display='block';
+}
+
+document.getElementById('selMaq').addEventListener('change',e=>renderMatriz(e.target.value,document.getElementById('matFltSt').value));
+document.getElementById('matFltSt').addEventListener('change',e=>renderMatriz(document.getElementById('selMaq').value,e.target.value));
+document.getElementById('btnExpMatriz').addEventListener('click',()=>{
+  const m=document.getElementById('selMaq').value;
+  if(!m)return;
+  exportXLSX(S.data.filter(d=>d.local===m),`PCM_Maquina_${m.replace(/[^a-z0-9]/gi,'_')}`);
+});
+
+/* ─── Export ─── */
+function exportXLSX(rows,fname){
+  if(!rows.length){toast('Nenhum dado para exportar','warn');return}
+  const flat=rows.map(d=>({'Área':d.area,'Setor':d.setor,'Local de Instalação':d.local,'Código':d.codigo,'Descrição':d.descricao,'Unidade':d.unid,'Quantidade':d.qtd,'Classe':d.classe,'Status':d.status.txt}));
+  const ws=XLSX.utils.json_to_sheet(flat);const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Dados');
+  XLSX.writeFile(wb,`${fname}_${new Date().toISOString().split('T')[0]}.xlsx`);
+  toast(`Exportado: ${fname}.xlsx`,'ok');
+}
+
+function doExport(){
+  const t=document.getElementById('expType').value,n=document.getElementById('expName').value||'PCM';
+  let rows=S.data;
+  if(t==='filtered')rows=S.flt;
+  if(t==='criticos')rows=S.data.filter(x=>x.status.lvl==='critico');
+  if(t==='atencao') rows=S.data.filter(x=>x.status.lvl==='atencao');
+  exportXLSX(rows,n);closeMo('moExport');
+}
+
+document.getElementById('btnExpFull').addEventListener('click',()=>{
+  const f=document.getElementById('relFltSt').value;
+  exportXLSX(f?S.data.filter(x=>x.status.lvl===f):S.data,'PCM_Completo');
+});
+document.getElementById('btnExpCrit').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Criticos'));
+document.getElementById('btnExpCritRel').addEventListener('click',()=>exportXLSX(S.data.filter(x=>x.status.lvl==='critico'),'PCM_Relatorio_Criticos'));
+
+/* ─── Tooltips ─── */
+let ttTimer=null,ttEl=null;
+
+function initTooltips(){
+  ttEl=document.getElementById('tooltip');
+  let delay=380;
+  document.body.addEventListener('mouseover',e=>{
+    if(!CFG.tooltips)return;
+    const t=e.target.closest('[data-tooltip]');
+    if(t){clearTimeout(ttTimer);ttTimer=setTimeout(()=>showTT(t,e),delay)}
+  });
+  document.body.addEventListener('mouseout',()=>{clearTimeout(ttTimer);hideTT()});
+  document.body.addEventListener('mousemove',e=>{if(ttEl.classList.contains('show'))posTT(e)});
+}
+
+function showTT(t,e){
+  ttEl.innerHTML=t.dataset.tooltip;
+  ttEl.classList.add('show');posTT(e);
+}
+function hideTT(){ttEl.classList.remove('show')}
+function posTT(e){
+  const m=14,w=ttEl.offsetWidth,h=ttEl.offsetHeight;
+  let x=e.clientX+m,y=e.clientY+m;
+  if(x+w>window.innerWidth-m)x=e.clientX-w-m;
+  if(y+h>window.innerHeight-m)y=e.clientY-h-m;
+  ttEl.style.left=x+'px';ttEl.style.top=y+'px';
+}
+
+/* ─── Clock ─── */
+function updateClock(){
+  const now=new Date();
+  const d=now.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}).replace('.','').toUpperCase();
+  const t=now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const el=document.getElementById('hdrClock');
+  if(el)el.innerHTML=`<div class="hd-time">${t}</div><div class="hd-date">${d}</div>`;
+}
+
+/* ─── Boot ─── */
+(async()=>{
+  loadCFG();
+  setInterval(updateClock,1000);updateClock();
+  initTooltips();
+  const fname=localStorage.getItem('pcm4_file');
+  if(!fname)return;
+  try{
+    setLdr(true,'restaurando sessão...');
+    const cached=await DB.get('dados');
+    if(cached&&cached.length){
+      S.data=cached;S.flt=[...cached];
+      showLoaded(fname);
+      updateAll();
+      toast(`Sessão restaurada — ${cached.length.toLocaleString('pt-BR')} registros`,'info',3000);
+    }
+  }catch(e){console.error(e)}
+  finally{setLdr(false)}
+})();
+</script>
+</body>
+</html>
